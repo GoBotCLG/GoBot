@@ -1,0 +1,18 @@
+﻿[
+  {
+    "outputFile": "Content/Menu.css",
+    "inputFile": "Content/Menu.scss"
+  },
+  {
+    "outputFile": "Content/Mixins.css",
+    "inputFile": "Content/Mixins.scss"
+  },
+  {
+    "outputFile": "Content/Style.css",
+    "inputFile": "Content/Style.scss"
+  },
+  {
+    "outputFile": "Content/Account.css",
+    "inputFile": "Content/Account.scss"
+  }
+]

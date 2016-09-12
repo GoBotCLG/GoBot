@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Gobotter</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
+
+    @Styles.Render("~/Content/Menu.css")
+    @Styles.Render("~/Content/Style.css")
+    @Scripts.Render("~/bundles/modernizr")
+    <meta name="description" content="The description of my page" />
+</head>
+<body>
+    <div id="nav">
+        <a id="account" class="active" href="@Url.Action("Index", "Account")">
+            <div id="img" style="background-image: url(@Url.Content("~/Images/anonymous.png"))"></div>
+            <div id="border"></div>
+        </a>
+        <a id="matches"  href="#"> 
+            <div style="background-image: url(@Url.Content("~/Images/matches.png"))"></div>
+        </a>
+        <a id="bet" href="#">
+            <div style="background-image: url(@Url.Content("~/Images/bet.png"))"></div>
+        </a>
+        <a id="teams" href="@Url.Action("Index", "Teams")">
+            <div style="background-image: url(@Url.Content("~/Images/team.png"))"></div>
+        </a>
+        <a id="inventory" href="@Url.Action("Index", "Inventory")">
+            <div style="background-image: url(@Url.Content("~/Images/inventory.png"))"></div>
+        </a>
+        <a id="shop" href="@Url.Action("Index", "Shop")">
+            <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
+        </a>
+        <a id="transactions" href="@Url.Action("Index", "Transactions")">
+            <div style="background-image: url(@Url.Content("~/Images/transactions.png"))"></div>
+        </a>
+
+        <div id="textLinks">
+            <a class="textLink" href="@Url.Action("FAQ", "Support")">FAQ</a>
+            <a class="textLink" href="@Url.Action("Index", "Support")">Support</a>
+            <a class="textLink" href="@Url.Action("Contact", "Support")">Contact</a>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script>
+    var waterDropInterval;
+    var mobileWidth = 959;
+
+    $(document).ready(function () {
+
+    });
+
+    $(window).on('resize', function () {
+        //if ($(window).width() > mobileWidth) {
+        //    $(".textLink > div").remove();
+        //}
+        //else {
+        //    if ($(".textLink > div").length == 0)
+        //        $(".textLink").prepend("<div></div>");
+        //}
+
+        //$(".ink").css("border-radius", $("#menu").width());
+    });
+
+    // Get cursor position on each mousemove.
+    var cursor = { x: -1, y: -1 };
+    $(document).mousemove(function (event) {
+        cursor.x = event.pageX;
+        cursor.y = event.pageY;
+    });
+
+    $(document).on("mouseenter", "#nav > a > div, .textLink > div", function (e) {
+        if (!$(this).parent().hasClass("active")) {
+            var parent = $(this).parent();
+
+            waterDrop(parent, e);
+            waterDropInterval = setInterval(function () {
+                waterDrop(parent, e);
+            }, 1000);
+
+            showNavText($(this));
+            var color = $(this).parent().css("background-color");
+            var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
+            for (var i = 0; i < colors.length; i++)
+                colors[i] = Math.round(colors[i] * 0.85);
+
+            color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+
+            $(this).parent().css({ backgroundColor: color });
+            //$(this).parent().css({ backgroundColor: "rgba(0,0,0,0.15)" });
+        }
+    });
+    $(document).on("mouseleave", "#nav > a > div, .textLink > div", function (e) {
+        if (!$(this).parent().hasClass("active")) {
+            clearInterval(waterDropInterval);
+            hideNavText($(this));
+
+            $(this).parent().css({ backgroundColor: "#f16651" });
+        }
+    });
+
+    $("#nav > a > div").click(function () {
+        clearInterval(waterDropInterval);
+        $("#nav").stop();
+        $("#nav").find(".active").removeClass("active");
+        $(this).parent().parent().find("a").css({ backgroundColor: "#f16651" });
+        $(this).parent().css({ backgroundColor: "#e3604c" });
+        $(this).parent().addClass("active");
+        hideNavText($(this));
+    });
+
+    function showNavText(elem) {
+        if ($(window).width() > mobileWidth) {
+            var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
+            elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
+
+            var topPos = elem.offset().top + (elem.height() / 2 - $("#text").height() / 2);
+            var leftPos = -($("#text").width() + 40);
+            $("#text").css({
+                top: topPos,
+                left: leftPos
+            });
+        }
+    }
+    function hideNavText(elem) {
+        if ($(window).width() > mobileWidth)
+            $("#nav > #text").remove();
+    }
+
+    function toMobile() {
+
+    }
+
+    function toDesktop() {
+
+    }
+
+    function waterDrop(parent, e) {
+        if (parent.find(".ink").length == 0)
+            parent.prepend("<span class='ink'></span>");
+
+        var ink = parent.find(".ink");
+        ink.removeClass("animate");
+
+        var d;
+        if (!ink.height() && !ink.width()) {
+            d = Math.max(parent.outerWidth(), parent.outerHeight());
+            ink.css({ height: d, width: d });
+        }
+
+        var x = cursor.x - parent.offset().left - ink.width() / 2;
+        var y = cursor.y - parent.offset().top - ink.height() / 2;
+
+        ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
+    }
+</script>

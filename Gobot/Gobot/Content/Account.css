@@ -1,0 +1,71 @@
+﻿h1, h2, h3, h4, h5, h6 {
+  font: italic 900 40px Lato, sans-serif;
+  color: white; }
+
+h1 {
+  display: block;
+  float: left;
+  margin: 0;
+  width: 32%;
+  font-size: 40px; }
+
+h2 {
+  font-size: 24px; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 14px; }
+
+h5 {
+  font-size: 30px; }
+
+h6 {
+  font-size: 36px; }
+
+span {
+  font: 300 14px Lato, sans-serif; }
+
+grey {
+  color: #626262; }
+
+green {
+  color: #51c24b; }
+
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 85%;
+  max-width: 1350px;
+  height: 130px;
+  background-color: #232323;
+  margin: 2px auto; }
+  .info #rank {
+    float: left;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 100%;
+    background-color: #1b1b1b; }
+  .info #rep {
+    float: left;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%; }
+
+#credits h4 {
+  position: absolute;
+  top: 23px;
+  left: 255px;
+  font-weight: 400 !important;
+  color: #7c7c7c; }
+
+.overlaid {
+  -webkit-transform: scale(0.97);
+  transform: scale(0.97);
+  overflow: hidden; }
+
