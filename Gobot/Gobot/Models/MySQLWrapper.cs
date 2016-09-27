@@ -23,7 +23,15 @@ namespace Gobot.Models
             }
         }
 
-        public string[] Select(string tablename, params string[] columnnames)
+        /// <summary>
+        /// Select columns from a table with where condition
+        /// </summary>
+        /// <param name="tablename">Name of the table</param>
+        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Surname = ?</param>
+        /// <param name="condition">Collection of OdbcParameter (In the same order as in "where" condition</param>
+        /// <param name="columnnames">Names of the needed columns</param>
+        /// <returns></returns>
+        public string[] Select(string tablename, string where, OdbcParameterCollection conditions, params string[] columnnames)
         {
             if(columnnames.Length > 0)
             {
@@ -33,9 +41,11 @@ namespace Gobot.Models
                 {
                     sql.Append(col + ',');
                 }
+                sql.Remove(sql.Length - 1, 1);
 
+                sql.Append(" from " + tablename + "where " + where);
 
-                OdbcCommand command = new OdbcCommand() 
+                OdbcCommand command = new OdbcCommand();
             }
             
         }
