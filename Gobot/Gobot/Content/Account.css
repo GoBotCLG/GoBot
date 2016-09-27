@@ -1,4 +1,65 @@
-﻿h1, h2, h3, h4, h5, h6 {
+﻿/* -------------------------------------------------------------------------------------------------------------------
+                                                    GENERAL ATTRIBUTES
+ ------------------------------------------------------------------------------------------------------------------- */
+html, body {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: auto;
+  background-color: #323232;
+  overflow-x: hidden; }
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+
+textarea, input, button {
+  outline: none;
+  border: none; }
+
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  background-color: transparent; }
+
+a {
+  text-decoration: none;
+  cursor: pointer; }
+
+ul {
+  list-style-type: none; }
+
+b {
+  font-weight: 300; }
+
+img {
+  border: 0; }
+
+.show {
+  visibility: visible;
+  opacity: 1; }
+
+.hide {
+  visibility: hidden;
+  opacity: 0; }
+
+.grey {
+  color: #626262; }
+
+.green {
+  color: #51c24b; }
+
+.red {
+  color: #963434; }
+
+h1, h2, h3, h4, h5, h6 {
   font: italic 900 40px Lato, sans-serif;
   color: white; }
 
@@ -26,12 +87,6 @@ h6 {
 
 span {
   font: 300 14px Lato, sans-serif; }
-
-grey {
-  color: #626262; }
-
-green {
-  color: #51c24b; }
 
 .info {
   position: relative;

@@ -1,4 +1,6 @@
-﻿$height: 130px;
+﻿@import 'global';
+
+$height: 130px;
 
 h1, h2, h3, h4, h5, h6 { font: italic 900 40px Lato, sans-serif; color: white; }
 
@@ -9,9 +11,6 @@ h4 { font-size: 14px; }
 h5 { font-size: 30px; }
 h6 { font-size: 36px; }
 span { font: 300 14px Lato, sans-serif; }
-
-grey { color: #626262; }
-green { color: #51c24b; }
 
 .info {
     position: relative;

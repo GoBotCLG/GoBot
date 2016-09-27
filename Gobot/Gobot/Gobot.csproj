@@ -188,6 +188,12 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Index.css">
+      <DependentUpon>Index.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Index.min.css">
+      <DependentUpon>Index.css</DependentUpon>
+    </Content>
     <Content Include="Content\Menu.css">
       <DependentUpon>Menu.scss</DependentUpon>
     </Content>
@@ -201,7 +207,7 @@
       <DependentUpon>Mixins.css</DependentUpon>
     </Content>
     <Content Include="Content\Style.css">
-      <DependentUpon>Style.scss</DependentUpon>
+      <DependentUpon>_global.scss</DependentUpon>
     </Content>
     <Content Include="Content\Style.min.css">
       <DependentUpon>Style.css</DependentUpon>
@@ -220,12 +226,13 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Menu.scss" />
     <Content Include="Content\Mixins.scss" />
-    <Content Include="Content\Style.scss" />
+    <Content Include="Content\_global.scss" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Content Include="Content\Account.scss" />
+    <Content Include="Content\Index.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
