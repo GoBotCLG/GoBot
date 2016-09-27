@@ -1,3 +1,107 @@
 ﻿@{
     ViewBag.Title = "Home";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Gobotter</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
+    @Styles.Render("~/Content/Index.css")
+</head>
+<body>
+    <div id="header">
+        <div id="sub">
+            <h1>VOUS ÊTES DÉCONNECTÉS.</h1>
+            <h2>Connectez-vous pour profiter de tout les fonctionnalités de Gobot. Si vous n'avez pas de compte, <a href="#">créez-le</a>, c'est gratuit et ça prend moins d'une minute!</h2>
+            <input value="S'INSCRIRE" />
+            <div class="separator">
+                <div class="line"></div>
+                <div class="diamond"></div>
+            </div>
+        </div>
+        <div id="login">
+            @using (Html.BeginForm())
+            {
+                <div id="username">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" />
+                    @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+                   
+                    @*@Html.EditorFor(model => model.UserName)
+                    @Html.ValidationMessageFor(model => model.UserName)*@
+                </div>
+                <div id="password">
+                    <label>Mot de passe</label>
+                    <input type="text"/>
+                    @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+
+                    @*@Html.EditorFor(model => model.UserName)
+                        @Html.ValidationMessageFor(model => model.UserName)*@
+                </div>
+                <input id="signIn" type="submit" value="Connexion" />
+            }
+            <div></div>
+        </div>
+    </div>
+    
+    <div id="main">
+        <div class="side ct">
+            <div class="img"></div>
+            <h1>CLOUD6</h1>
+            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+
+            <div class="team">
+                <div class="names">
+                    <span>Albert</span>
+                    <span>Cecil</span>
+                    <span>Elliot</span>
+                    <span>Marvin</span>
+                    <span>Fergus</span>
+                </div>
+                <div class="roles">
+                    <span>Rifle</span>
+                    <span>Sniper</span>
+                    <span>Rifle</span>
+                    <span>Shotgun</span>
+                    <span>rifle</span>
+                </div>
+            </div>
+        </div>
+        <div id="video">
+
+        </div>
+        <div class="side ct">
+            <div class="img"></div>
+            <h1>CLOUD6</h1>
+            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+
+            <div class="team">
+                <div class="names">
+                    <span>Albert</span>
+                    <span>Cecil</span>
+                    <span>Elliot</span>
+                    <span>Marvin</span>
+                    <span>Fergus</span>
+                </div>
+                <div class="roles">
+                    <span>Rifle</span>
+                    <span>Sniper</span>
+                    <span>Rifle</span>
+                    <span>Shotgun</span>
+                    <span>rifle</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    <script>
+
+    </script>
 }
