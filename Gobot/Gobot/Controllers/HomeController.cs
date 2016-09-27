@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Gobot.Models;
 
 namespace Gobot.Controllers
 {
@@ -6,6 +7,7 @@ namespace Gobot.Controllers
     {
         public ActionResult Index()
         {
+            MySQLWrapper test = new MySQLWrapper("Max", "yolo");
             return View();
         }
     }
