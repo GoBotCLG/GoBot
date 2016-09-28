@@ -10,6 +10,7 @@ $menuColor_active_borderTop: #cc5644;
 $menuColor_active_borderRight: #a84739;
 $menuColor_Ink: #a74232;
 
+$darkGrey: #323232;
 $grey: #626262;
 $green: #51c24b;
 $red: #963434;
@@ -27,7 +28,7 @@ html, body {
     margin: 0;
     padding: 0;
 	height: auto;
-	background-color: #323232;
+	background-color: $darkGrey;
     overflow-x: hidden;
 }
 
@@ -53,3 +54,9 @@ img                         { border: 0; }
 .grey { color: $grey; }
 .green { color: $green; }
 .red { color: $red; }
+
+@mixin box-shadow($params){
+    -webkit-box-shadow: $params rgba(0,0,0,1);
+    -moz-box-shadow: $params rgba(0,0,0,1);
+    box-shadow: $params rgba(0,0,0,1);
+}

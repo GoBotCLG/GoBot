@@ -10,7 +10,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title - Gobotter</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
-    @Styles.Render("~/Content/Index.css")
+    <script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.2.js" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/Home.min.css")
 </head>
 <body>
     <div id="header">
@@ -28,82 +30,135 @@
         <div id="login">
             @using (Html.BeginForm())
             {
-                <div id="username">
-                    <label>Nom d'utilisateur</label>
-                    <input type="text" />
-                    @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
-                   
-                    @*@Html.EditorFor(model => model.UserName)
-                    @Html.ValidationMessageFor(model => model.UserName)*@
-                </div>
-                <div id="password">
-                    <label>Mot de passe</label>
-                    <input type="text"/>
-                    @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+                <div class="left">
+                    <div id="username">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" class="type" />
+                        @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
 
-                    @*@Html.EditorFor(model => model.UserName)
-                        @Html.ValidationMessageFor(model => model.UserName)*@
+                        @*@Html.EditorFor(model => model.UserName)
+                            @Html.ValidationMessageFor(model => model.UserName)*@
+                    </div>
+                    <div id="password">
+                        <label>Mot de passe</label>
+                        <input type="password" class="type" />
+                        @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+
+                        @*@Html.EditorFor(model => model.UserName)
+                            @Html.ValidationMessageFor(model => model.UserName)*@
+                    </div>
                 </div>
-                <input id="signIn" type="submit" value="Connexion" />
+                <div class="right">
+                    <div id="signIn_cont">
+                        <div id="signIn_circle">
+                            <canvas id="canvas"></canvas>
+                            <input type=submit value="" />
+                        </div>
+                        <input id="signIn_rect" type="submit" value="Connexion" />
+                    </div>
+                </div>
             }
             <div></div>
         </div>
     </div>
-    
+
     <div id="main">
-        <div class="side ct">
-            <div class="img"></div>
-            <h1>CLOUD6</h1>
-            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+            <div class="side ct">
+                <div class="img"></div>
+                <h1>CLOUD6</h1>
+                <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
 
-            <div class="team">
-                <div class="names">
-                    <span>Albert</span>
-                    <span>Cecil</span>
-                    <span>Elliot</span>
-                    <span>Marvin</span>
-                    <span>Fergus</span>
+                <div class="team">
+                    <div class="names">
+                        <span>Albert</span>
+                        <span>Cecil</span>
+                        <span>Elliot</span>
+                        <span>Marvin</span>
+                        <span>Fergus</span>
+                    </div>
+                    <div class="roles">
+                        <span>Rifle</span>
+                        <span>Sniper</span>
+                        <span>Rifle</span>
+                        <span>Shotgun</span>
+                        <span>rifle</span>
+                    </div>
                 </div>
-                <div class="roles">
-                    <span>Rifle</span>
-                    <span>Sniper</span>
-                    <span>Rifle</span>
-                    <span>Shotgun</span>
-                    <span>rifle</span>
+            </div>
+            <div id="video">
+                <iframe src="https://player.twitch.tv/?channel=prestigegamingwow" frameborder="0" scrolling="no"></iframe>
+            </div>
+            <div class="side ct">
+                <div class="img"></div>
+                <h1>CLOUD6</h1>
+                <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+
+                <div class="team">
+                    <div class="names">
+                        <span>Albert</span>
+                        <span>Cecil</span>
+                        <span>Elliot</span>
+                        <span>Marvin</span>
+                        <span>Fergus</span>
+                    </div>
+                    <div class="roles">
+                        <span>Rifle</span>
+                        <span>Sniper</span>
+                        <span>Rifle</span>
+                        <span>Shotgun</span>
+                        <span>rifle</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="video">
 
-        </div>
-        <div class="side ct">
-            <div class="img"></div>
-            <h1>CLOUD6</h1>
-            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
 
-            <div class="team">
-                <div class="names">
-                    <span>Albert</span>
-                    <span>Cecil</span>
-                    <span>Elliot</span>
-                    <span>Marvin</span>
-                    <span>Fergus</span>
-                </div>
-                <div class="roles">
-                    <span>Rifle</span>
-                    <span>Sniper</span>
-                    <span>Rifle</span>
-                    <span>Shotgun</span>
-                    <span>rifle</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        (function () {
+            var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+            window.requestAnimationFrame = requestAnimationFrame;
+        })();
+
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        context.fillStyle = '#f67763';
+        context.lineWidth = 1;
+        context.strokeStyle = '#cf513f';
+        var x = canvas.width / 2;
+        var y = canvas.height / 2;
+        var radius = canvas.width / 4;
+        var curPerc = 0;
+        var circ = Math.PI * 2;
+        var quart = Math.PI;
+
+        function animate(current) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            context.beginPath();
+            //context.arc(x, y, radius, -(quart), ((circ) * current) - quart);
+            context.ellipse(x, y, radius *2, radius, 0, -(quart), ((circ) * current) - quart);
+            context.fill();
+            context.stroke();
+
+            curPerc+=5;
+            if (curPerc < 100) {
+                requestAnimationFrame(function () {
+                    animate(curPerc / 100)
+                });
+            }
+        }
+
+        function resetAnimation() {
+            curPerc = 0;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        $("#signIn_rect, #signIn_circle > input").mouseenter(function () {
+            animate();
+        }).mouseleave(function () {
+            resetAnimation();
+        });
+    </script>
 </body>
 </html>
-
-@section Scripts {
-    <script>
-
-    </script>
-}

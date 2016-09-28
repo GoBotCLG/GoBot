@@ -18,5 +18,9 @@
   {
     "outputFile": "Content/Index.css",
     "inputFile": "Content/Index.scss"
+  },
+  {
+    "outputFile": "Content/Home.css",
+    "inputFile": "Content/Home.scss"
   }
 ]

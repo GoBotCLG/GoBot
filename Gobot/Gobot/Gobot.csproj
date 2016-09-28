@@ -188,8 +188,14 @@
     </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Home.css">
+      <DependentUpon>Home.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Home.min.css">
+      <DependentUpon>Home.css</DependentUpon>
+    </Content>
     <Content Include="Content\Index.css">
-      <DependentUpon>Index.scss</DependentUpon>
+      <DependentUpon>Home.scss</DependentUpon>
     </Content>
     <Content Include="Content\Index.min.css">
       <DependentUpon>Index.css</DependentUpon>
@@ -232,7 +238,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Content Include="Content\Account.scss" />
-    <Content Include="Content\Index.scss" />
+    <Content Include="Content\Home.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

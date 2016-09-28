@@ -1,0 +1,202 @@
+﻿@import 'global';
+
+#header {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    height: 280px;
+    width: 100%;
+
+    > div {
+        position: relative;
+        width: 50%;
+        height: 100%;
+    }
+    > #sub {
+        background-color: $menuColor;
+        float: left;
+        $marginLeft: 65px;
+
+        > h1 {
+            margin-bottom: 0;
+            margin-left: $marginLeft;
+            font: italic 900 50px $font;
+            color: white;
+            text-transform: uppercase;
+        }
+        > h2 {
+            margin-left: $marginLeft;
+            
+            max-width: 60%;
+            font: 300 16px $font;
+            color: white;
+
+            > a {
+                text-decoration: underline;
+                color: white;
+            }
+            > a:hover { color: $off-white; }
+        }
+
+        $aColor: #9a483b;
+        $aBGColor: #f67763;
+        $aBorderColor: #cf513f;
+
+        > a {
+            display: block;
+            position: relative;
+            width: 290px;
+            height: auto;
+            background-color: $aBGColor;
+            color: $aColor;
+            border: 1px solid $aBorderColor;
+            margin: 28px auto;
+            font: italic 900 30px $font;
+            padding: 16px 0;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        > a:hover {
+            border-color: $aColor;
+            @include box-shadow(1px 1px 14px -4px);
+        }
+    }
+    > #login {
+        
+        background-color: $off-white; 
+        float: right;
+
+        > form {
+            height: 100%;
+            width: 100%;
+
+            > div {
+                width: 50%;
+                height: 100%;
+            }
+
+            > .left {
+                float: left;
+
+                > div {
+                    position: relative;
+                    margin: 0 106px 0 16%;
+
+                    $fontSize: 24px;
+                    > label {
+                        display: block;
+                        float: left;
+                        clear: both;
+                        font: italic 900 $fontSize $font;
+                        margin: 24px 0 5px 0;
+                        text-transform: uppercase;
+                        color: $darkGrey;
+                    }
+                    > .type {
+                        float: left;
+                        clear: both;
+                        font: 400 $fontSize $font;
+                        width: 325px;
+                        height: 60px;
+                        border: 1px solid #b9b9b9;
+                        text-indent: 15px;
+                    }
+                }
+            }
+            > .right {
+                float: right;
+            }
+        }
+    }
+}
+
+
+// Sign in button
+#signIn_cont {
+    position: relative;
+    display: block;
+    top: 27px; // ################################################################################ SET THIS IN JAVASCRIPT
+    width: 330px !important;
+    height: 225px !important;
+    margin: 0 auto;
+
+}
+    #signIn_rect {
+        position: absolute;
+        top: 65px;
+        width: 100%;
+        height: 95px;
+        margin: auto 0;
+        background-color: #d9d9d9;
+        border: 1px solid #a8a8a8;
+        font: italic 900 32px $font;
+        text-transform: uppercase;
+        color: $darkGrey;
+        cursor: pointer;
+    }
+
+    #signIn_circle {
+        position: relative;
+        height: 225px;
+        width: 225px;
+        shape-outside: circle(50%);
+        border-radius: 50%;
+        margin: 0 auto !important;
+        background-color: #e6e6e6;
+        border: 1px solid #d2d2d2;
+
+        > input {
+            display: block;
+            position: relative;
+            top: 17px;
+            width: 190px;
+            height: 190px;
+            shape-outside: circle(50%);
+            border-radius: 50%;
+            margin: 0 auto !important;
+            background-color: #d9d9d9;
+            border: 1px solid #a8a8a8;
+            padding: 0;
+            cursor: pointer;
+        }
+    }
+    
+#canvas {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 101%;
+    height: 101%;
+}
+
+#main {
+    position: relative;
+    width: 100%;
+    height: 680px;
+
+    > .side {
+        position: relative;
+        float: left;
+        width: 15%;
+        height: 100%;
+    }
+
+    > #video {
+        position: relative;
+        float: left;
+        width: 70%;
+        height: 100%;
+
+        > iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 1600px) {
+
+}
