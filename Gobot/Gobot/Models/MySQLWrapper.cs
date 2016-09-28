@@ -66,8 +66,13 @@ namespace Gobot.Models
                         result[result.Count - 1].Add(reader[i]);
                     }
                 }
+
+                return result;
             }
-            return new List<List<object>>();
+            else
+            {
+                return new List<List<object>>();
+            }
         }
 
         /// <summary>
@@ -160,6 +165,13 @@ namespace Gobot.Models
             }
         }
 
+        /// <summary>
+        /// Delete rows matching with the where statement
+        /// </summary>
+        /// <param name="tablename">Name of the table</param>
+        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Surname = ?</param>
+        /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
+        /// <returns></returns>
         public int Delete(string tablename, string where, List<OdbcParameter> conditions)
         {
             if(connection != null & tablename != "")
@@ -186,6 +198,74 @@ namespace Gobot.Models
             else
             {
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Executes a stored procedure
+        /// </summary>
+        /// <param name="procedurename">Name of the procedure</param>
+        /// <param name="args">All the parameters for the procedure</param>
+        public void Procedure(string procedurename, params OdbcParameter[] args)
+        {
+            if(connection != null & procedurename != "")
+            {
+                StringBuilder sql = new StringBuilder("call " + procedurename + "(");
+                foreach(OdbcParameter arg in args)
+                {
+                    sql.Append("?,");
+                }
+                sql.Remove(sql.Length - 1, 1);
+                sql.Append(")");
+
+                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+
+                foreach(OdbcParameter arg in args)
+                {
+                    command.Parameters.Add(arg);
+                }
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public List<List<object>> Function(string functionname, params OdbcParameter[] args)
+        {
+            if(connection != null & functionname != "")
+            {
+                StringBuilder sql = new StringBuilder("select " + functionname + "(");
+                foreach(OdbcParameter arg in args)
+                {
+                    sql.Append("?,");
+                }
+                sql.Remove(sql.Length - 1, 1);
+                sql.Append(")");
+
+                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+
+                foreach (OdbcParameter arg in args)
+                {
+                    command.Parameters.Add(arg);
+                }
+
+                OdbcDataReader reader = command.ExecuteReader();
+                List<List<object>> result = new List<List<object>>();
+
+                while(reader.Read())
+                {
+                    result.Add(new List<object>());
+
+                    for(int i = 0; i < reader.FieldCount; i++)
+                    {
+                        result[result.Count - 1].Add(reader[i]);
+                    }
+                }
+
+                return result;
+            }
+            else
+            {
+                return new List<List<object>>();
             }
         }
     }
