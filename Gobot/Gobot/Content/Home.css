@@ -150,19 +150,56 @@ img {
   width: 330px !important;
   height: 225px !important;
   margin: 0 auto; }
+  #signIn_cont > p {
+    position: absolute; }
 
 #signIn_rect {
   position: absolute;
   top: 65px;
-  width: 100%;
+  width: 330px;
   height: 95px;
   margin: auto 0;
   background-color: #d9d9d9;
-  border: 1px solid #a8a8a8;
   font: italic 900 32px Lato, Arial, sans-serif;
   text-transform: uppercase;
   color: #323232;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 999; }
+
+#signIn_border {
+  position: absolute;
+  left: -1px;
+  top: 64px;
+  width: 332px;
+  height: 97px; }
+
+#signIn_border:before, #signIn_border:after, #signIn_border > :last-child:before, #signIn_border > :last-child:after {
+  position: absolute;
+  width: 83px;
+  height: 48px;
+  border-color: #a8a8a8;
+  border-style: solid;
+  content: ' '; }
+
+#signIn_border:before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px; }
+
+#signIn_border:after {
+  top: 0;
+  right: 0;
+  border-width: 1px 1px 0 0; }
+
+#signIn_border > :last-child:before {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0; }
+
+#signIn_border > :last-child:after {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1px 1px; }
 
 #signIn_circle {
   position: relative;

@@ -54,7 +54,8 @@
                             <canvas id="canvas"></canvas>
                             <input type=submit value="" />
                         </div>
-                        <input id="signIn_rect" type="submit" value="Connexion" />
+                        <input id="signIn_rect" type="submit" value="Connexion">
+                        <div id="signIn_border"><p></p></div>
                     </div>
                 </div>
             }
@@ -63,54 +64,54 @@
     </div>
 
     <div id="main">
-            <div class="side ct">
-                <div class="img"></div>
-                <h1>CLOUD6</h1>
-                <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+        <div class="side ct">
+            <div class="img"></div>
+            <h1>CLOUD6</h1>
+            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
 
-                <div class="team">
-                    <div class="names">
-                        <span>Albert</span>
-                        <span>Cecil</span>
-                        <span>Elliot</span>
-                        <span>Marvin</span>
-                        <span>Fergus</span>
-                    </div>
-                    <div class="roles">
-                        <span>Rifle</span>
-                        <span>Sniper</span>
-                        <span>Rifle</span>
-                        <span>Shotgun</span>
-                        <span>rifle</span>
-                    </div>
+            <div class="team">
+                <div class="names">
+                    <span>Albert</span>
+                    <span>Cecil</span>
+                    <span>Elliot</span>
+                    <span>Marvin</span>
+                    <span>Fergus</span>
                 </div>
-            </div>
-            <div id="video">
-                <iframe src="https://player.twitch.tv/?channel=prestigegamingwow" frameborder="0" scrolling="no"></iframe>
-            </div>
-            <div class="side ct">
-                <div class="img"></div>
-                <h1>CLOUD6</h1>
-                <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
-
-                <div class="team">
-                    <div class="names">
-                        <span>Albert</span>
-                        <span>Cecil</span>
-                        <span>Elliot</span>
-                        <span>Marvin</span>
-                        <span>Fergus</span>
-                    </div>
-                    <div class="roles">
-                        <span>Rifle</span>
-                        <span>Sniper</span>
-                        <span>Rifle</span>
-                        <span>Shotgun</span>
-                        <span>rifle</span>
-                    </div>
+                <div class="roles">
+                    <span>Rifle</span>
+                    <span>Sniper</span>
+                    <span>Rifle</span>
+                    <span>Shotgun</span>
+                    <span>rifle</span>
                 </div>
             </div>
         </div>
+        <div id="video">
+            <iframe src="https://player.twitch.tv/?channel=prestigegamingwow" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div class="side ct">
+            <div class="img"></div>
+            <h1>CLOUD6</h1>
+            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+
+            <div class="team">
+                <div class="names">
+                    <span>Albert</span>
+                    <span>Cecil</span>
+                    <span>Elliot</span>
+                    <span>Marvin</span>
+                    <span>Fergus</span>
+                </div>
+                <div class="roles">
+                    <span>Rifle</span>
+                    <span>Sniper</span>
+                    <span>Rifle</span>
+                    <span>Shotgun</span>
+                    <span>rifle</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script>
@@ -131,17 +132,17 @@
         var curPerc = 0;
         var circ = Math.PI * 2;
         var quart = Math.PI;
+        var lastOver;
 
         function animate(current) {
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             context.beginPath();
-            //context.arc(x, y, radius, -(quart), ((circ) * current) - quart);
-            context.ellipse(x, y, radius *2, radius, 0, -(quart), ((circ) * current) - quart);
+            context.ellipse(x, y, radius * 2, radius, 0, -(quart), ((circ) * current) - quart);
             context.fill();
             context.stroke();
 
-            curPerc+=5;
+            curPerc += 8;
             if (curPerc < 100) {
                 requestAnimationFrame(function () {
                     animate(curPerc / 100)
@@ -155,8 +156,16 @@
         }
 
         $("#signIn_rect, #signIn_circle > input").mouseenter(function () {
-            animate();
+            if (lastOver.attr('id') != "signIn_rect" && lastOver.parent().attr('id') != "signIn_circle")
+                animate();
+
+            lastOver = $(this);
         }).mouseleave(function () {
+            resetAnimation();
+        });
+
+        $("#header").not("#signIn_circle > input, #signIn_rect").mouseover(function () {
+            lastOver = $(this);
             resetAnimation();
         });
     </script>
