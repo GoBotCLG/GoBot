@@ -229,44 +229,44 @@ namespace Gobot.Models
             }
         }
 
-        //public List<List<object>> Function(string functionname, params OdbcParameter[] args)
-        //{
-        //    if(connection != null & functionname != "")
-        //    {
-        //        StringBuilder sql = new StringBuilder("select " + functionname + "(");
-        //        foreach(OdbcParameter arg in args)
-        //        {
-        //            sql.Append("?,");
-        //        }
-        //        sql.Remove(sql.Length - 1, 1);
-        //        sql.Append(")");
+        public List<List<object>> Function(string functionname, params OdbcParameter[] args)
+        {
+            if (connection != null & functionname != "")
+            {
+                StringBuilder sql = new StringBuilder("select " + functionname + "(");
+                foreach (OdbcParameter arg in args)
+                {
+                    sql.Append("?,");
+                }
+                sql.Remove(sql.Length - 1, 1);
+                sql.Append(")");
 
-        //        OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-        //        foreach (OdbcParameter arg in args)
-        //        {
-        //            command.Parameters.Add(arg);
-        //        }
+                foreach (OdbcParameter arg in args)
+                {
+                    command.Parameters.Add(arg);
+                }
 
-        //        OdbcDataReader reader = command.ExecuteReader();
-        //        List<List<object>> result = new List<List<object>>();
+                OdbcDataReader reader = command.ExecuteReader();
+                List<List<object>> result = new List<List<object>>();
 
-        //        while(reader.Read())
-        //        {
-        //            result.Add(new List<object>());
+                while (reader.Read())
+                {
+                    result.Add(new List<object>());
 
-        //            for(int i = 0; i < reader.FieldCount; i++)
-        //            {
-        //                result[result.Count - 1].Add(reader[i]);
-        //            }
-        //        }
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        result[result.Count - 1].Add(reader[i]);
+                    }
+                }
 
-        //        return result;
-        //    }
-        //    else
-        //    {
-        //        return new List<List<object>>();
-        //    }
-        //}
+                return result;
+            }
+            else
+            {
+                return new List<List<object>>();
+            }
+        }
     }
 }
