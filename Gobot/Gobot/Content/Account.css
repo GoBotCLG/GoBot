@@ -12,14 +12,6 @@ html, body {
   background-color: #323232;
   overflow-x: hidden; }
 
-.noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
 textarea, input, button {
   outline: none;
   border: none; }
@@ -37,9 +29,6 @@ a {
 
 ul {
   list-style-type: none; }
-
-b {
-  font-weight: 300; }
 
 img {
   border: 0; }
@@ -60,6 +49,9 @@ img {
 
 .red {
   color: #963434; }
+
+.white {
+  color: white; }
 
 h1, h2, h3, h4, h5, h6 {
   font: italic 900 40px Lato, sans-serif;

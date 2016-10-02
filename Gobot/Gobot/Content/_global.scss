@@ -32,31 +32,31 @@ html, body {
     overflow-x: hidden;
 }
 
-.noselect {
+textarea, input, button 	{ outline: none; border: none; }
+button                  	{ margin: 0; padding: 0; border: none; cursor: pointer; background-color: transparent; }
+a                       	{ text-decoration: none; cursor: pointer; }
+ul 					        { list-style-type: none; }
+img                         { border: 0; }
+
+.show { visibility: visible; opacity: 1; }
+.hide { visibility: hidden; opacity: 0; }
+
+.grey   { color: $grey; }
+.green  { color: $green; }
+.red    { color: $red; }
+.white  { color: white; }
+
+@mixin box-shadow($params){
+    -webkit-box-shadow: $params rgba(0,0,0,1);
+    -moz-box-shadow: $params rgba(0,0,0,1);
+    box-shadow: $params rgba(0,0,0,1);
+}
+
+@mixin noselect() {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-textarea, input, button 	{ outline: none; border: none; }
-button                  	{ margin: 0; padding: 0; border: none; cursor: pointer; background-color: transparent; }
-a                       	{ text-decoration: none; cursor: pointer; }
-ul 					        { list-style-type: none; }
-b 					        { font-weight: 300; }
-img                         { border: 0; }
-
-.show { visibility: visible; opacity: 1; }
-.hide { visibility: hidden; opacity: 0; }
-
-.grey { color: $grey; }
-.green { color: $green; }
-.red { color: $red; }
-
-@mixin box-shadow($params){
-    -webkit-box-shadow: $params rgba(0,0,0,1);
-    -moz-box-shadow: $params rgba(0,0,0,1);
-    box-shadow: $params rgba(0,0,0,1);
 }

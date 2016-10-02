@@ -65,9 +65,10 @@
 
     <div id="main">
         <div class="side ct">
-            <div class="img"></div>
+            <img src="~/Images/ct_side.png" />
             <h1>CLOUD6</h1>
-            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+            <h2><b class="green">49</b> <img src="~/Images/games_won.png" /> <b class="white">90</b> <img src="~/Images/games_played.png" /></h2>
+            <h2></h2>
 
             <div class="team">
                 <div class="names">
@@ -87,12 +88,12 @@
             </div>
         </div>
         <div id="video">
-            <iframe src="https://player.twitch.tv/?channel=prestigegamingwow" frameborder="0" scrolling="no"></iframe>
+            <iframe src="https://player.twitch.tv/?channel=esl_csgo" frameborder="0" scrolling="no" height="378" width="620"></iframe>
         </div>
-        <div class="side ct">
-            <div class="img"></div>
+        <div class="side t">
+            <img src="~/Images/t_side.png" />
             <h1>CLOUD6</h1>
-            <h2><b class="green">55</b> VICTOIRES <b class="grey"> / </b><b class="red">49</b> DÉFAITES</h2>
+            <h2><b class="green">49</b> <img src="~/Images/games_won.png" /> <b class="white">90</b> <img src="~/Images/games_played.png" /></h2>
 
             <div class="team">
                 <div class="names">
@@ -142,8 +143,10 @@
             context.fill();
             context.stroke();
 
-            curPerc += 8;
-            if (curPerc < 100) {
+            var jump = 12;
+            curPerc += jump;
+
+            if (curPerc - jump < 100) {
                 requestAnimationFrame(function () {
                     animate(curPerc / 100)
                 });
@@ -168,6 +171,30 @@
             lastOver = $(this);
             resetAnimation();
         });
+
+        $(document).ready(function () {
+            onResize();
+        });
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        function onResize() {
+            $("#main").height($(window).height() - $("#header").height());
+            $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
+
+            if ($(window).width() <= 1520) {
+                $("#video").prependTo("#main");
+                $(".side").css("top", 0);
+            }
+            else {
+                $("#video").insertBefore(".t");
+                $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
+            }
+
+            $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
+        }
     </script>
 </body>
 </html>
