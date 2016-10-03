@@ -40,7 +40,7 @@ namespace Gobot.Controllers
         }
 
         [HttpPost]
-        ActionResult Index(string UserName, string PassWord)
+        public ActionResult Index(string UserName, string PassWord)
         {
             MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
             List<List<object>> ConnectResult = Bd.Function("Connect", new OdbcParameter(":username", UserName), new OdbcParameter(":password", PassWord));
@@ -57,7 +57,7 @@ namespace Gobot.Controllers
         /// Returns full informations for the current match in JSON form
         /// </summary>
         /// <returns>JSON data of the current match</returns>
-        JsonResult GetCurrentStats()
+        public JsonResult GetCurrentStats()
         {
             MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
 
