@@ -57,7 +57,7 @@ namespace Gobot.Controllers
         /// Returns full informations for the current match in JSON form
         /// </summary>
         /// <returns>JSON data of the current match</returns>
-        string GetCurrentStats()
+        JsonResult GetCurrentStats()
         {
             MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
 
@@ -65,8 +65,8 @@ namespace Gobot.Controllers
 
             string Team1 = InfoLiveMatch[0][1].ToString();
             string Team2 = InfoLiveMatch[0][3].ToString();
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(new[] { /*2 Teams*/
+            
+            return Json(new[] { /*2 Teams*/
                 new { /*Team 1*/
                     TeamId = InfoLiveMatch[0][0].ToString(),
                     TeamName = Team1.Split('"')[1],
