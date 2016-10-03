@@ -159,12 +159,16 @@
         }
 
         $("#signIn_rect, #signIn_circle > input").mouseenter(function () {
-            if (lastOver.attr('id') != "signIn_rect" && lastOver.parent().attr('id') != "signIn_circle")
-                animate();
+            if ($(window).width() > 1600) {
+                if (lastOver.attr('id') != "signIn_rect" && lastOver.parent().attr('id') != "signIn_circle")
+                    animate();
 
-            lastOver = $(this);
+                lastOver = $(this);
+            }
         }).mouseleave(function () {
-            resetAnimation();
+            if ($(window).width() > 1600) {
+                resetAnimation();
+            }
         });
 
         $("#header").not("#signIn_circle > input, #signIn_rect").mouseover(function () {
@@ -185,11 +189,15 @@
             $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
 
             if ($(window).width() <= 1520) {
-                $("#video").prependTo("#main");
+                if (!$("#video").is(':first-child'))
+                    $("#video").prependTo("#main");
+
                 $(".side").css("top", 0);
             }
             else {
-                $("#video").insertBefore(".t");
+                if ($("#video").is(':first-child')) 
+                    $("#video").insertBefore(".t");
+
                 $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
             }
 
