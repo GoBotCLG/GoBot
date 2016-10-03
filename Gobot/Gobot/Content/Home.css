@@ -297,6 +297,13 @@ img {
     color: #4c4c4c;
     text-align: left; }
 
+@media screen and (max-width: 1600px) {
+  #signIn_circle {
+    display: none; }
+  #signIn_border:before, #signIn_border:after, #signIn_border > :last-child:before, #signIn_border > :last-child:after {
+    width: 100%;
+    transition: width 1s; } }
+
 @media screen and (max-width: 1520px) {
   .side {
     float: right;
@@ -304,4 +311,42 @@ img {
     padding: 5% 0; }
   #video {
     width: 100%; } }
+
+@media screen and (max-width: 650px) {
+  .side {
+    width: 100%; }
+  .ct:before {
+    content: "";
+    position: absolute;
+    left: 20%;
+    bottom: 0;
+    height: 1px;
+    width: 60%;
+    /* or 100px */
+    border-bottom: 2px solid #4c4c4c; }
+  .ct {
+    padding-bottom: 7%; }
+  .t {
+    padding-top: 7%; } }
+
+@media screen and (max-height: 900px) and (min-width: 1520px) {
+  .team {
+    display: none; } }
+
+@media screen and (max-height: 675px) and (min-width: 1520px) {
+  .side > img {
+    width: 30%; }
+  .side > h1 {
+    margin-top: 10px; } }
+
+@media screen and (max-height: 570px) and (min-width: 1520px) {
+  .side > img {
+    display: none; }
+  .side > h1 {
+    margin-top: 0; } }
+
+@media screen and (max-height: 440px) and (min-width: 1520px) {
+  .side {
+    opacity: 0;
+    height: 1px; } }
 
