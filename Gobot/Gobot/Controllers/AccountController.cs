@@ -1,5 +1,9 @@
 ﻿using System.Web.Mvc;
 using Gobot.Models;
+using System.Data.Odbc;
+using System.Collections.Generic;
+using System.Data;
+using System.ComponentModel;
 
 namespace Gobot.Controllers
 {
@@ -14,12 +18,39 @@ namespace Gobot.Controllers
         [HttpGet]
         public ActionResult Register()
         {
-            return View();
+            RegisterViewModel user = new RegisterViewModel();
+            return View(user);
         }
 
         [HttpPost]
-        public ActionResult Register(string UserName, string PassWord)
+        public ActionResult Register(RegisterViewModel user)
         {
+            if(user.Password == user.ConfirmPassword)
+            {
+                MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+                string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
+                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", ""), new OdbcParameter(":Image", new byte[0]), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
+
+                OdbcParameter username = new OdbcParameter(":Username", user.Username);
+                List<OdbcParameter> parameters = new List<OdbcParameter>();
+                parameters.Add(username);
+
+                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, encPassword.Substring(0, 64))));
+                User sessionuser = new User();
+                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
+                sessionuser.Email = sessionuser.Username = UserResult.Rows[0]["Email"].ToString();
+                byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
+                TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
+                sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
+                sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                Session["User"] = sessionuser;
+            }
 
             return RedirectToAction("Index", "Watch");
         }

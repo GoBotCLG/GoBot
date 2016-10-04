@@ -14,7 +14,7 @@ namespace Gobot.Models
 
         public MySQLWrapper(string user, string password)
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.2 UNICODE Driver};Database=gobot;server=67.68.203.251;Port=3306;UID=" + user + ";PWD=" + password + ";");
+            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=67.68.203.251;PORT=3306;DATABASE=gobot;USER=" + user + ";PASSWORD=" + password + ";OPTION=3;");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Gobot.Models
                 
                 if(where != "")
                 {
-                    sql.Append("where " + where);
+                    sql.Append(" where " + where);
 
                 }
 
@@ -201,9 +201,10 @@ namespace Gobot.Models
         /// </summary>
         /// <param name="procedurename">Name of the procedure</param>
         /// <param name="args">All the parameters for the procedure</param>
-        public void Procedure(string procedurename, params OdbcParameter[] args)
+        public DataTable Procedure(string procedurename, params OdbcParameter[] args)
         {
             if(connection != null & procedurename != "")
+
             {
                 StringBuilder sql = new StringBuilder("call " + procedurename + "(");
                 foreach(OdbcParameter arg in args)
@@ -219,8 +220,24 @@ namespace Gobot.Models
                 {
                     command.Parameters.Add(arg);
                 }
+                DataTable result = new DataTable();
+                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                adapt.Fill(result);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(procedurename + "(");
+                foreach (OdbcParameter param in args)
+                {
+                    sb.Append(param.Value + ",");
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append(")");
+                result.TableName = sb.ToString();
 
-                command.ExecuteNonQuery();
+                return result;
+            }
+            else
+            {
+                return null;
             }
         }
 
