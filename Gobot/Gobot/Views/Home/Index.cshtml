@@ -201,7 +201,18 @@
                 $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
             }
 
+            if ($(window).width() <= 1600) {
+                var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
+                $("#username > label, #password > label").css("margin-top", pos);
+            }
+            else
+                $("#username > label, #password > label").css("margin-top", 24);
+
             $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
+        }
+
+        function removePx(s) {
+            return s.substring(0, s.indexOf('px'));
         }
     </script>
 </body>
