@@ -62,10 +62,13 @@ namespace Gobot.Controllers
                 DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username));
                 User sessionuser = new User();
                 sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
-                sessionuser.Email = sessionuser.Username = UserResult.Rows[0]["Email"].ToString();
-                byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
-                TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
-                sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
+                if (UserResult.Rows[0]["Image"].GetType() != typeof(System.DBNull))
+                {
+                    byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
+                    TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
+                    sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                }
                 sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
                 sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
                 sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
