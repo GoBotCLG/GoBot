@@ -56,7 +56,7 @@ namespace Gobot.Controllers
                 DataTable pass = Bd.Select("user", "Username = ?", parameters, "Password");
 
 
-                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
+                DataTable UserResult = Bd.Procedure("Connect", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
 
                 if (UserResult.Rows.Count > 0)
                 {

@@ -25,7 +25,7 @@ namespace Gobot.Models
         [Required]
         [Display(Name = "Adresse courriel")]
         [EmailAddress]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [MinLength(10, ErrorMessage = "Votre mot de passe doit comporter au moins {0} caractères")]

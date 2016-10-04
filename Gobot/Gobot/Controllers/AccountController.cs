@@ -11,7 +11,31 @@ namespace Gobot.Controllers
     {
         public ActionResult Index()
         {
+            MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+            DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", ((User)Session["User"]).Username));
 
+            if (UserResult.Rows.Count > 0)
+            {
+                User sessionuser = new User();
+                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
+                sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
+                if (UserResult.Rows[0]["Image"].GetType() != typeof(System.DBNull))
+                {
+                    byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
+                    TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
+                    sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                }
+                sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
+                sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                Session["User"] = sessionuser;
+
+                return RedirectToAction("Index", "Watch");
+            }
             return View();
         }
 
@@ -29,7 +53,7 @@ namespace Gobot.Controllers
             {
                 MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
                 string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
-                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", ""), new OdbcParameter(":Image", new byte[0]), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
+                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":Image", new byte[0]), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
 
                 OdbcParameter username = new OdbcParameter(":Username", user.Username);
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
