@@ -55,24 +55,18 @@ namespace Gobot.Models
                     }
                 }
 
-                OdbcDataReader reader = command.ExecuteReader();
+                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
 
-                List<List<object>> result = new List<List<object>>();
+                DataTable result = new DataTable();
 
-                while (reader.Read())
-                {
-                    result.Add(new List<object>());
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        result[result.Count - 1].Add(reader[i]);
-                    }
-                }
+                adapt.Fill(result);
+                result.TableName = tablename;
 
                 return result;
             }
             else
             {
-                return new DataTable();
+                return null;
             }
         }
 
@@ -230,7 +224,7 @@ namespace Gobot.Models
             }
         }
 
-        public List<List<object>> Function(string functionname, params OdbcParameter[] args)
+        public DataTable Function(string functionname, params OdbcParameter[] args)
         {
             if (connection != null & functionname != "")
             {
@@ -249,24 +243,24 @@ namespace Gobot.Models
                     command.Parameters.Add(arg);
                 }
 
-                OdbcDataReader reader = command.ExecuteReader();
-                List<List<object>> result = new List<List<object>>();
+                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                DataTable result = new DataTable();
 
-                while (reader.Read())
+                adapt.Fill(result);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(functionname + "(");
+                foreach(OdbcParameter param in args)
                 {
-                    result.Add(new List<object>());
-
-                    for (int i = 0; i < reader.FieldCount; i++)
-                    {
-                        result[result.Count - 1].Add(reader[i]);
-                    }
+                    sb.Append(param.Value + ",");
                 }
-
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append(")");
+                result.TableName = sb.ToString();
                 return result;
             }
             else
             {
-                return new List<List<object>>();
+                return null;
             }
         }
     }
