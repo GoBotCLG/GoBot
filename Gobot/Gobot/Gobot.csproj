@@ -192,6 +192,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
     <Compile Include="Models\Bot.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\MySQLWrapper.cs" />
