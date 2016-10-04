@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Odbc;
 using System.Text;
+using System.Data;
 
 namespace Gobot.Models
 {
@@ -24,7 +25,7 @@ namespace Gobot.Models
         /// <param name="condition">Collection of OdbcParameter (In the same order as in "where" condition</param>
         /// <param name="columnnames">Names of the needed columns</param>
         /// <returns>2D list of data returned by the query</returns>
-        public List<List<object>> Select(string tablename, string where, List<OdbcParameter> conditions, params string[] columnnames)
+        public DataTable Select(string tablename, string where, List<OdbcParameter> conditions, params string[] columnnames)
         {
             if (connection != null & columnnames.Length > 0 & tablename != "")
             {
@@ -71,7 +72,7 @@ namespace Gobot.Models
             }
             else
             {
-                return new List<List<object>>();
+                return new DataTable();
             }
         }
 

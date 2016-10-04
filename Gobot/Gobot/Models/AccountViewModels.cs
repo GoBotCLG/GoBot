@@ -14,9 +14,6 @@ namespace Gobot.Models
         [DataType(DataType.Password)]
         [Display(Name = "Mot de passe")]
         public string Password { get; set; }
-
-        [Display(Name = "Reconnecter automatiquement?")]
-        public bool RememberMe { get; set; }
     }
 
     public class RegisterViewModel
