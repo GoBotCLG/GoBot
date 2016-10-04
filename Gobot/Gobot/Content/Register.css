@@ -12,14 +12,6 @@ html, body {
   background-color: #323232;
   overflow-x: hidden; }
 
-.noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
 textarea, input, button {
   outline: none;
   border: none; }
@@ -37,9 +29,6 @@ a {
 
 ul {
   list-style-type: none; }
-
-b {
-  font-weight: 300; }
 
 img {
   border: 0; }
@@ -61,33 +50,12 @@ img {
 .red {
   color: #963434; }
 
-#header {
-  position: relative;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 0;
-  height: 280px;
-  width: 100%; }
-  #header > div {
-    position: relative;
-    width: 50%;
-    height: 100%; }
-  #header > #sub {
-    background-color: #f16651;
-    float: left; }
-    #header > #sub > h1 {
-      font: italic 900 50px Lato, Arial, sans-serif;
-      color: white; }
-    #header > #sub > h2 {
-      font: 300 16px Lato, Arial, sans-serif;
-      color: white; }
-      #header > #sub > h2 > a {
-        text-decoration: underline;
-        color: white; }
-      #header > #sub > h2 > a:hover {
-        color: #eeeeee; }
-  #header > #login {
-    background-color: #eeeeee;
-    float: right; }
+.white {
+  color: white; }
+
+label {
+  color: white !important; }
+
+input {
+  color: black !important; }
 

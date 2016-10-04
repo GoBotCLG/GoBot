@@ -1,5 +1,7 @@
-﻿@{
-    ViewBag.Title = "Home";
+﻿@model Gobot.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Connection";
     Layout = null;
 }
 
@@ -21,7 +23,7 @@
             <h2>
                 Connectez-vous pour profiter de tout les fonctionnalités de Gobot. Si vous n'avez pas de compte, <a href="#">créez-le</a>, ça prend moins d'une minute et c'est gratuit!
             </h2>
-            <a href="#">S'INSCRIRE</a>
+            <a href="@Url.Action("Register", "Account")">S'INSCRIRE</a>
             <div class="separator">
                 <div class="line"></div>
                 <div class="diamond"></div>
@@ -32,20 +34,16 @@
             {
                 <div class="left">
                     <div id="username">
-                        <label>Nom d'utilisateur</label>
-                        <input type="text" class="type" />
-                        @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+                        @Html.LabelFor(model => model.Username)
 
-                        @*@Html.EditorFor(model => model.UserName)
-                            @Html.ValidationMessageFor(model => model.UserName)*@
+                        @Html.EditorFor(model => model.Username)
+                            @Html.ValidationMessageFor(model => model.Username)
                     </div>
                     <div id="password">
-                        <label>Mot de passe</label>
-                        <input type="password" class="type" />
-                        @*@Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })*@
+                        @Html.LabelFor(model => model.Password)
 
-                        @*@Html.EditorFor(model => model.UserName)
-                            @Html.ValidationMessageFor(model => model.UserName)*@
+                        @Html.EditorFor(model => model.Password)
+                        @Html.ValidationMessageFor(model => model.Password)
                     </div>
                 </div>
                 <div class="right">
@@ -178,6 +176,9 @@
 
         $(document).ready(function () {
             onResize();
+            $(".single-line").removeClass("single-line");
+            $(".text-box").removeClass("text-box");
+            $("#username > input, #password > input").addClass("type");
         });
 
         $(window).resize(function () {

@@ -1,0 +1,65 @@
+﻿@model Gobot.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "S'enregistrer";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title - Gobotter</title>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
+    <script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.2.js" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/Register.min.css")
+</head>
+<body>
+    <div id="back">
+        <img src="~/Images/back_sm_white.png"/>
+        <a href="@Url.Action("Index", "Home")">Retour</a>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <img src="~/Images/gobot_logo.png"/>
+        @Html.LabelFor(model => model.Username)
+        @Html.EditorFor(model => model.Username)
+        @Html.ValidationMessageFor(model => model.Username)
+
+        @Html.LabelFor(model => model.email)
+        @Html.EditorFor(model => model.email)
+        @Html.ValidationMessageFor(model => model.email)
+
+        @Html.LabelFor(model => model.Password)
+        @Html.EditorFor(model => model.Password)
+        @Html.ValidationMessageFor(model => model.Password)
+
+        @Html.LabelFor(model => model.ConfirmPassword)
+        @Html.EditorFor(model => model.ConfirmPassword)
+        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+
+        <div id="go"></div>
+        <input type="submit" value="ok">
+    }
+
+    <script>
+        $(document).ready(function () {
+            onResize();
+        });
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        function onResize() {
+
+        }
+
+        function removePx(s) {
+            return s.substring(0, s.indexOf('px'));
+        }
+    </script>
+</body>
+</html>

@@ -220,23 +220,17 @@
     <Content Include="Content\Home.min.css">
       <DependentUpon>Home.css</DependentUpon>
     </Content>
-    <Content Include="Content\Index.css">
-      <DependentUpon>Home.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\Index.min.css">
-      <DependentUpon>Index.css</DependentUpon>
-    </Content>
     <Content Include="Content\Menu.css">
       <DependentUpon>Menu.scss</DependentUpon>
     </Content>
     <Content Include="Content\Menu.min.css">
       <DependentUpon>Menu.css</DependentUpon>
     </Content>
-    <Content Include="Content\Mixins.css">
-      <DependentUpon>Mixins.scss</DependentUpon>
+    <Content Include="Content\Register.css">
+      <DependentUpon>Register.scss</DependentUpon>
     </Content>
-    <Content Include="Content\Mixins.min.css">
-      <DependentUpon>Mixins.css</DependentUpon>
+    <Content Include="Content\Register.min.css">
+      <DependentUpon>Register.css</DependentUpon>
     </Content>
     <Content Include="Content\Style.css">
       <DependentUpon>_global.scss</DependentUpon>
@@ -257,7 +251,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Menu.scss" />
-    <Content Include="Content\Mixins.scss" />
     <Content Include="Content\_global.scss" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -273,6 +266,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\Register.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -308,6 +302,7 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Views\Account\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

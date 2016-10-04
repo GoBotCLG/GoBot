@@ -35,7 +35,7 @@ namespace Gobot.Controllers
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
                 parameters.Add(username);
 
-                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, encPassword.Substring(0, 64))));
+                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username));
                 User sessionuser = new User();
                 sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
                 sessionuser.Email = sessionuser.Username = UserResult.Rows[0]["Email"].ToString();
