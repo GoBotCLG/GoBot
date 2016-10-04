@@ -45,35 +45,40 @@ namespace Gobot.Controllers
         [HttpPost]
         public ActionResult Index(LoginViewModel user)
         {
-            MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
-
-            DataTable ConnectResult = Bd.Function("Connect", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", user.Password));
-
-            if(ConnectResult.Rows[0][0].ToString() == "1")
+            if(user.Username != null & user.Username != "")
             {
+                MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+
                 OdbcParameter username = new OdbcParameter(":Username", user.Username);
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
                 parameters.Add(username);
-                DataTable UserResult = Bd.Select("user", "Username = ?", parameters, "Username", "Email", "Image", "Credit", "SteamProfile", "Win", "Game", "TotalCredit", "EXP", "LVL");
-                User sessionuser = new User();
-                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
-                sessionuser.Email = sessionuser.Username = UserResult.Rows[0]["Email"].ToString();
-                byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
-                TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
-                sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
-                sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
-                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
-                sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
-                sessionuser.Games = (int)UserResult.Rows[0]["Game"];
-                sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
-                sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
-                sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
-                Session["User"] = sessionuser;
+                DataTable pass = Bd.Select("user", "Username = ?", parameters, "Password");
 
-                return RedirectToAction("Index", "Watch");
-            }
 
-            return View();
+                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
+
+                if (UserResult.Rows.Count > 0)
+                {
+                    User sessionuser = new User();
+                    sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
+                    sessionuser.Email = sessionuser.Username = UserResult.Rows[0]["Email"].ToString();
+                    byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
+                    TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
+                    sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                    sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                    sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
+                    sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                    sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                    sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                    sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                    sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                    Session["User"] = sessionuser;
+
+                    return RedirectToAction("Index", "Watch");
+                }
+            }            
+            LoginViewModel model = new LoginViewModel();
+            return View(model);
         }
 
         /// <summary>
