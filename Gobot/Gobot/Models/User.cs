@@ -9,7 +9,7 @@ namespace Gobot.Models
     {
         public string Username { get; set; }
         public string Email { get; set; }
-        public System.Drawing.Image ProfilPic { get; set; }
+        public System.Drawing.Bitmap ProfilPic { get; set; }
         public int Credits { get; set; }
         public string SteamID { get; set; }
         public int Wins { get; set; }
