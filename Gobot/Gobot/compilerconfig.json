@@ -22,5 +22,9 @@
   {
     "outputFile": "Content/Home.css",
     "inputFile": "Content/Home.scss"
+  },
+  {
+    "outputFile": "Content/Register.css",
+    "inputFile": "Content/Register.scss"
   }
 ]
