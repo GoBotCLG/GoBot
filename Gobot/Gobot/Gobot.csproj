@@ -232,12 +232,6 @@
     <Content Include="Content\Register.min.css">
       <DependentUpon>Register.css</DependentUpon>
     </Content>
-    <Content Include="Content\Style.css">
-      <DependentUpon>_global.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\Style.min.css">
-      <DependentUpon>Style.css</DependentUpon>
-    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

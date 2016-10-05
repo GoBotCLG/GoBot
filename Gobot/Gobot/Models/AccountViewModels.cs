@@ -28,7 +28,7 @@ namespace Gobot.Models
         public string Email { get; set; }
 
         [Required]
-        [MinLength(10, ErrorMessage = "Votre mot de passe doit comporter au moins {0} caractères")]
+        [MinLength(6, ErrorMessage = "Votre mot de passe doit comporter au moins {0} caractères")]
         [DataType(DataType.Password)]
         [Display(Name = "Mot de passe")]
         public string Password { get; set; }

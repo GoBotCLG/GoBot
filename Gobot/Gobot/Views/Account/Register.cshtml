@@ -28,8 +28,7 @@
         }
     }
     <div id="back">
-        <img src="~/Images/back_sm_white.png" />
-        <a href="@Url.Action("Index", "Home")">Retour</a>
+        <a href="@Url.Action("Index", "Home")"><img src="~/Images/arrow_left.png" />RETOUR</a>
     </div>
     @using (Html.BeginForm())
     {
@@ -49,9 +48,19 @@
         @Html.LabelFor(model => model.ConfirmPassword)
         @Html.EditorFor(model => model.ConfirmPassword)
         @Html.ValidationMessageFor(model => model.ConfirmPassword)
-
-        <div id="go"></div>
-        <input type="submit" value="ok">
+        
+        <div class="flip-container">
+            <div class="flipper">
+                <div class="front go">
+                    <img src="~/Images/arrow_right.png" />
+                    <input type="submit" value="">
+                </div>
+                <div class="back go">
+                    <img src="~/Images/check.png" />
+                    <input type="submit" value="">
+                </div>
+            </div>
+        </div>
     }
 
     <script>
@@ -64,11 +73,36 @@
         });
 
         function onResize() {
-
+            var goPos = $("form").width() / 2 - $(".flip-container").width() / 2;
+            $(".flip-container").css("margin-left", goPos);
         }
 
         function removePx(s) {
             return s.substring(0, s.indexOf('px'));
+        }
+
+        $(".go").hover(function () {
+            if (validUser() && validEmail() && validPwd() && samePwd()) {
+                $(".back > img").attr('src', '/Images/check.png');
+                $(".back").css('background-color', '#51c24b');
+            }
+            else {
+                $(".back > img").attr('src', '/Images/close.png');
+                $(".back").css('background-color', '#963434');
+            }
+        });
+
+        function validUser() {
+            return true;
+        }
+        function validEmail() {
+            return true;
+        }
+        function validPwd() {
+            return true;
+        }
+        function samePwd() {
+            return $("#Password").val() == $("#ConfirmPassword").val();
         }
     </script>
 </body>

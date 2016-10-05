@@ -26,5 +26,9 @@
   {
     "outputFile": "Content/Register.css",
     "inputFile": "Content/Register.scss"
+  },
+  {
+    "outputFile": "Content/_global.css",
+    "inputFile": "Content/_global.scss"
   }
 ]
