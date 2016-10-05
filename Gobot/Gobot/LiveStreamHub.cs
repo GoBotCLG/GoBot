@@ -11,6 +11,7 @@ namespace Gobot
         public void UpdateScore(string jsonScoreString)
         {
             Clients.All.updateScore(jsonScoreString);
+            
         }
     }
 }

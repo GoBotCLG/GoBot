@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Gobot.Models.User
+
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -18,7 +20,7 @@
             <img id="img" src="~/Images/anonymous.png" />
             <div id="border"></div>
         </div>
-        <span id="name">PLAYER_NAME</span>
+        <span id="name">@Html.DisplayFor(model => model.Username)</span>
         <button id="test">test</button>
     </div>
 
@@ -26,19 +28,19 @@
         <div id="rank">
             <h2>RANK</h2>
             <img src="~/Images/rank.png" />
-            <h2><grey>1</grey></h2>
+            <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
         </div>
         <div id="rep">
             <h2>REPUTATION</h2>
             <div id="rep-bar"></div>
-            <h3><green>245</green>/1500 <grey>REP</grey></h3>
+            <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
         </div>
     </div>
 
     <div class="info" id="credits">
         <img src="~/Images/gbCredit.png" />
         <h1>
-            1495 <grey>GOBOT CREDITS</grey>
+            @Html.DisplayFor(model => model.Credits) <grey>GOBOT CREDITS</grey>
         </h1>
         <h4>1 Gobot credit = 0.01$</h4>
         <button id="buy"><h6>BUY</h6></button>

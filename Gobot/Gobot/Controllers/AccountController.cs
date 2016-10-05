@@ -11,6 +11,11 @@ namespace Gobot.Controllers
     {
         public ActionResult Index()
         {
+            if((User)Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
             DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", ((User)Session["User"]).Username));
 
@@ -34,9 +39,13 @@ namespace Gobot.Controllers
                 sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
                 Session["User"] = sessionuser;
 
-                return RedirectToAction("Index", "Watch");
+                return View((User)Session["User"]);
             }
-            return View();
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         [HttpGet]
