@@ -17,13 +17,23 @@
     @Styles.Render("~/Content/Register.min.css")
 </head>
 <body>
+    @{
+        if (ViewBag.Error != null && ViewBag.Error != "")
+        {
+            <div id="error">
+                <img src="~/Images/error_big.png" />
+                <h1>@ViewBag.Error</h1>
+                <div>Fermer</div>
+            </div>
+        }
+    }
     <div id="back">
-        <img src="~/Images/back_sm_white.png"/>
+        <img src="~/Images/back_sm_white.png" />
         <a href="@Url.Action("Index", "Home")">Retour</a>
     </div>
     @using (Html.BeginForm())
     {
-        <img src="~/Images/gobot_logo.png"/>
+        <img src="~/Images/gobot_logo.png" />
         @Html.LabelFor(model => model.Username)
         @Html.EditorFor(model => model.Username)
         @Html.ValidationMessageFor(model => model.Username)

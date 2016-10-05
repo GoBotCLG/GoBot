@@ -77,9 +77,14 @@ namespace Gobot.Controllers
                 sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
                 sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
                 Session["User"] = sessionuser;
-            }
 
-            return RedirectToAction("Index", "Watch");
+                return RedirectToAction("Index", "Watch");
+            }
+            else
+            {
+                ViewBag.Error = "Les mots de passe entrés ne sont pas identiques.";
+                return View();
+            }
         }
 
         [HttpPost]
