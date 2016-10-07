@@ -53,7 +53,6 @@
             <div class="flipper">
                 <div class="front go">
                     <img src="~/Images/arrow_right.png" />
-                    <input type="submit" value="">
                 </div>
                 <div class="back go">
                     <img src="~/Images/check.png" />
@@ -64,15 +63,24 @@
     }
 
     <script>
-        $(document).ready(function () {
+        $(function () {
             onResize();
         });
 
-        $(window).resize(function () {
-            onResize();
-        });
+        $(window).resize(function () { onResize(); });
 
         function onResize() {
+            if ($(window).width() <= 500 && $("#back").css("position") == "fixed") {
+                $("#back").css({ position: "relative", margin: "0 0 15px 0" });
+                $("#back > a").css({ width: "100%", padding: "15px 0" });
+                $("#back > a > img").css({ marginLeft: "20px" });
+            }
+            else if ($(window).width() > 500 && $("#back").css("position") == "relative") {
+                $("#back").css({ position: "fixed", margin: "15px" });
+                $("#back > a").css({ width: "auto", padding: "15px 20px" });
+                $("#back > a > img").css({ marginLeft: "0" });
+            }
+
             var goPos = $("form").width() / 2 - $(".flip-container").width() / 2;
             $(".flip-container").css("margin-left", goPos);
         }
@@ -83,26 +91,41 @@
 
         $(".go").hover(function () {
             if (validUser() && validEmail() && validPwd() && samePwd()) {
+                $(".back > input").attr("disabled", "false");
                 $(".back > img").attr('src', '/Images/check.png');
-                $(".back").css('background-color', '#51c24b');
+                $(".back").css({ backgroundColor: "#51c24b" });
+                $(".back > input").css({ cursor: "pointer" });
             }
             else {
                 $(".back > img").attr('src', '/Images/close.png');
-                $(".back").css('background-color', '#963434');
+                $(".back").css({ backgroundColor: "#963434" });
+                $(".back > input").css({ cursor: "not-allowed" });
+                $(".back > input").attr("disabled", "true");
             }
         });
 
         function validUser() {
-            return true;
+            if ($("#Username").val() != "") {
+                return true;
+            }
+
+            return false;
         }
         function validEmail() {
-            return true;
+            var text = $("#Email").val().toUpperCase();
+            var re = /\b[A-Z0-9._%+-]+@@[A-Z0-9.-]+\.[A-Z]{2,}\b/;
+            var result = re.test(text);
+            return result;
         }
         function validPwd() {
-            return true;
+            if ($("#Password").val() != "") {
+                return true;
+            }
+
+            return false;
         }
         function samePwd() {
-            return $("#Password").val() == $("#ConfirmPassword").val();
+            return $("#Password").val().length >= 6 && $("#Password").val() == $("#ConfirmPassword").val();
         }
     </script>
 </body>

@@ -53,12 +53,6 @@ img {
 .white {
   color: white; }
 
-label {
-  color: white !important; }
-
-input {
-  color: black !important; }
-
 body, html {
   height: 100% !important; }
 
@@ -73,7 +67,8 @@ body, html {
   -webkit-box-shadow: 2px 2px 14px -2px black;
   -moz-box-shadow: 2px 2px 14px -2px black;
   box-shadow: 2px 2px 14px -2px black;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 999; }
   #back > a {
     display: block;
     font: italic 900 24px Lato, Arial, sans-serif;
@@ -111,7 +106,7 @@ form {
     padding: 15px 0;
     background-color: #1f1f1f;
     border: 1px solid #323232;
-    color: #eeeeee !important;
+    color: #eeeeee;
     text-indent: 15px; }
   form > label {
     display: block;
@@ -120,7 +115,7 @@ form {
     text-transform: uppercase;
     margin-bottom: 5px;
     margin-top: 20px;
-    color: #626262 !important; }
+    color: #626262; }
 
 .go {
   position: absolute;
@@ -134,7 +129,7 @@ form {
   -webkit-box-shadow: 2px 2px 14px -2px black;
   -moz-box-shadow: 2px 2px 14px -2px black;
   box-shadow: 2px 2px 14px -2px black; }
-  .go > input {
+  .go > input, .go > div {
     position: absolute;
     width: 100%;
     height: 100%;
