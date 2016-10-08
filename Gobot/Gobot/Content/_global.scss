@@ -61,3 +61,69 @@ img                         { border: 0; }
     -ms-user-select: none;
     user-select: none;
 }
+
+#error_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    background-color: rgb(20,20,20);
+    z-index: 9999;
+    
+    > div {
+        position: relative;
+        width: 50%;
+        margin: 40px 25%;
+
+        > #error_overlay_image {
+            display: block;
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin-left: calc(50% - 220px / 2);
+            background: $red no-repeat center/55% url("/Images/close.png");
+            border-radius: 50%;
+        }
+        > h1, > a, > button {
+            display: block !important;
+            text-align: center;
+            font: italic 400 36px $font;
+        }
+        > h1 {
+            color: $off-white;
+            width: 80% !important;
+            margin-left: 10%;
+        }
+        > a, > button {
+            width: 60% !important;
+            margin-left: 20%;
+            margin-top: 50px !important;
+            position: relative;
+            color: $grey;
+            border: 1px solid $darkGrey;
+            padding: 15px 0;
+        }
+         > a:hover, > button:hover { color: $off-white; border-color: $off-white; }
+    }
+}
+
+@media screen and (max-width:1200px) {
+    #error_overlay > div {
+        width: 75%;
+        margin: 40px 12.5%;
+        > h1, > a { font-size: 30px !important; }
+    }
+}
+
+@media screen and (max-width:600px) {
+    #error_overlay > div {
+        margin-top: 80px !important;
+        width: 100%;
+        margin: 20px 0;
+        > h1, > a, > button { font-size: 20px !important; }
+        > a, > button { margin-top: 20px !important; }
+        > div { width: 120px !important; height: 120px !important; margin-left: calc(50% - 120px /2) !important; }
+    }
+}

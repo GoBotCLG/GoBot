@@ -1,34 +1,37 @@
-﻿[
+[
   {
     "outputFile": "Content/Menu.css",
-    "inputFile": "Content/Menu.scss"
+    "inputFile": "Content/Menu.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Mixins.css",
-    "inputFile": "Content/Mixins.scss"
+    "inputFile": "Content/Mixins.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Style.css",
-    "inputFile": "Content/Style.scss"
+    "inputFile": "Content/Style.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Account.css",
-    "inputFile": "Content/Account.scss"
+    "inputFile": "Content/Account.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Index.css",
-    "inputFile": "Content/Index.scss"
+    "inputFile": "Content/Index.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Home.css",
-    "inputFile": "Content/Home.scss"
+    "inputFile": "Content/Home.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/Register.css",
-    "inputFile": "Content/Register.scss"
-  },
-  {
-    "outputFile": "Content/_global.css",
-    "inputFile": "Content/_global.scss"
+    "inputFile": "Content/Register.scss",
+    "sourceMap": false
   }
 ]

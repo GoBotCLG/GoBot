@@ -20,10 +20,12 @@
     @{
         if (ViewBag.Error != null && ViewBag.Error != "")
         {
-            <div id="error">
-                <img src="~/Images/error_big.png" />
-                <h1>@ViewBag.Error</h1>
-                <div>Fermer</div>
+            <div id="error_overlay">
+                <div>
+                    <div id="error_overlay_image"></div>
+                    <h1>@ViewBag.Error</h1>
+                    <button>Fermer</button>
+                </div>
             </div>
         }
     }
