@@ -417,6 +417,35 @@ body {
   #video {
     width: 100%; } }
 
+@media screen and (max-width: 1485px) {
+  #header {
+    height: 190px; }
+  #sub {
+    width: 40% !important; }
+    #sub > h1 {
+      font-size: 36px;
+      margin-left: 30px; }
+    #sub > a {
+      font-size: 28px;
+      width: 220px; }
+  #login {
+    width: 60% !important; } }
+
+@media screen and (max-width: 1340px) {
+  #header {
+    height: 122px; }
+  #sub {
+    width: 25% !important; }
+    #sub > h1 {
+      display: none; }
+    #sub > a {
+      width: 170px;
+      font-size: 24px; }
+  #login {
+    width: 75% !important; }
+  #username > label, #password > label {
+    margin-top: 10px !important; } }
+
 @media screen and (max-width: 650px) {
   .side {
     width: 100%; }

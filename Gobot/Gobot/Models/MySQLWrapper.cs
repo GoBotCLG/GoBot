@@ -204,7 +204,6 @@ namespace Gobot.Models
         public DataTable Procedure(string procedurename, params OdbcParameter[] args)
         {
             if(connection != null & procedurename != "")
-
             {
                 StringBuilder sql = new StringBuilder("call " + procedurename + "(");
                 foreach(OdbcParameter arg in args)

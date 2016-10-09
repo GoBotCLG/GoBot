@@ -58,7 +58,19 @@ namespace Gobot.Controllers
         [HttpPost]
         public ActionResult Register(RegisterViewModel user)
         {
-            if(user.Password == user.ConfirmPassword)
+            bool notTrue = false;
+            
+            if (notTrue) // If the username is already taken
+                ViewBag.Error = "Le nom d'utilisateur est déja utilisé.";
+            else if (notTrue) // If the username is invalid
+                ViewBag.Error = "Le nom d'utilisateur saisi est invalide. Il doit comporter au moins 6 caractères.";
+            else if (notTrue) // If the email adress is invalid
+                ViewBag.Error = "L'adresse courriel saisie est invalide.";
+            else if (notTrue) // If the password is invalid
+                ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter au moins 6 caractères.";
+            else if (user.Password != user.ConfirmPassword) // If both passwords aren't the same
+                ViewBag.Error = "Les mots de passe saisis ne sont pas identiques.";
+            else
             {
                 MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
                 string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
@@ -74,7 +86,7 @@ namespace Gobot.Controllers
                 sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
                 if (UserResult.Rows[0]["Image"].GetType() != typeof(System.DBNull))
                 {
-                    if(((byte[])UserResult.Rows[0]["Image"]).Length > 0)
+                    if (((byte[])UserResult.Rows[0]["Image"]).Length > 0)
                     {
                         byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
                         TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
@@ -89,7 +101,7 @@ namespace Gobot.Controllers
                 {
                     sessionuser.ProfilPic = new System.Drawing.Bitmap(1, 1);
                 }
-                
+
                 sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
                 sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
                 sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
@@ -101,11 +113,8 @@ namespace Gobot.Controllers
 
                 return RedirectToAction("Index", "Account");
             }
-            else
-            {
-                ViewBag.Error = "Les mots de passe entrés ne sont pas identiques.";
-                return View();
-            }
+            
+            return View();
         }
 
         [HttpPost]

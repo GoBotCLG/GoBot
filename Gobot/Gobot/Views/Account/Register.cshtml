@@ -17,6 +17,14 @@
     @Styles.Render("~/Content/Register.min.css")
 </head>
 <body>
+    <noscript id="error_overlay">
+        <div>
+            <div id="error_overlay_image"></div>
+            <h1>Gobot nécéssite Javascript pour fonctionner corretement. Veuillez l'activer pour pouvoir profiter du contenu de Gobot.com.</h1>
+            <a href="http://enable-javascript.com/fr/" target="_blank">Comment activer mon Javascript?</a>
+        </div>
+    </noscript>
+
     @{
         if (ViewBag.Error != null && ViewBag.Error != "")
         {
@@ -24,7 +32,7 @@
                 <div>
                     <div id="error_overlay_image"></div>
                     <h1>@ViewBag.Error</h1>
-                    <button>Fermer</button>
+                    <button id="close_errorOverlay">Fermer</button>
                 </div>
             </div>
         }
@@ -65,10 +73,7 @@
     }
 
     <script>
-        $(function () {
-            onResize();
-        });
-
+        $(function () { onResize(); });
         $(window).resize(function () { onResize(); });
 
         function onResize() {
@@ -93,10 +98,10 @@
 
         $(".go").hover(function () {
             if (validUser() && validEmail() && validPwd() && samePwd()) {
-                $(".back > input").attr("disabled", "false");
                 $(".back > img").attr('src', '/Images/check.png');
                 $(".back").css({ backgroundColor: "#51c24b" });
                 $(".back > input").css({ cursor: "pointer" });
+                $('.back > input').prop("disabled", false);
             }
             else {
                 $(".back > img").attr('src', '/Images/close.png');
@@ -130,5 +135,7 @@
             return $("#Password").val().length >= 6 && $("#Password").val() == $("#ConfirmPassword").val();
         }
     </script>
+
+    @Scripts.Render("~/Scripts/global.js")
 </body>
 </html>

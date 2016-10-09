@@ -148,19 +148,18 @@ body { overflow: hidden; }
     width: 332px;
     height: 97px;
 }
-
-#signIn_border:before, #signIn_border:after, #signIn_border > :last-child:before, #signIn_border > :last-child:after {
-    position: absolute;
-    width: 83px; 
-    height: 48px;
-    border-color: #a8a8a8;
-    border-style: solid;
-    content: ' ';
-}
-    #signIn_border:before {top:0; left:0; border-width: 1px 0 0 1px;}
-    #signIn_border:after {top:0; right:0; border-width: 1px 1px 0 0;}
-    #signIn_border > :last-child:before {bottom:0; right:0; border-width: 0 1px 1px 0; }
-    #signIn_border > :last-child:after {bottom:0; left:0; border-width: 0 0 1px 1px; }
+    #signIn_border:before, #signIn_border:after, #signIn_border > :last-child:before, #signIn_border > :last-child:after {
+        position: absolute;
+        width: 83px; 
+        height: 48px;
+        border-color: #a8a8a8;
+        border-style: solid;
+        content: ' ';
+    }
+        #signIn_border:before {top:0; left:0; border-width: 1px 0 0 1px;}
+        #signIn_border:after {top:0; right:0; border-width: 1px 1px 0 0;}
+        #signIn_border > :last-child:before {bottom:0; right:0; border-width: 0 1px 1px 0; }
+        #signIn_border > :last-child:after {bottom:0; left:0; border-width: 0 0 1px 1px; }
 
     #signIn_circle {
         position: relative;
@@ -326,16 +325,43 @@ body { overflow: hidden; }
         > h2 { display: none; }
     }
 }
-
 @media screen and (max-width: 1520px) {
     .side { float: right; width: 50%; padding: 5% 0; }
     #video { width: 100%; }
 }
-
-@media screen and (max-width: 1400px) {
-    // CHANGE HEADER AGAIN
+@media screen and (max-width: 1485px) {
+    #header { height: 190px; }
+    #sub { 
+        width: 40% !important;
+        > h1 { 
+            font-size: 36px; 
+            margin-left: 30px; 
+        }
+        > a {
+            font-size: 28px;
+            width: 220px;
+        }
+    }
+    #login { 
+        width: 60% !important;
+    }
 }
-
+@media screen and (max-width: 1340px) {
+    #header { height: 122px; }
+    #sub { 
+        width: 25% !important;
+        > h1 { display: none; }
+        > a { width: 170px; font-size: 24px; }
+    }
+    #login {
+        width: 75% !important;
+    }
+    #username, #password {
+        > label {
+            margin-top: 10px !important;
+        }
+    }
+}
 @media screen and (max-width: 650px) {
     .side { width: 100%; }
     .ct:before {

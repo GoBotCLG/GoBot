@@ -26,7 +26,7 @@
     </noscript>
     <div id="header">
         <div id="sub">
-            <h1>VOUS ÊTES DÉCONNECTÉS.</h1>
+            <h1>VOUS N'ÊTES PAS CONNECTÉ.</h1>
             <h2>
                 Connectez-vous pour profiter de tout les fonctionnalités de Gobot. Si vous n'avez pas de compte, <a href="@Url.Action("Register", "Account")">créez-le</a>, ça prend moins d'une minute et c'est gratuit!
             </h2>
@@ -196,25 +196,32 @@
             $("#main").height($(window).height() - $("#header").height());
             $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
 
-            if ($(window).width() <= 1520) {
-                if (!$("#video").is(':first-child'))
-                    $("#video").prependTo("#main");
+            if ($(window).width() > 950) {
+                // CHECK IF LOGIN FORM EXISTS AND ADD IT IF NOT
 
-                $(".side").css("top", 0);
+                if ($(window).width() <= 1520) {
+                    if (!$("#video").is(':first-child'))
+                        $("#video").prependTo("#main");
+
+                    $(".side").css("top", 0);
+                }
+                else {
+                    if ($("#video").is(':first-child'))
+                        $("#video").insertBefore(".t");
+
+                    $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
+                }
+
+                if ($(window).width() <= 1600) {
+                    var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
+                    $("#username > label, #password > label").css("margin-top", pos);
+                }
+                else
+                    $("#username > label, #password > label").css("margin-top", 24);
             }
             else {
-                if ($("#video").is(':first-child')) 
-                    $("#video").insertBefore(".t");
-
-                $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
+                // REMOVE LOGIN FORM AND ADD OVERLAY LOGIN FORM
             }
-
-            if ($(window).width() <= 1600) {
-                var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
-                $("#username > label, #password > label").css("margin-top", pos);
-            }
-            else
-                $("#username > label, #password > label").css("margin-top", 24);
 
             $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
         }
