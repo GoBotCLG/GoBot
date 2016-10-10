@@ -10,7 +10,7 @@ namespace Gobot.Models
         public int Id { get; set; }
         public int Amount { get; set; }
         public int Profit { get; set; }
-        public User User { get; set; }
+        public string Username { get; set; }
         public int TeamId { get; set; }
         public int MatchId { get; set; }
     }

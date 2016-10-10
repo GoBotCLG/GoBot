@@ -197,7 +197,7 @@
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\MySQLWrapper.cs" />
     <Compile Include="LiveStreamHub.cs" />
-    <Compile Include="Models\PasswordManipulator.cs" />
+    <Compile Include="Models\PasswordEncrypter.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

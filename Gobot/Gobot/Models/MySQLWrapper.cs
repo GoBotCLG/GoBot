@@ -5,6 +5,7 @@ using System.Web;
 using System.Data.Odbc;
 using System.Text;
 using System.Data;
+using System.ComponentModel;
 
 namespace Gobot.Models
 {
@@ -27,7 +28,7 @@ namespace Gobot.Models
         /// <returns>2D list of data returned by the query</returns>
         public DataTable Select(string tablename, string where, List<OdbcParameter> conditions, params string[] columnnames)
         {
-            if (connection != null & columnnames.Length > 0 & tablename != "")
+            if (connection != null && columnnames.Length > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("select ");
 
@@ -74,37 +75,32 @@ namespace Gobot.Models
         /// Insert one row in a table
         /// </summary>
         /// <param name="tablename">Name of the table</param>
-        /// <param name="columnvalues">Dictionary of column names and column values</param>
+        /// <param name="columnNames">List of column names to insert</param>
+        /// <param name="values">List of parameters for values to insert</param>
         /// <returns>Number of rows inserted (1 if inserted or 0 if error)</returns>
-        public int Insert(string tablename, Dictionary<string, string> columnvalues)
+        public int Insert(string tablename, List<string> columnNames, List<OdbcParameter> values)
         {
-            if (connection != null & columnvalues.Count > 0 & tablename != "")
+            if (connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("insert into " + tablename + "(");
 
-                foreach (KeyValuePair<string, string> val in columnvalues)
+                foreach (string val in columnNames)
                 {
-                    sql.Append(val.Key + ",");
+                    sql.Append(val + ",");
                 }
                 sql.Remove(sql.Length - 1, 1);
                 sql.Append(") values(");
 
-                foreach (KeyValuePair<string, string> val in columnvalues)
+                foreach (OdbcParameter val in values)
                 {
                     sql.Append("?,");
                 }
                 sql.Remove(sql.Length - 1, 1);
                 sql.Append(")");
 
-                List<OdbcParameter> columns = new List<OdbcParameter>();
-                foreach (KeyValuePair<string, string> val in columnvalues)
-                {
-                    columns.Add(new OdbcParameter(":" + val.Key.ToLower(), val.Value));
-                }
-
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                foreach (OdbcParameter param in columns)
+                foreach (OdbcParameter param in values)
                 {
                     command.Parameters.Add(param);
                 }
@@ -121,30 +117,36 @@ namespace Gobot.Models
         /// Update one or multiple columns on rows matching with where statement
         /// </summary>
         /// <param name="tablename">Name of the table</param>
-        /// <param name="columnvalues">Dictionary of column names and new values</param>
-        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Surname = ?</param>
+        /// <param name="columnNames">List of column names to update</param>
+        /// <param name="values">List of values to put in the table</param>
+        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Firstname = ?</param>
         /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
         /// <returns>Number of rows updated</returns>
-        public int Update(string tablename, Dictionary<string, string> columnvalues, string where, List<OdbcParameter> conditions)
+        public int Update(string tablename, List<string> columnNames, List<OdbcParameter> values, string where, List<OdbcParameter> conditions)
         {
-            if (connection != null & columnvalues.Count > 0 & tablename != "")
+            if (connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("update " + tablename);
 
-                foreach(KeyValuePair<string, string> param in columnvalues)
+                foreach(string col in columnNames)
                 {
-                    sql.Append(param.Key + " = ?,");
+                    sql.Append(col + " = ?,");
                 }
                 sql.Remove(sql.Length - 1, 1);
 
-                if(where != "")
+                if(where != "" && conditions.Count > 0)
                 {
                     sql.Append(" where " + where);
                 }
                 
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                if(conditions.Count > 0)
+                foreach(OdbcParameter val in values)
+                {
+                    command.Parameters.Add(val);
+                }
+
+                if(conditions.Count > 0 && where != "")
                 {
                     foreach (OdbcParameter param in conditions)
                     {
@@ -164,12 +166,12 @@ namespace Gobot.Models
         /// Delete rows matching with the where statement
         /// </summary>
         /// <param name="tablename">Name of the table</param>
-        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Surname = ?</param>
+        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR FirstName = ?</param>
         /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
         /// <returns></returns>
         public int Delete(string tablename, string where, List<OdbcParameter> conditions)
         {
-            if(connection != null & tablename != "")
+            if(connection != null && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("delete " + tablename);
 
@@ -203,7 +205,7 @@ namespace Gobot.Models
         /// <param name="args">All the parameters for the procedure</param>
         public DataTable Procedure(string procedurename, params OdbcParameter[] args)
         {
-            if(connection != null & procedurename != "")
+            if(connection != null && procedurename != "")
             {
                 StringBuilder sql = new StringBuilder("call " + procedurename + "(");
                 foreach(OdbcParameter arg in args)
@@ -242,7 +244,7 @@ namespace Gobot.Models
 
         public DataTable Function(string functionname, params OdbcParameter[] args)
         {
-            if (connection != null & functionname != "")
+            if (connection != null && functionname != "")
             {
                 StringBuilder sql = new StringBuilder("select " + functionname + "(");
                 foreach (OdbcParameter arg in args)
@@ -273,6 +275,42 @@ namespace Gobot.Models
                 sb.Append(")");
                 result.TableName = sb.ToString();
                 return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public User GetUserFromDB(string username)
+        {
+            if (connection != null || username == "")
+            {
+                return null;
+            }
+
+            DataTable UserResult = Procedure("GetUser", new OdbcParameter(":Username", username));
+
+            if (UserResult.Rows.Count > 0)
+            {
+                User sessionuser = new User();
+                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
+                sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
+                if (UserResult.Rows[0]["Image"].GetType() != typeof(System.DBNull))
+                {
+                    byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
+                    TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
+                    sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
+                }
+                sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
+                sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+
+                return sessionuser;
             }
             else
             {
