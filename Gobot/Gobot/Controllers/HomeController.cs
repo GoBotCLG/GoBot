@@ -12,7 +12,10 @@ namespace Gobot.Controllers
     {
         public ActionResult Index()
         {
-            string password = PasswordEncrypter.EncryptPassword("admin");
+            if(Session["User"] != null)
+            {
+                return RedirectToAction("Index", "Watch");
+            }
             //    MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
             //    List<List<object>> InfoLiveMatch = Bd.Function("GetLiveStats");
             //    string Team1 = InfoLiveMatch[0][1].ToString();
@@ -48,7 +51,7 @@ namespace Gobot.Controllers
         {
             if(user.Username != null & user.Username != "")
             {
-                MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+                MySQLWrapper Bd = new MySQLWrapper();
 
                 OdbcParameter username = new OdbcParameter(":Username", user.Username);
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
@@ -80,6 +83,12 @@ namespace Gobot.Controllers
 
                     return RedirectToAction("Index", "Watch");
                 }
+                else
+                {
+                    ViewBag.Error = "Mauvais nom d'utilisateur/mot de passe";
+                    LoginViewModel model1 = new LoginViewModel();
+                    return View(model1);
+                }
             }            
             LoginViewModel model = new LoginViewModel();
             return View(model);
@@ -91,7 +100,7 @@ namespace Gobot.Controllers
         /// <returns>JSON data of the current match</returns>
         public JsonResult GetCurrentStats()
         {
-            MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+            MySQLWrapper Bd = new MySQLWrapper();
 
             DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
 

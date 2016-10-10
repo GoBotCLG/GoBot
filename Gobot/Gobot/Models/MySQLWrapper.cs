@@ -12,9 +12,9 @@ namespace Gobot.Models
     {
         private OdbcConnection connection;
 
-        public MySQLWrapper(string user, string password)
+        public MySQLWrapper()
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=67.68.203.251;PORT=3306;DATABASE=gobot;USER=" + user + ";PASSWORD=" + password + ";OPTION=3;");
+            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=67.68.203.251;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
         }
 
         /// <summary>
