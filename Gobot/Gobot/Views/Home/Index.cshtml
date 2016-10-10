@@ -64,7 +64,6 @@
                     </div>
                 </div>
             }
-            <div></div>
         </div>
     </div>
 
@@ -121,12 +120,27 @@
 
 
     <script>
+        var originalForm;
+
         (function () {
             var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
             window.requestAnimationFrame = requestAnimationFrame;
+
+            $(".single-line").removeClass("single-line");
+            $(".text-box").removeClass("text-box");
+            $("#username > input, #password > input").addClass("type");
+
+            originalForm = $('#login')[0].outerHTML;
+
+            onResize();
         })();
 
+        $(window).resize(function () {
+            onResize();
+        });
+
+        //#region animation
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         context.fillStyle = '#f67763';
@@ -175,55 +189,73 @@
                 resetAnimation();
             }
         });
-
         $("#header").not("#signIn_circle > input, #signIn_rect").mouseover(function () {
             lastOver = $(this);
             resetAnimation();
         });
-
-        $(document).ready(function () {
-            onResize();
-            $(".single-line").removeClass("single-line");
-            $(".text-box").removeClass("text-box");
-            $("#username > input, #password > input").addClass("type");
-        });
-
-        $(window).resize(function () {
-            onResize();
-        });
+        //#endregion animation
 
         function onResize() {
             $("#main").height($(window).height() - $("#header").height());
             $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
 
-            if ($(window).width() > 950) {
-                // CHECK IF LOGIN FORM EXISTS AND ADD IT IF NOT
-
-                if ($(window).width() <= 1520) {
-                    if (!$("#video").is(':first-child'))
-                        $("#video").prependTo("#main");
-
-                    $(".side").css("top", 0);
-                }
-                else {
-                    if ($("#video").is(':first-child'))
-                        $("#video").insertBefore(".t");
-
-                    $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
-                }
-
-                if ($(window).width() <= 1600) {
-                    var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
-                    $("#username > label, #password > label").css("margin-top", pos);
-                }
-                else
-                    $("#username > label, #password > label").css("margin-top", 24);
+            
+            if ($(window).width() > 932) {
+                addHeaderLogin();
+                positionFormLabels();
             }
             else {
-                // REMOVE LOGIN FORM AND ADD OVERLAY LOGIN FORM
+                addPopOutLogin();
+            }
+
+            setVideoPos();
+        }
+
+        function setVideoPos() {
+            if ($(window).width() <= 1520) {
+                if (!$("#video").is(':first-child'))
+                    $("#video").prependTo("#main");
+
+                $(".side").css("top", 0);
+            }
+            else {
+                if ($("#video").is(':first-child'))
+                    $("#video").insertBefore(".t");
+
+                $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
             }
 
             $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
+        }
+
+        function positionFormLabels() {
+            if ($(window).width() <= 1600) {
+                //var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
+                //$("#username > label, #password > label").css("margin-top", pos);
+            }
+            else
+                $("#username > label, #password > label").css("margin-top", 24);
+        }
+
+        function addHeaderLogin() {
+            if ($("#login > form").length == 0) {
+                $("#login").remove();
+                $("#popOut_login").remove();
+                $("#header").append(originalForm);
+            }
+        }
+
+        function addPopOutLogin() {
+            if ($("#popOut_login").length == 0) {
+                var formInputs = $("#username > input, #password > input").removeClass("type");
+                var user = $("#username").html();
+                var pwd = $("#password").html();
+                $("#login").empty();
+                $("#login").append("<button>Connexion</button>");
+
+                var popOutLogin = '<div id="popOut_login">' + user + pwd + '<input type="submit" value="Connexion"/></div>';
+                $("body").prepend(popOutLogin);
+            }
         }
 
         function removePx(s) {
