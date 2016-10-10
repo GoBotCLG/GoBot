@@ -446,6 +446,36 @@ body {
   #username > label, #password > label {
     margin-top: 10px !important; } }
 
+@media screen and (max-width: 949px) {
+  #header {
+    height: auto !important;
+    z-index: 1000; }
+  #sub {
+    width: 50% !important; }
+    #sub > a {
+      width: 150px;
+      font-size: 20px;
+      padding: 13px 0;
+      margin: 15px auto !important; }
+  #login {
+    width: 50% !important; }
+    #login > button {
+      display: block;
+      position: relative;
+      width: 150px;
+      font: italic 900 20px Lato, Arial, sans-serif;
+      text-transform: uppercase;
+      padding: 13px 0;
+      border: 1px solid #626262;
+      margin: 0 auto;
+      background-color: lightgrey;
+      margin: 15px auto !important; }
+    #login > button:hover {
+      -webkit-box-shadow: 1px 1px 14px -4px black;
+      -moz-box-shadow: 1px 1px 14px -4px black;
+      box-shadow: 1px 1px 14px -4px black;
+      transition: 0.15s; } }
+
 @media screen and (max-width: 650px) {
   .side {
     width: 100%; }
@@ -462,6 +492,13 @@ body {
     padding-bottom: 7%; }
   .t {
     padding-top: 7%; } }
+
+@media screen and (max-width: 390px) {
+  #sub > a, #login > button {
+    padding: 10px 0;
+    margin: 10px auto;
+    font-size: 18px;
+    width: 130px; } }
 
 @media screen and (max-height: 900px) and (min-width: 1520px) {
   .team {

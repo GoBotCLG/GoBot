@@ -362,6 +362,40 @@ body { overflow: hidden; }
         }
     }
 }
+
+@media screen and (max-width: 949px) {
+    $width: 150px;
+    $font-size: 20px;
+    $padding: 13px 0;
+    $marginTop: 15px;
+    #header { height: auto !important; z-index: 1000; }
+    #sub { 
+        width: 50% !important; 
+        > a {
+            width: $width; 
+            font-size: $font-size; 
+            padding: $padding;
+            margin: $marginTop auto !important;
+        } 
+    }
+    #login { 
+        width: 50% !important; 
+        > button {
+            display: block;
+            position: relative;
+            width: $width; 
+            font: italic 900 $font-size $font;
+            text-transform: uppercase; 
+            padding: $padding;
+            border: 1px solid $grey;
+            margin: 0 auto;
+            background-color: lightgrey;
+            margin: $marginTop auto !important;
+        }
+            > button:hover { @include box-shadow(1px 1px 14px -4px); transition: 0.15s; }
+    }
+}
+
 @media screen and (max-width: 650px) {
     .side { width: 100%; }
     .ct:before {
@@ -375,6 +409,15 @@ body { overflow: hidden; }
     }
     .ct { padding-bottom: 7%; }
     .t { padding-top: 7%; }
+}
+
+@media screen and (max-width: 390px) {
+    #sub > a, #login > button {
+        padding: 10px 0;
+        margin: 10px auto;
+        font-size: 18px;
+        width: 130px;
+    }
 }
 
 @media screen and (max-height: 900px) and (min-width: 1520px) {
