@@ -4,6 +4,7 @@ using System.Data.Odbc;
 using System.Collections.Generic;
 using System.Data;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Gobot.Controllers
 {
@@ -16,7 +17,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
+            MySQLWrapper Bd = new MySQLWrapper();
             DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", ((User)Session["User"]).Username));
 
             if (UserResult.Rows.Count > 0)
@@ -58,21 +59,61 @@ namespace Gobot.Controllers
         [HttpPost]
         public ActionResult Register(RegisterViewModel user)
         {
-            bool notTrue = false;
-            
-            if (notTrue) // If the username is already taken
+            bool Erreur = false;
+
+            MySQLWrapper Bd = new MySQLWrapper();
+
+            DataTable isUser = Bd.Procedure("IsUser", new OdbcParameter(":username", user.Username));
+            if((int)isUser.Rows[0][0] != 0)
+            {
                 ViewBag.Error = "Le nom d'utilisateur est déja utilisé.";
-            else if (notTrue) // If the username is invalid
-                ViewBag.Error = "Le nom d'utilisateur saisi est invalide. Il doit comporter au moins 6 caractères.";
-            else if (notTrue) // If the email adress is invalid
-                ViewBag.Error = "L'adresse courriel saisie est invalide.";
-            else if (notTrue) // If the password is invalid
-                ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter au moins 6 caractères.";
-            else if (user.Password != user.ConfirmPassword) // If both passwords aren't the same
-                ViewBag.Error = "Les mots de passe saisis ne sont pas identiques.";
+                Erreur = true;
+            }
+
+            if(!Erreur)
+            {
+                if(user.Username.Length < 6 || user.Username.Length > 50)
+                {
+                    ViewBag.Error = "Le nom d'utilisateur saisi est invalide. Il doit comporter entre 6 et 50 caractères.";
+                    Erreur = true;
+                }
+            }
+
+            if(!Erreur)
+            {
+                Regex r = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
+                if (!r.IsMatch(user.Email))
+                {
+                    ViewBag.Error = "L'adresse courriel saisie est invalide.";
+                    Erreur = true;
+                }
+            }
+
+            if(!Erreur)
+            {
+                if(user.Password.Length < 6)
+                {
+                    //Le plus gros mot de passe acceptable pour notre système d'encryption c'est ~= 2'091'752 terabytes, pas besoin de le spécifier?
+                    ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter au moins 6 caractères.";
+                    Erreur = true;
+                }
+            }
+
+            if(!Erreur)
+            {
+                if (user.Password != user.ConfirmPassword) // If both passwords aren't the same
+                {
+                    ViewBag.Error = "Les mots de passe saisis ne sont pas identiques.";
+                    Erreur = true;
+                }
+            }
+
+            
+
+            if (Erreur)
+                return View(user);
             else
             {
-                MySQLWrapper Bd = new MySQLWrapper("Max", "yolo");
                 string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
                 Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":Image", new byte[0]), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
 
@@ -113,8 +154,6 @@ namespace Gobot.Controllers
 
                 return RedirectToAction("Index", "Account");
             }
-            
-            return View();
         }
 
         [HttpPost]
