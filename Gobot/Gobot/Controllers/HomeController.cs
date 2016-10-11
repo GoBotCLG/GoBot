@@ -20,7 +20,7 @@ namespace Gobot.Controllers
 
             MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable InfoLiveMatch = Bd.Function("GetTeamCourant");
+            DataTable InfoLiveMatch = Bd.Procedure("GetTeamCourant");
             JObject[] Teams = new JObject[2];
 
             Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
@@ -106,11 +106,11 @@ namespace Gobot.Controllers
         {
             MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
+            DataTable InfoLiveMatch = Bd.Procedure("GetTeamCourant");
             JObject[] Teams = new JObject[2];
 
-            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0][1].ToString());
-            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0][3].ToString());
+            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
+            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
 
             List<OdbcParameter> idTeam = new List<OdbcParameter>();
             idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));

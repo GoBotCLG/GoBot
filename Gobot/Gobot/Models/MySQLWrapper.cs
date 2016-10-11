@@ -208,11 +208,15 @@ namespace Gobot.Models
             if(connection != null && procedurename != "")
             {
                 StringBuilder sql = new StringBuilder("call " + procedurename + "(");
-                foreach(OdbcParameter arg in args)
+
+                if (args.Length > 0)
                 {
-                    sql.Append("?,");
+                    foreach (OdbcParameter arg in args)
+                    {
+                        sql.Append("?,");
+                    }
+                    sql.Remove(sql.Length - 1, 1);
                 }
-                sql.Remove(sql.Length - 1, 1);
                 sql.Append(")");
 
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
