@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Data;
 using System.ComponentModel;
+using Newtonsoft.Json.Linq;
 
 namespace Gobot.Controllers
 {
@@ -16,7 +17,31 @@ namespace Gobot.Controllers
             {
                 return RedirectToAction("Index", "Watch");
             }
+
+            MySQLWrapper Bd = new MySQLWrapper();
+
+            DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
+            JObject[] Teams = new JObject[2];
+
+            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
+            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
             
+
+            List<OdbcParameter> idTeam = new List<OdbcParameter>();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+            
+            Teams[0]["TeamName"].AddAfterSelf(new { Wins = Team1.Rows[0]["Win"] });
+            Teams[0]["Wins"].AddAfterSelf(new { Games = Team1.Rows[0]["Game"] });
+
+            idTeam.Clear();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+            
+            Teams[1]["TeamName"].AddAfterSelf(new { Wins = Team2.Rows[0]["Win"] });
+            Teams[1]["Wins"].AddAfterSelf(new { Games = Team2.Rows[0]["Game"] });
+
+            ViewBag.LiveStats = Teams;
 
             LoginViewModel model = new LoginViewModel();
             return View(model);
@@ -82,66 +107,26 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
 
             DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
+            JObject[] Teams = new JObject[2];
 
-            string Team1 = InfoLiveMatch.Rows[0][1].ToString();
-            string Team2 = InfoLiveMatch.Rows[0][3].ToString();
-            
-            return Json(new[] { /*2 Teams*/
-                new { /*Team 1*/
-                    TeamId = InfoLiveMatch.Rows[0][0].ToString(),
-                    TeamName = Team1.Split('"')[1],
-                    TeamComp = new[] {
-                        new { /*Bot 1 of Team 1*/
-                            BotId = Team1.Split('"')[3],
-                            BotName = Team1.Split('"')[5]
-                        },
-                        new { /*Bot 2 of Team 1*/
-                            BotId = Team1.Split('"')[7],
-                            BotName = Team1.Split('"')[9]
-                        },
-                        new { /*Bot 3 of Team 1*/
-                            BotId = Team1.Split('"')[11],
-                            BotName = Team1.Split('"')[13]
-                        },
-                        new { /*Bot 4 of Team 1*/
-                            BotId = Team1.Split('"')[15],
-                            BotName = Team1.Split('"')[17]
-                        },
-                        new { /*Bot 5 of Team 1*/
-                            BotId = Team1.Split('"')[19],
-                            BotName = Team1.Split('"')[21]
-                        }
-                    },
-                    Score = Team1.Split('"')[25]
-                },
-                new { /*Team 2*/
-                    TeamId = InfoLiveMatch.Rows[0][2].ToString(),
-                    TeamName = Team2.Split('"')[1],
-                    TeamComp = new[] {
-                        new { /*Bot 1 of Team 2*/
-                            BotId = Team2.Split('"')[3],
-                            BotName = Team2.Split('"')[5]
-                        },
-                        new { /*Bot 2 of Team 2*/
-                            BotId = Team2.Split('"')[7],
-                            BotName = Team2.Split('"')[9]
-                        },
-                        new { /*Bot 3 of Team 2*/
-                            BotId = Team2.Split('"')[11],
-                            BotName = Team2.Split('"')[13]
-                        },
-                        new { /*Bot 4 of Team 2*/
-                            BotId = Team2.Split('"')[15],
-                            BotName = Team2.Split('"')[17]
-                        },
-                        new { /*Bot 5 of Team 2*/
-                            BotId = Team2.Split('"')[19],
-                            BotName = Team2.Split('"')[21]
-                        }
-                    },
-                    Score = Team2.Split('"')[25]
-                }
-            });
+            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0][1].ToString());
+            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0][3].ToString());
+
+            List<OdbcParameter> idTeam = new List<OdbcParameter>();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+
+            Teams[0]["TeamName"].AddAfterSelf(new { Wins = Team1.Rows[0]["Win"] });
+            Teams[0]["Wins"].AddAfterSelf(new { Games = Team1.Rows[0]["Game"] });
+
+            idTeam.Clear();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+
+            Teams[1]["TeamName"].AddAfterSelf(new { Wins = Team2.Rows[0]["Win"] });
+            Teams[1]["Wins"].AddAfterSelf(new { Games = Team2.Rows[0]["Game"] });
+
+            return Json(Teams);
         }
     }
 }

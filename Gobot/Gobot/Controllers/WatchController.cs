@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Gobot.Models;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Data;
+using System.Data.Odbc;
 using System.Web.Mvc;
 
 namespace Gobot.Controllers
@@ -11,6 +12,35 @@ namespace Gobot.Controllers
         // GET: Watch
         public ActionResult Index()
         {
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            MySQLWrapper Bd = new MySQLWrapper();
+
+            DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
+            JObject[] Teams = new JObject[2];
+
+            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
+            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
+
+            List<OdbcParameter> idTeam = new List<OdbcParameter>();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+
+            Teams[0]["TeamName"].AddAfterSelf(new { Wins = Team1.Rows[0]["Win"] });
+            Teams[0]["Wins"].AddAfterSelf(new { Games = Team1.Rows[0]["Game"] });
+
+            idTeam.Clear();
+            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+
+            Teams[1]["TeamName"].AddAfterSelf(new { Wins = Team2.Rows[0]["Win"] });
+            Teams[1]["Wins"].AddAfterSelf(new { Games = Team2.Rows[0]["Game"] });
+
+            ViewBag.LiveStats = Teams;
+
             return View();
         }
 
