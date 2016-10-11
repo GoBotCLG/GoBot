@@ -38,13 +38,13 @@
         </div>
         <div id="login">
             @using (Html.BeginForm())
-            {
+{
                 <div class="left">
                     <div id="username">
                         @Html.LabelFor(model => model.Username)
 
                         @Html.EditorFor(model => model.Username)
-                            @Html.ValidationMessageFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
                     </div>
                     <div id="password">
                         @Html.LabelFor(model => model.Password)
@@ -64,15 +64,14 @@
                     </div>
                 </div>
             }
-            <div></div>
         </div>
     </div>
 
     <div id="main">
         <div class="side ct">
             <img src="~/Images/ct_side.png" />
-            <h1>CLOUD6</h1>
-            <h2><b class="green">49</b> <img src="~/Images/games_won.png" /> <b class="white">90</b> <img src="~/Images/games_played.png" /></h2>
+            <h1>CLOUD6@{/*((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["TeamName"].ToObject<string>()*/}</h1>
+            <h2><b class="green">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Wins"].ToObject<string>()*/}</b> <img src="~/Images/games_won.png" /> <b class="white">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Games"].ToObject<string>()*/}</b> <img src="~/Images/games_played.png" /></h2>
             <h2></h2>
 
             <div class="team">
@@ -119,14 +118,8 @@
         </div>
     </div>
 
-
     <script>
-        (function () {
-            var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                                        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-            window.requestAnimationFrame = requestAnimationFrame;
-        })();
-
+        //#region Animation variables
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
         context.fillStyle = '#f67763';
@@ -139,6 +132,38 @@
         var circ = Math.PI * 2;
         var quart = Math.PI;
         var lastOver;
+        //#endregion Animation variables
+        var originalForm;
+
+        (function () {
+            var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+            window.requestAnimationFrame = requestAnimationFrame;
+
+            $(".single-line").removeClass("single-line");
+            $(".text-box").removeClass("text-box");
+            $("#username > input, #password > input").addClass("type");
+
+            originalForm = $('#login')[0].outerHTML;
+
+            onResize();
+
+            $("#popOut_login > form > img").click(function () {
+                $("#popOut_login").remove();
+            });
+
+            $("#login > button").click(function () {
+                addPopOutLogin();
+            });
+
+            // CHECK IF THERE WAS AN ERROR IN THE POST AND IF SO, DISPLAY THE POPOUT LOGIN MENU.
+        })();
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        //#region animation
 
         function animate(current) {
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -175,55 +200,85 @@
                 resetAnimation();
             }
         });
-
         $("#header").not("#signIn_circle > input, #signIn_rect").mouseover(function () {
             lastOver = $(this);
             resetAnimation();
         });
-
-        $(document).ready(function () {
-            onResize();
-            $(".single-line").removeClass("single-line");
-            $(".text-box").removeClass("text-box");
-            $("#username > input, #password > input").addClass("type");
-        });
-
-        $(window).resize(function () {
-            onResize();
-        });
+        //#endregion animation
 
         function onResize() {
             $("#main").height($(window).height() - $("#header").height());
             $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
 
-            if ($(window).width() > 950) {
-                // CHECK IF LOGIN FORM EXISTS AND ADD IT IF NOT
+            var mobileLoginHTML = "<button>Connexion</button>";
+            if ($(window).width() > 932 && $("#login").html() == mobileLoginHTML) {
+                addHeaderLogin();
+                positionFormLabels();
+            }
+            else if ($("#login").html() != mobileLoginHTML) {
+                $("#login").empty();
+                $("#login").append(mobileLoginHTML);
+            }
 
-                if ($(window).width() <= 1520) {
-                    if (!$("#video").is(':first-child'))
-                        $("#video").prependTo("#main");
+            setVideoPos();
+        }
 
-                    $(".side").css("top", 0);
+        function setPopOutLogin() {
+            let pos = $(window).height() / 2 - $("#popOut_login > form").outerHeight() / 2;
+            $("#popOut_login").css("padding-top", pos <= 0 ? 0 : pos);
+
+            $("#popOut_login > form > span").each(function () {
+                if ($(this).is(":visible")) {
+                    $(this).css("display", "block");
+                    $(this).prev().css("border-color", "#963434");
                 }
-                else {
-                    if ($("#video").is(':first-child'))
-                        $("#video").insertBefore(".t");
+            });
+        }
 
-                    $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
-                }
+        function setVideoPos() {
+            if ($(window).width() <= 1520) {
+                if (!$("#video").is(':first-child'))
+                    $("#video").prependTo("#main");
 
-                if ($(window).width() <= 1600) {
-                    var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
-                    $("#username > label, #password > label").css("margin-top", pos);
-                }
-                else
-                    $("#username > label, #password > label").css("margin-top", 24);
+                $(".side").css("top", 0);
             }
             else {
-                // REMOVE LOGIN FORM AND ADD OVERLAY LOGIN FORM
+                if ($("#video").is(':first-child'))
+                    $("#video").insertBefore(".t");
+
+                $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
             }
 
             $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
+        }
+
+        function positionFormLabels() {
+            if ($(window).width() <= 1600) {
+                //var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
+                //$("#username > label, #password > label").css("margin-top", pos);
+            }
+            else
+                $("#username > label, #password > label").css("margin-top", 24);
+        }
+
+        function addHeaderLogin() {
+            if ($("#login > form").length == 0) {
+                $("#login").remove();
+                $("#popOut_login").remove();
+                $("#header").append(originalForm);
+            }
+        }
+
+        function addPopOutLogin() {
+            if ($("#popOut_login").length == 0) {
+                var formHTML = $('<div/>').html(originalForm).contents();
+                var user = formHTML.find("#username").html();
+                var pwd = formHTML.find("#password").html();
+                var popOutLogin = '<div id="popOut_login"><form action="/" method="post">' + user + pwd + '<input type="submit" value="Connexion"/><img src="/Images/close.png" alt="Fermer"/></form></div>';
+                $("body").prepend(popOutLogin);
+
+                setPopOutLogin();
+            }
         }
 
         function removePx(s) {

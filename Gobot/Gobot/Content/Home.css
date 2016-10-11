@@ -359,6 +359,81 @@ body {
     color: #4c4c4c;
     text-align: left; }
 
+#popOut_login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #1f1f1f;
+  z-index: 9999; }
+  #popOut_login > form > label, #popOut_login > form > input {
+    display: block;
+    position: relative;
+    font: italic 900 34px Lato, Arial, sans-serif;
+    text-align: center; }
+  #popOut_login > form > label:not(:first-of-type) {
+    margin-top: 40px !important; }
+  #popOut_login > form > label {
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #626262;
+    text-transform: uppercase; }
+  #popOut_login > form > input:not([type=submit]) {
+    background-color: transparent;
+    border-bottom: 1px solid #323232;
+    font-weight: 400 !important;
+    font-size: 26px !important;
+    width: 60%;
+    margin-left: 20%;
+    color: #eeeeee; }
+  #popOut_login > form > input:not([type=submit]):focus {
+    border-bottom-color: #f16651 !important; }
+  #popOut_login > form > input[type=submit] {
+    position: relative;
+    display: block;
+    width: 50%;
+    height: auto;
+    margin-left: calc(25% - 10px);
+    padding: 15px 10px;
+    background-color: transparent;
+    border: 1px solid #626262;
+    margin-top: 50px;
+    color: #eeeeee;
+    cursor: pointer;
+    text-transform: uppercase; }
+  #popOut_login > form > input[type=submit]:hover {
+    border-color: #f16651;
+    color: #f16651; }
+  #popOut_login > form > img {
+    display: block;
+    position: relative;
+    width: 30px;
+    margin-left: calc(50% - 45px);
+    margin-top: 30px;
+    display: block;
+    color: #626262;
+    cursor: pointer;
+    padding: 15px;
+    border: 1px solid #626262;
+    color: #626262; }
+  #popOut_login > form > img:hover {
+    color: #963434;
+    border-color: #963434;
+    background-color: #963434; }
+  #popOut_login > form > span {
+    width: 100%;
+    text-align: center;
+    color: #963434;
+    font: 400 14px Lato, Arial, sans-serif;
+    margin-top: 5px; }
+
+@media screen and (max-width: 555px) {
+  #popOut_login > form > label, #popOut_login > form > input {
+    font-size: 28px;
+    width: 90% !important;
+    margin-left: 5% !important; } }
+
 @media screen and (max-width: 1600px) {
   #header {
     height: 210px; }

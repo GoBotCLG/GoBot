@@ -205,45 +205,45 @@ namespace Gobot.Models
         /// <param name="args">All the parameters for the procedure</param>
         public DataTable Procedure(string procedurename, params OdbcParameter[] args)
         {
-            if(connection != null && procedurename != "")
-            {
-                StringBuilder sql = new StringBuilder("call " + procedurename + "(");
+            //if(connection != null && procedurename != "")
+            //{
+            //    StringBuilder sql = new StringBuilder("call " + procedurename + "(");
 
-                if (args.Length > 0)
-                {
-                    foreach (OdbcParameter arg in args)
-                    {
-                        sql.Append("?,");
-                    }
-                    sql.Remove(sql.Length - 1, 1);
-                }
-                sql.Append(")");
+            //    if (args.Length > 0)
+            //    {
+            //        foreach (OdbcParameter arg in args)
+            //        {
+            //            sql.Append("?,");
+            //        }
+            //        sql.Remove(sql.Length - 1, 1);
+            //    }
+            //    sql.Append(")");
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+            //    OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                foreach(OdbcParameter arg in args)
-                {
-                    command.Parameters.Add(arg);
-                }
-                DataTable result = new DataTable();
-                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
-                adapt.Fill(result);
-                StringBuilder sb = new StringBuilder();
-                sb.Append(procedurename + "(");
-                foreach (OdbcParameter param in args)
-                {
-                    sb.Append(param.Value + ",");
-                }
-                sb.Remove(sb.Length - 1, 1);
-                sb.Append(")");
-                result.TableName = sb.ToString();
+            //    foreach(OdbcParameter arg in args)
+            //    {
+            //        command.Parameters.Add(arg);
+            //    }
+            //    DataTable result = new DataTable();
+            //    OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+            //    adapt.Fill(result);
+            //    StringBuilder sb = new StringBuilder();
+            //    sb.Append(procedurename + "(");
+            //    foreach (OdbcParameter param in args)
+            //    {
+            //        sb.Append(param.Value + ",");
+            //    }
+            //    sb.Remove(sb.Length - 1, 1);
+            //    sb.Append(")");
+            //    result.TableName = sb.ToString();
 
-                return result;
-            }
-            else
-            {
+            //    return result;
+            //}
+            //else
+            //{
                 return null;
-            }
+            //}
         }
 
         public DataTable Function(string functionname, params OdbcParameter[] args)

@@ -18,33 +18,34 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Watch");
             }
 
-            MySQLWrapper Bd = new MySQLWrapper();
+            //MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable InfoLiveMatch = Bd.Procedure("GetTeamCourant");
-            JObject[] Teams = new JObject[2];
+            //DataTable InfoLiveMatch = Bd.Procedure("GetTeamCourant");
+            //JObject[] Teams = new JObject[2];
 
-            Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
-            Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
-            
+            //Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
+            //Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
 
-            List<OdbcParameter> idTeam = new List<OdbcParameter>();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
-            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            
-            Teams[0]["TeamName"].AddAfterSelf(new { Wins = Team1.Rows[0]["Win"] });
-            Teams[0]["Wins"].AddAfterSelf(new { Games = Team1.Rows[0]["Game"] });
 
-            idTeam.Clear();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
-            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            
-            Teams[1]["TeamName"].AddAfterSelf(new { Wins = Team2.Rows[0]["Win"] });
-            Teams[1]["Wins"].AddAfterSelf(new { Games = Team2.Rows[0]["Game"] });
+            //List<OdbcParameter> idTeam = new List<OdbcParameter>();
+            //idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            //DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
 
-            ViewBag.LiveStats = Teams;
+            //Teams[0]["TeamName"].AddAfterSelf(new { Wins = Team1.Rows[0]["Win"] });
+            //Teams[0]["Wins"].AddAfterSelf(new { Games = Team1.Rows[0]["Game"] });
 
-            LoginViewModel model = new LoginViewModel();
-            return View(model);
+            //idTeam.Clear();
+            //idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            //DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+
+            //Teams[1]["TeamName"].AddAfterSelf(new { Wins = Team2.Rows[0]["Win"] });
+            //Teams[1]["Wins"].AddAfterSelf(new { Games = Team2.Rows[0]["Game"] });
+
+            //ViewBag.LiveStats = Teams;
+
+            //LoginViewModel model = new LoginViewModel();
+            //return View(model);
+            return View();
         }
 
         [HttpPost]
