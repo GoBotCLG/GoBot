@@ -19,7 +19,7 @@ namespace Gobot.Controllers
 
             MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable InfoLiveMatch = Bd.Function("GetLiveStats");
+            DataTable InfoLiveMatch = Bd.Function("GetTeamCourant");
             JObject[] Teams = new JObject[2];
 
             Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
