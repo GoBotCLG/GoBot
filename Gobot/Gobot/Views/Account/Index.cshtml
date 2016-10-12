@@ -4,81 +4,85 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Styles.Render("~/Content/Account.css")
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title - Gobotter</title>
-    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    @Styles.Render("~/Content/Account.css")
-</head>
-<body>
-    <div id="accountInfo">
-        <div>
-            <img id="img" src="~/Images/anonymous.png" />
-            <div id="border"></div>
-        </div>
-        <span id="name">@Html.DisplayFor(model => model.Username)</span>
-        <button id="test">test</button>
+<div id="accountInfo">
+    <div>
+        <img id="img" src="~/Images/anonymous.png" />
+        <div id="border"></div>
     </div>
+    <span id="name">@Html.DisplayFor(model => model.Username)</span>
+    <button id="test">test</button>
+</div>
 
-    <div class="info">
-        <div id="rank">
-            <h2>RANK</h2>
-            <img src="~/Images/rank.png" />
-            <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
-        </div>
-        <div id="rep">
-            <h2>REPUTATION</h2>
-            <div id="rep-bar"></div>
-            <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
-        </div>
+<div class="info">
+    <div class="info_logo" id="rank">
+        <h2>RANK</h2>
+        <img src="~/Images/rank.png" />
+        <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
     </div>
+    <div id="rep">
+        <h2>REPUTATION</h2>
+        <div id="rep-bar"></div>
+        <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
+    </div>
+</div>
 
-    <div class="info" id="credits">
-        <img src="~/Images/gbCredit.png" />
-        <h1>
-            @Html.DisplayFor(model => model.Credits) <grey>GOBOT CREDITS</grey>
-        </h1>
-        <h4>1 Gobot credit = 0.01$</h4>
-        <button id="buy"><h6>BUY</h6></button>
-        <button id="trade">
-            <h5>TRADE</h5>
-            <h2><grey>SKINS</grey></h2>
-        </button>
-    </div>
+<div class="info" id="credits">
+    <div class="info_logo"></div>
+    <h1>@Html.DisplayFor(model => model.Credits) <b>GOBOT CREDITS</b></h1>
+    <h4>1 Gobot credit = 0.01$</h4>
+    <button id="buy"><h6>ACHETER</h6></button>
+    <button id="trade">
+        <h5>REGARDER UNE</h5>
+        <h2><b>ANNONCE</b></h2>
+    </button>
+</div>
 
-    <div class="info" id="bets">
-        <img src="~/Images/dices-big.png" />
-        <h1 id="total">300 <grey>BETS</grey></h1>
-        <h1 id="wins"><green>150</green> <grey>WINS</grey></h1>
-        <h1 id="ratio">50% <grey>WON GAMES</grey></h1>
-    </div>
+<div class="info" id="bets">
+    <div class="info_logo"></div>
+    <h1 id="total">300 <b>VICTOIRES</b></h1>
+    <h1 id="wins">150<b>PARTIES</b></h1>
+    <h1 id="ratio">50% <b>PARTIES GAGNÉES</b></h1>
+</div>
 
-    <div class="info" id="inventory">
-        <img src="~/Images/bullet-big.png" />
-        <h1 id="steam-skins">83 <grey>SKINS <h4>IN STEAM INVENTORY</h4></grey></h1>
-        <h1 id="value">94.07$ <h2><grey>ESTIMATED VALUE</grey></h2></h1>
-        <button id="buySkins">
-            <h5>BUY SKINS</h5>
-            <h4><grey>FROM GOBOTTER</grey></h4>
-        </button>
-    </div>
+<div class="info" id="creditStats">
+    <div class="info_logo"></div>
+    <h1 id="wonLoss"><b>850</b>/<b>400</b>VICTOIRES/DÉFAITES</h1>
+    <h1>200<b>ACHETÉS</b></h1>
+    <button id="buySkins">
+        <h5>ACHETER DES CRÉDITS</h5>
+        <h4><grey>DE GOBOTTER</grey></h4>
+    </button>
+</div>
 
-    <div class="info" id="transactions">
-        <img src="~/Images/transactions-big.png" />
-        <h1 id="toGB">8 <grey>SKINS TRADED <h3>TO GOBOTTER</h3></grey></h1>
-        <h1 id="fromGB">8 <grey>SKINS BOUGHT <h3>FROM GOBOTTER</h3></grey></h1>
-        <button><h3><grey>VIEW ALL</grey></h3> <h5>TRANSACTIONS</h5></button>
-    </div>
-</body>
-</html>
+<div class="info" id="transactions">
+    <div class="info_logo"></div>
+    <h1 id="fromGB">8 <b>OBJETS ACHETÉS</b></h1>
+    <h2>FROM GOBOTTER</h2>
+    <h1>525 <b>CRÉDITS TOTAL</b></h1>
+    <button><h3><grey>MES</grey></h3> <h5>TRANSACTIONS</h5></button>
+</div>
+
+<div class="info" id="matches">
+    <div class="info_logo"></div>
+    <h1>250<b>PARTIES REGARDÉES</b></h1>
+    <h1>CLOUD6<b>ÉQUIPE FAVORITE</b></h1>
+    <button><h2>VOIR LES</h2><h1>ÉQUIPES</h1></button>
+</div>
 
 @section Scripts {
     <script>
+        $(function () {
+            onResize();
+        });
 
+        $(window).resize(function () {
+            onResize();
+        });
+
+        function onResize() {
+            h_align_window($(".info"));
+        }
     </script>
 }

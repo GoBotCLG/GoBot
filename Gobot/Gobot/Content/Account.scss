@@ -22,13 +22,20 @@ span { font: 300 14px Lato, sans-serif; }
     background-color: #232323;
     margin: 2px auto;
 
-    #rank {
+    .info_logo {
         float: left;
         position: relative;
         top: 0;
         left: 0;
         width: $height;
         height: 100%;
+        background-position: center;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-size: 62px;
+    }
+
+    #rank {
         background-color: #1b1b1b;
     }
 
@@ -38,6 +45,42 @@ span { font: 300 14px Lato, sans-serif; }
         top: 0;
         left: 0;
         height: 100%;
+    }
+}
+
+#credits {
+    > div {
+        background-image: url("/Images/gcCredit.png");
+    }
+}
+
+#bets {
+    > div {
+        background-image: url("/Images/stat_bets.png");
+    }
+}
+
+#creditStats {  
+    > div {
+        background-image: url("/Images/stat_winLoss.png");
+    }
+}
+
+#creditStats, #transactions {
+    button, a {
+        background-color: $darkerGrey;
+    }
+}
+
+#transactions {
+    > div {
+        background-image: url("/Images/stat_transactions.png");
+    }
+}
+
+#matches {
+    > div {
+        background-image: url("/Images/stat_matches.png");
     }
 }
 
