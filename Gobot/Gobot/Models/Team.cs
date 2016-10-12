@@ -9,13 +9,13 @@ namespace Gobot.Models
     {
         public Team()
         {
-            TeamComp = new int[5];
+            TeamComp = new Bot[5];
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public int Wins { get; set; }
         public int Games { get; set; }
-        public int[] TeamComp { get; set; }
+        public Bot[] TeamComp { get; set; }
     }
 }

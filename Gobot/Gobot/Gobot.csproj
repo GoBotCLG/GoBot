@@ -298,10 +298,10 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Bet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Bet\" />
     <Folder Include="Views\Stats\" />
     <Folder Include="Views\Support\" />
     <Folder Include="Views\Watch\" />
