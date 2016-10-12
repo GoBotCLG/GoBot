@@ -19,17 +19,28 @@ namespace Gobot.Controllers
             List<Match> Matches = new List<Match>();
             List<Bet> Bets = new List<Bet>();
 
-            DataTable MatchResult = Bd.Select("matchs", "Date >= CURDATE() order by Date", new List<OdbcParameter>(), "*");
-
+            DataTable MatchResult = Bd.Select("matchs", "Date>=now() order by Date", new List<OdbcParameter>(), "*");
+            
             foreach(DataRow row in MatchResult.Rows)
             {
                 Match m = new Match();
-                m.Id = (int)row["IdMatch"];
-                m.TeamIds[0] = (int)row["Team_IdTeam1"];
-                m.TeamIds[1] = (int)row["Team_IdTeam2"];
-                m.TeamVictoire = (int)row["FlagWin"];
-                m.Date = (DateTime)row["Date"];
-                Matches.Add(m);
+                Team t = new Team();
+                Bot b = new Bot();
+
+                for(int i = 0; i < 2; i++)
+                {
+                    DataTable teams = Bd.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", (int)row["Team_IdTeam" + (i + 1).ToString()]));
+                    t.Id = (int)teams.Rows[i]["IdTeam"];
+                    t.Name = teams.Rows[i]["Name"].ToString();
+                    t.Wins = (int)teams.Rows[i]["Win"];
+                    t.Games = (int)teams.Rows[i]["Game"];
+
+                    for(int j = 0; j < 5; j++)
+                    {
+                        DataTable bots = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)teams.Rows[i]["IdTeam"]));
+                        b.Id = bots.Rows
+                    }
+                }
             }
 
             List<OdbcParameter> param = new List<OdbcParameter>();

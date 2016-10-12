@@ -9,12 +9,12 @@ namespace Gobot.Models
     {
         public Match()
         {
-            TeamIds = new int[2];
+            Teams = new Team[2];
         }
 
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int[] TeamIds { get; set; }
+        public Team[] Teams { get; set; }
         public int TeamVictoire { get; set; }
     }
 }
