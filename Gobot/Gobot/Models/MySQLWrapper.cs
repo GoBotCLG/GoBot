@@ -292,7 +292,7 @@ namespace Gobot.Models
 
         public User GetUserFromDB(string username)
         {
-            if (connection != null || username == "")
+            if (connection == null || username == "")
             {
                 return null;
             }
