@@ -14,7 +14,7 @@
 </head>
 <body>
     <div id="navBig">
-        <a id="account" class="active" href="@Url.Action("Index", "Account")">
+        <a id="account" href="@Url.Action("Index", "Account")">
             <div id="img" style="background-image: url(@Url.Content("~/Images/anonymous.png"))"></div>
             <div id="border"></div>
         </a>
@@ -59,11 +59,7 @@
     </div>*@
     @RenderBody()
 
-    @RenderSection("scripts", required: false)
-</body>
-</html>
-
-<script>
+    <script>
     // ERROR!!!!!! ACCOUNT ON HOVER TEXT CHANGES POSITION DEPENDING ON POSITION OF HOVER
 
     var waterDropInterval;
@@ -177,4 +173,18 @@
 
         ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
     }
-</script>
+
+    function h_align_window(elem) {
+        var pos = ($(window).width() - $("#navBig").width()) / 2 - elem.width() / 2;
+        elem.css("left", pos);
+    }
+
+    function v_align_window(elem, parent) {
+        var pos = $(window).height() / 2 - elem.height() / 2;
+        elem.css("top", pos);
+    }
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
