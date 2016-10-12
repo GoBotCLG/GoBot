@@ -107,6 +107,18 @@ body { overflow: hidden; }
                     border: 1px solid #b9b9b9;
                     text-indent: 15px;
                 }
+
+                > span {
+                    position: relative;
+                    float: left;
+                    color: $red;
+                    font: 400 14px $font;
+                    width: 100%;
+                    margin-top: 3px;
+                    text-indent: 5px;
+                }
+
+                @media screen and (max-width: 1600px) { > span { margin-top: 0; font-size: 12px; top: -15px; text-indent: 15px;}}
             }
         }
         > .right {
@@ -312,6 +324,7 @@ body { overflow: hidden; }
             width: 60%;
             margin-left: 20%;
             color: $off-white;
+            font-style: normal !important;
         }
             > input:not([type=submit]):focus { border-bottom-color: $menuColor !important; }
 
@@ -338,7 +351,7 @@ body { overflow: hidden; }
             display: block;
             position: relative;
             width: 30px;
-            margin-left: calc(50% - 45px);
+            margin-left: calc(50% - 30px);
             margin-top: 30px;
             display: block;
             color: $grey;
@@ -470,9 +483,9 @@ body { overflow: hidden; }
             font: italic 900 $font-size $font;
             text-transform: uppercase; 
             padding: $padding;
-            border: 1px solid $grey;
+            border: 1px solid #a7a7a7;
             margin: 0 auto;
-            background-color: lightgrey;
+            background-color: #d9d9d9;
             margin: $marginTop auto !important;
         }
             > button:hover { @include box-shadow(1px 1px 14px -4px); transition: 0.15s; }
@@ -482,12 +495,12 @@ body { overflow: hidden; }
 @media screen and (max-width: 650px) {
     .side { width: 100%; }
     .ct:before {
-      content : "";
+      content: "";
       position: absolute;
-      left    : 20%;
-      bottom  : 0;
-      height  : 1px;
-      width   : 60%;  /* or 100px */
+      left: 20%;
+      bottom: 0;
+      height: 1px;
+      width: 60%;
       border-bottom: 2px solid #4c4c4c;
     }
     .ct { padding-bottom: 7%; }

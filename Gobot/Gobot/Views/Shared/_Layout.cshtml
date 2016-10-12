@@ -17,10 +17,10 @@
             <div id="img" style="background-image: url(@Url.Content("~/Images/anonymous.png"))"></div>
             <div id="border"></div>
         </a>
-        <a id="matches"  href="#"> 
+        <a id="matches"  href="@Url.Action("Index", "Watch")"> 
             <div style="background-image: url(@Url.Content("~/Images/matches.png"))"></div>
         </a>
-        <a id="bet" href="#">
+        <a id="bet" href="@Url.Action("Bet", "Account")">
             <div style="background-image: url(@Url.Content("~/Images/bet.png"))"></div>
         </a>
         <a id="teams" href="@Url.Action("Index", "Teams")">
@@ -31,9 +31,6 @@
         </a>
         <a id="shop" href="@Url.Action("Index", "Shop")">
             <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
-        </a>
-        <a id="transactions" href="@Url.Action("Index", "Transactions")">
-            <div style="background-image: url(@Url.Content("~/Images/transactions.png"))"></div>
         </a>
 
         <div id="textLinks">

@@ -200,6 +200,20 @@ body {
           height: 60px;
           border: 1px solid #b9b9b9;
           text-indent: 15px; }
+        #login > form > .left > div > span {
+          position: relative;
+          float: left;
+          color: #963434;
+          font: 400 14px Lato, Arial, sans-serif;
+          width: 100%;
+          margin-top: 3px;
+          text-indent: 5px; }
+        @media screen and (max-width: 1600px) {
+          #login > form > .left > div > span {
+            margin-top: 0;
+            font-size: 12px;
+            top: -15px;
+            text-indent: 15px; } }
     #login > form > .right {
       float: right; }
 
@@ -386,7 +400,8 @@ body {
     font-size: 26px !important;
     width: 60%;
     margin-left: 20%;
-    color: #eeeeee; }
+    color: #eeeeee;
+    font-style: normal !important; }
   #popOut_login > form > input:not([type=submit]):focus {
     border-bottom-color: #f16651 !important; }
   #popOut_login > form > input[type=submit] {
@@ -409,7 +424,7 @@ body {
     display: block;
     position: relative;
     width: 30px;
-    margin-left: calc(50% - 45px);
+    margin-left: calc(50% - 30px);
     margin-top: 30px;
     display: block;
     color: #626262;
@@ -541,9 +556,9 @@ body {
       font: italic 900 20px Lato, Arial, sans-serif;
       text-transform: uppercase;
       padding: 13px 0;
-      border: 1px solid #626262;
+      border: 1px solid #a7a7a7;
       margin: 0 auto;
-      background-color: lightgrey;
+      background-color: #d9d9d9;
       margin: 15px auto !important; }
     #login > button:hover {
       -webkit-box-shadow: 1px 1px 14px -4px black;
@@ -561,7 +576,6 @@ body {
     bottom: 0;
     height: 1px;
     width: 60%;
-    /* or 100px */
     border-bottom: 2px solid #4c4c4c; }
   .ct {
     padding-bottom: 7%; }

@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title - Gobotter</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
-    <script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.2.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     @Scripts.Render("~/bundles/modernizr")
     @Styles.Render("~/Content/Home.min.css")
 </head>
@@ -148,15 +148,20 @@
 
             onResize();
 
-            $("#popOut_login > form > img").click(function () {
+            if ($(window).width() <= 932) {
+                addPopOutLogin();
+
+                if ($('#popOut_login > form > span.field-validation-error').length == 0)
+                    $("#popOut_login").remove();
+            }
+
+            $(document).on('click', '#popOut_login > form > img', function () {
                 $("#popOut_login").remove();
             });
 
-            $("#login > button").click(function () {
+            $(document).on('click', '#login > button', function () {
                 addPopOutLogin();
             });
-
-            // CHECK IF THERE WAS AN ERROR IN THE POST AND IF SO, DISPLAY THE POPOUT LOGIN MENU.
         })();
 
         $(window).resize(function () {
@@ -215,7 +220,7 @@
                 addHeaderLogin();
                 positionFormLabels();
             }
-            else if ($("#login").html() != mobileLoginHTML) {
+            else if ($("#login").html() != mobileLoginHTML && $(window).width() <= 932) {
                 $("#login").empty();
                 $("#login").append(mobileLoginHTML);
             }
@@ -228,7 +233,7 @@
             $("#popOut_login").css("padding-top", pos <= 0 ? 0 : pos);
 
             $("#popOut_login > form > span").each(function () {
-                if ($(this).is(":visible")) {
+                if ($(this).hasClass("field-validation-error")) {
                     $(this).css("display", "block");
                     $(this).prev().css("border-color", "#963434");
                 }
@@ -238,13 +243,13 @@
         function setVideoPos() {
             if ($(window).width() <= 1520) {
                 if (!$("#video").is(':first-child'))
-                    $("#video").prependTo("#main");
+                    $(".ct").insertBefore(".t");
 
                 $(".side").css("top", 0);
             }
             else {
                 if ($("#video").is(':first-child'))
-                    $("#video").insertBefore(".t");
+                    $(".ct").insertBefore("#video");
 
                 $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
             }
@@ -253,9 +258,9 @@
         }
 
         function positionFormLabels() {
-            if ($(window).width() <= 1600) {
-                //var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
-                //$("#username > label, #password > label").css("margin-top", pos);
+            if ($(window).width() <= 1600 && $(window).width() > 932) {
+                var pos = parseInt(removePx($("#signIn_cont").css("top"))) - $("#username > label").height();
+                $("#username > label, #password > label").css("margin-top", pos);
             }
             else
                 $("#username > label, #password > label").css("margin-top", 24);
@@ -264,7 +269,9 @@
         function addHeaderLogin() {
             if ($("#login > form").length == 0) {
                 $("#login").remove();
-                $("#popOut_login").remove();
+
+                if ($("#popOut_login").length > 0)
+                    $("#popOut_login").remove();
                 $("#header").append(originalForm);
             }
         }
