@@ -35,11 +35,11 @@ namespace Gobot.Controllers
                     t.Wins = (int)teams.Rows[i]["Win"];
                     t.Games = (int)teams.Rows[i]["Game"];
 
-                    for(int j = 0; j < 5; j++)
-                    {
-                        DataTable bots = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)teams.Rows[i]["IdTeam"]));
-                        b.Id = bots.Rows
-                    }
+                    //for(int j = 0; j < 5; j++)
+                    //{
+                    //    DataTable bots = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)teams.Rows[i]["IdTeam"]));
+                    //    b.Id = bots.Rows;
+                    //}
                 }
             }
 
