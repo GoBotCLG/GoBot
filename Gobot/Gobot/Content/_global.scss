@@ -63,7 +63,7 @@ img                         { border: 0; }
     user-select: none;
 }
 
-#error_overlay {
+#error_overlay, #js_error {
     position: fixed;
     top: 0;
     left: 0;

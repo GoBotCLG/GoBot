@@ -4,11 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Gobotter</title>
-    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
 
-    @Styles.Render("~/Content/Menu.css")
-    @Styles.Render("~/Content/Style.css")
+    @Styles.Render("~/Content/Menu.min.css")
     @Scripts.Render("~/bundles/modernizr")
     <meta name="description" content="The description of my page" />
 </head>
@@ -134,7 +133,8 @@
             var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
             elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
 
-            var topPos = elem.offset().top + (elem.height() / 2 - $("#text").height() / 2);
+            var scrollTop = $(window).scrollTop(), elementOffset = elem.offset().top, topPos = (elementOffset - scrollTop);
+            topPos += (elem.height() / 2 - $("#text").height() / 2);
             var leftPos = -($("#text").width() + 40);
             $("#text").css({
                 top: topPos,
@@ -182,6 +182,21 @@
     function v_align_window(elem, parent) {
         var pos = $(window).height() / 2 - elem.height() / 2;
         elem.css("top", pos);
+    }
+
+    function v_align(e, p, eH) {
+        var pos = p.height() / 2 - eH / 2;
+        e.css("top", pos);
+    }
+
+    function getHeightOfChilds(e) {
+        var totalHeight = 0;
+
+        e.children().each(function () {
+            totalHeight += $(this).outerHeight(true);
+        });
+
+        return totalHeight;
     }
     </script>
 

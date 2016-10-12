@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System;
 
 namespace Gobot.Controllers
 {
@@ -51,7 +52,7 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
 
             DataTable isUser = Bd.Procedure("IsUser", new OdbcParameter(":username", user.Username));
-            if ((int)isUser.Rows[0][0] != 0)
+            if (Convert.ToInt32(isUser.Rows[0][0]) != 0)
             {
                 ViewBag.Error = "Le nom d'utilisateur est déja utilisé.";
                 Erreur = true;
@@ -69,7 +70,7 @@ namespace Gobot.Controllers
             if (!Erreur)
             {
                 Regex r = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
-                if (!r.IsMatch(user.Email))
+                if (!r.IsMatch(user.Email.ToUpper()))
                 {
                     ViewBag.Error = "L'adresse courriel saisie est invalide.";
                     Erreur = true;

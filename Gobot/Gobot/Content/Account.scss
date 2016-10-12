@@ -2,15 +2,30 @@
 
 $height: 130px;
 
-h1, h2, h3, h4, h5, h6 { font: italic 900 40px Lato, sans-serif; color: white; }
 
-h1 { display: block; float: left; margin: 0; width: 32%; font-size: 40px; }
+button, a, h1, h2, h3, h4, h5, h6 {
+    position: relative;
+    display: block;
+}
+
+h1, h2, h3, h4, h5, h6 { 
+    font: italic 900 40px $font;
+    color: $off-white; 
+    padding: 0;
+    margin: 0;
+}
+
+h1 { font-size: 40px; line-height: 32px; }
 h2 { font-size: 24px; }
 h3 { font-size: 18px; }
-h4 { font-size: 14px; }
+h4 { font: 400 16px $font; color: $lightGrey; padding: 0; margin: 0; }
 h5 { font-size: 30px; }
 h6 { font-size: 36px; }
 span { font: 300 14px Lato, sans-serif; }
+
+.darkBG {
+    
+}
 
 .info {
     position: relative;
@@ -18,9 +33,25 @@ span { font: 300 14px Lato, sans-serif; }
     clear: both;
     width: 85%;
     max-width: 1350px;
-    height: $height;
+    height: auto;
     background-color: #232323;
     margin: 2px auto;
+
+    b { color: $lightGrey !important; font-weight: inherit; }
+
+    > div {
+        float: left; 
+        position: relative;
+        top: 0;
+        left: 0;
+        height: $height;
+
+        > button, a {
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    }
 
     .info_logo {
         float: left;
@@ -28,7 +59,6 @@ span { font: 300 14px Lato, sans-serif; }
         top: 0;
         left: 0;
         width: $height;
-        height: 100%;
         background-position: center;
         background-color: transparent;
         background-repeat: no-repeat;
@@ -49,48 +79,41 @@ span { font: 300 14px Lato, sans-serif; }
 }
 
 #credits {
-    > div {
+    h4 {
+        text-align: right;
+    }
+    > div:first-of-type {
         background-image: url("/Images/gcCredit.png");
     }
 }
 
 #bets {
-    > div {
+    > div:first-of-type {
         background-image: url("/Images/stat_bets.png");
     }
 }
 
 #creditStats {  
-    > div {
+    > div:first-of-type  {
         background-image: url("/Images/stat_winLoss.png");
     }
 }
 
-#creditStats, #transactions {
+/*#creditStats, #transactions {
     button, a {
         background-color: $darkerGrey;
     }
-}
+}*/
 
 #transactions {
-    > div {
+    > div:first-of-type  {
         background-image: url("/Images/stat_transactions.png");
     }
 }
 
 #matches {
-    > div {
+    > div:first-of-type  {
         background-image: url("/Images/stat_matches.png");
-    }
-}
-
-#credits {
-    h4 {
-        position: absolute;
-        top: 23px;
-        left: 255px;
-        font-weight: 400 !important;
-        color: #7c7c7c;
     }
 }
 

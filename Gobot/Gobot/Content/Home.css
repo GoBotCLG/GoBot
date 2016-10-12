@@ -53,7 +53,7 @@ img {
 .white {
   color: white; }
 
-#error_overlay {
+#error_overlay, #js_error {
   position: fixed;
   top: 0;
   left: 0;
@@ -62,11 +62,11 @@ img {
   min-height: 100%;
   background-color: #141414;
   z-index: 9999; }
-  #error_overlay > div {
+  #error_overlay > div, #js_error > div {
     position: relative;
     width: 50%;
     margin: 40px 25%; }
-    #error_overlay > div > #error_overlay_image {
+    #error_overlay > div > #error_overlay_image, #js_error > div > #error_overlay_image {
       display: block;
       position: relative;
       width: 220px;
@@ -74,15 +74,15 @@ img {
       margin-left: calc(50% - 220px / 2);
       background: #963434 no-repeat center/55% url("/Images/close.png");
       border-radius: 50%; }
-    #error_overlay > div > h1, #error_overlay > div > a, #error_overlay > div > button {
+    #error_overlay > div > h1, #error_overlay > div > a, #error_overlay > div > button, #js_error > div > h1, #js_error > div > a, #js_error > div > button {
       display: block !important;
       text-align: center;
       font: italic 400 36px Lato, Arial, sans-serif; }
-    #error_overlay > div > h1 {
+    #error_overlay > div > h1, #js_error > div > h1 {
       color: #eeeeee;
       width: 80% !important;
       margin-left: 10%; }
-    #error_overlay > div > a, #error_overlay > div > button {
+    #error_overlay > div > a, #error_overlay > div > button, #js_error > div > a, #js_error > div > button {
       width: 60% !important;
       margin-left: 20%;
       margin-top: 50px !important;
@@ -90,7 +90,7 @@ img {
       color: #626262;
       border: 1px solid #323232;
       padding: 15px 0; }
-    #error_overlay > div > a:hover, #error_overlay > div > button:hover {
+    #error_overlay > div > a:hover, #error_overlay > div > button:hover, #js_error > div > a:hover, #js_error > div > button:hover {
       color: #eeeeee;
       border-color: #eeeeee; }
 

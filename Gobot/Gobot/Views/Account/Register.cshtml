@@ -17,7 +17,7 @@
     @Styles.Render("~/Content/Register.min.css")
 </head>
 <body>
-    <noscript id="error_overlay">
+    <noscript id="js_error">
         <div>
             <div id="error_overlay_image"></div>
             <h1>Gobot nécéssite Javascript pour fonctionner corretement. Veuillez l'activer pour pouvoir profiter du contenu de Gobot.com.</h1>
@@ -120,7 +120,7 @@
         }
         function validEmail() {
             var text = $("#Email").val().toUpperCase();
-            var re = /\b[A-Z0-9._%+-]+@@[A-Z0-9.-]+\.[A-Z]{2,}\b/;
+            var re = /^[A-Z0-9._%+-]+@@[A-Z0-9.-]+\.[A-Z]{2,}$/;
             var result = re.test(text);
             return result;
         }

@@ -30,45 +30,73 @@
 
 <div class="info" id="credits">
     <div class="info_logo"></div>
-    <h1>@Html.DisplayFor(model => model.Credits) <b>GOBOT CREDITS</b></h1>
-    <h4>1 Gobot credit = 0.01$</h4>
-    <button id="buy"><h6>ACHETER</h6></button>
-    <button id="trade">
-        <h5>REGARDER UNE</h5>
-        <h2><b>ANNONCE</b></h2>
-    </button>
+    <div>
+        <h1>@Html.DisplayFor(model => model.Credits) <b>GOBOT CREDITS</b></h1>
+        <h4>1 Gobot credit = 0.01$</h4>
+    </div>
+    <div>
+        <button id="buy"><h6>ACHETER</h6></button>
+    </div>
+    <div>
+        <button id="trade">
+            <h5>REGARDER UNE</h5>
+            <h2><b>ANNONCE</b></h2>
+        </button>
+    </div>
 </div>
 
 <div class="info" id="bets">
     <div class="info_logo"></div>
-    <h1 id="total">300 <b>VICTOIRES</b></h1>
-    <h1 id="wins">150<b>PARTIES</b></h1>
-    <h1 id="ratio">50% <b>PARTIES GAGNÉES</b></h1>
+    <div>
+        <h1 id="total">300 <b>VICTOIRES</b></h1>
+    </div>
+    <div>
+        <h1 id="wins">150<b>PARTIES</b></h1>
+    </div>
+    <div>
+        <h1 id="ratio">50% <b>PARTIES GAGNÉES</b></h1>
+    </div>
 </div>
 
 <div class="info" id="creditStats">
     <div class="info_logo"></div>
-    <h1 id="wonLoss"><b>850</b>/<b>400</b>VICTOIRES/DÉFAITES</h1>
-    <h1>200<b>ACHETÉS</b></h1>
-    <button id="buySkins">
+    <div>
+        <h1 id="wonLoss"><b>850</b>/<b>400</b>VICTOIRES/DÉFAITES</h1>
+    </div>
+    <div>
+        <h1>200<b>ACHETÉS</b></h1>
+    </div>
+    <a href="#" class="darkBG">
         <h5>ACHETER DES CRÉDITS</h5>
         <h4><grey>DE GOBOTTER</grey></h4>
-    </button>
+    </a>
 </div>
 
 <div class="info" id="transactions">
     <div class="info_logo"></div>
-    <h1 id="fromGB">8 <b>OBJETS ACHETÉS</b></h1>
-    <h2>FROM GOBOTTER</h2>
-    <h1>525 <b>CRÉDITS TOTAL</b></h1>
-    <button><h3><grey>MES</grey></h3> <h5>TRANSACTIONS</h5></button>
+    <div>
+        <h1 id="fromGB">8 <b>OBJETS ACHETÉS</b></h1>
+        <h2>DE GOBOTTER</h2>
+    </div>
+    <div>
+        <h1>525 <b>CRÉDITS TOTAL</b></h1>
+    </div>
+    <div>
+        <button><h3><grey>MES</grey></h3> <h5>TRANSACTIONS</h5></button>
+    </div>
 </div>
 
 <div class="info" id="matches">
     <div class="info_logo"></div>
-    <h1>250<b>PARTIES REGARDÉES</b></h1>
-    <h1>CLOUD6<b>ÉQUIPE FAVORITE</b></h1>
-    <button><h2>VOIR LES</h2><h1>ÉQUIPES</h1></button>
+    <div>
+        <h1>250<b>PARTIES REGARDÉES</b></h1>
+    </div>
+    <div>
+        <h1>CLOUD6<b>ÉQUIPE FAVORITE</b></h1>
+    </div>
+    <div>
+        <a><h2>VOIR LES</h2><h1>ÉQUIPES</h1></a>
+    </div>
 </div>
 
 @section Scripts {
@@ -83,6 +111,10 @@
 
         function onResize() {
             h_align_window($(".info"));
+            var elems = $(".info > div:not(:first-of-type)");
+            $(".info > div:not(:first-of-type)").each(function () {
+                v_align($(this).children(), $(this), getHeightOfChilds($(this)))
+            });
         }
     </script>
 }

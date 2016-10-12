@@ -22,6 +22,6 @@ function setErrorMessage() {
     }
 }
 
-$("#close_errorOverlay").click(function () {
+$(document).on("click", "#close_errorOverlay", function () {
     $("#error_overlay").remove();
 });
