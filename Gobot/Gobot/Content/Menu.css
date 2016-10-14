@@ -41,16 +41,16 @@ img {
   visibility: hidden;
   opacity: 0; }
 
-.grey {
+.grey, grey {
   color: #626262; }
 
-.green {
+.green, green {
   color: #51c24b; }
 
-.red {
+.red, red {
   color: #963434; }
 
-.white {
+.white, white {
   color: white; }
 
 #error_overlay, #js_error {
@@ -136,11 +136,11 @@ img {
     height: 65px;
     overflow: hidden;
     background-color: #f16651; }
-  #navBig > #account {
+  #navBig > #compte {
     height: 98px; }
-    #navBig > #account > #img {
+    #navBig > #compte > #img {
       background-size: 56px 56px; }
-    #navBig > #account > #border {
+    #navBig > #compte > #border {
       position: absolute;
       top: 17px;
       left: 13px;

@@ -17,6 +17,7 @@ $lightGrey: #5f5f5f;
 $green: #51c24b;
 $red: #963434;
 $off-white: #eeeeee;
+$orange: #ffbf5c;
 
 $font: Lato, Arial, sans-serif;
 
@@ -43,10 +44,10 @@ img                         { border: 0; }
 .show { visibility: visible; opacity: 1; }
 .hide { visibility: hidden; opacity: 0; }
 
-.grey   { color: $grey; }
-.green  { color: $green; }
-.red    { color: $red; }
-.white  { color: white; }
+.grey, grey   { color: $grey; }
+.green, green  { color: $green; }
+.red, red    { color: $red; }
+.white, white  { color: white; }
 
 @mixin box-shadow($params){
     -webkit-box-shadow: $params rgba(0,0,0,1);

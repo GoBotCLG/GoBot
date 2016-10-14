@@ -1,11 +1,12 @@
 ﻿@import 'global';
 
 $height: 130px;
-
+$infoBgColor: #232323;
 
 button, a, h1, h2, h3, h4, h5, h6 {
     position: relative;
     display: block;
+    text-align: center;
 }
 
 h1, h2, h3, h4, h5, h6 { 
@@ -15,18 +16,19 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
-h1 { font-size: 40px; line-height: 32px; }
+h1 { font-size: 36px; line-height: 30px; }
 h2 { font-size: 24px; }
 h3 { font-size: 18px; }
 h4 { font: 400 16px $font; color: $lightGrey; padding: 0; margin: 0; }
 h5 { font-size: 30px; }
 h6 { font-size: 36px; }
-span { font: 300 14px Lato, sans-serif; }
+span { font: 400 14px Lato, sans-serif; }
 
 .darkBG {
     
 }
 
+green { color: $green; }
 .info {
     position: relative;
     float: left;
@@ -34,8 +36,19 @@ span { font: 300 14px Lato, sans-serif; }
     width: 85%;
     max-width: 1350px;
     height: auto;
-    background-color: #232323;
+    background-color: $infoBgColor;
     margin: 2px auto;
+    
+    a { padding: 0 25px; }
+    a:not(.whiteLink) { background-color: #202020; }
+    a:not(.whiteLink):hover {
+        background-color: #1b1b1b;
+        > .grey { color: $orange; }
+    }
+
+    .whiteLink { background-color: $off-white !important; color: $infoBgColor !important; }
+        .whiteLink > h2 { color: $infoBgColor; }
+        .whiteLink:hover { background-color: $orange !important; }
 
     b { color: $lightGrey !important; font-weight: inherit; }
 
@@ -52,6 +65,7 @@ span { font: 300 14px Lato, sans-serif; }
             left: 0;
         }
     }
+    
 
     .info_logo {
         float: left;
@@ -99,12 +113,6 @@ span { font: 300 14px Lato, sans-serif; }
     }
 }
 
-/*#creditStats, #transactions {
-    button, a {
-        background-color: $darkerGrey;
-    }
-}*/
-
 #transactions {
     > div:first-of-type  {
         background-image: url("/Images/stat_transactions.png");
@@ -115,10 +123,4 @@ span { font: 300 14px Lato, sans-serif; }
     > div:first-of-type  {
         background-image: url("/Images/stat_matches.png");
     }
-}
-
-.overlaid {
-	-webkit-transform: scale(0.97);
-	transform: scale(0.97);
-    overflow: hidden;
 }

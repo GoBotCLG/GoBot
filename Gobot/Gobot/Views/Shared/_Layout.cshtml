@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model Gobot.Models.User
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,23 +15,23 @@
 </head>
 <body>
     <div id="navBig">
-        <a id="account" href="@Url.Action("Index", "Account")">
-            <div id="img" style="background-image: url(@Url.Content("~/Images/anonymous.png"))"></div>
+        <a id="compte" href="@Url.Action("Index", "Account")">
+            <div id="img" style="background-image: url(@Model.ProfilPic)"></div>
             <div id="border"></div>
         </a>
-        <a id="matches"  href="@Url.Action("Index", "Watch")"> 
+        <a id="matchs"  href="@Url.Action("Index", "Watch")"> 
             <div style="background-image: url(@Url.Content("~/Images/matches.png"))"></div>
         </a>
-        <a id="bet" href="@Url.Action("Bet", "Account")">
+        <a id="gagueure" href="@Url.Action("Index", "Bet")">
             <div style="background-image: url(@Url.Content("~/Images/bet.png"))"></div>
         </a>
-        <a id="teams" href="@Url.Action("Index", "Teams")">
+        <a id="équipes" href="@Url.Action("Index", "Teams")">
             <div style="background-image: url(@Url.Content("~/Images/teams.png"))"></div>
         </a>
-        <a id="inventory" href="@Url.Action("Index", "Inventory")">
+        <a id="inventaire" href="@Url.Action("Index", "Inventory")">
             <div style="background-image: url(@Url.Content("~/Images/inventory.png"))"></div>
         </a>
-        <a id="shop" href="@Url.Action("Index", "Shop")">
+        <a id="magasin" href="@Url.Action("Index", "Shop")">
             <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
         </a>
 
@@ -193,7 +195,7 @@
         var totalHeight = 0;
 
         e.children().each(function () {
-            totalHeight += $(this).outerHeight(true);
+             totalHeight += $(this).outerHeight(true);
         });
 
         return totalHeight;

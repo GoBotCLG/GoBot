@@ -19,7 +19,8 @@ namespace Gobot.Controllers
             }
 
             MySQLWrapper Bd = new MySQLWrapper();
-            Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+            User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
+            Session["User"] = user;
 
             return View((User)Session["User"]);
         }

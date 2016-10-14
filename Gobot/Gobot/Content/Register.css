@@ -41,16 +41,16 @@ img {
   visibility: hidden;
   opacity: 0; }
 
-.grey {
+.grey, grey {
   color: #626262; }
 
-.green {
+.green, green {
   color: #51c24b; }
 
-.red {
+.red, red {
   color: #963434; }
 
-.white {
+.white, white {
   color: white; }
 
 #error_overlay, #js_error {
