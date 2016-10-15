@@ -127,8 +127,41 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     }
 }
 
+#userOptions {
+    width: $height;
+    background-color: $darkerGrey;
+    cursor: pointer;
+
+    > img {
+        width: 60px;
+        padding-top: 20px;
+        padding-bottom: 8px;
+        margin: 0 35px;
+    }
+    > h3 { 
+        color: #404040; 
+        text-transform: uppercase; 
+        font-weight: 900 !important; 
+        top: 0 !important; 
+    }
+}
+    #userOptions:hover {
+        background-color: #1b1b1b;
+        > img { content:url("/Images/settings_hover.png"); }
+        > h3 { color: $orange; }
+    }
+
+#rank, #rep { > h2:first-of-type { padding-top: 5px; } }
+
 #rank { 
     background-color: #1b1b1b;
+
+    > img { 
+        display: block;
+        position: relative;
+        width: 40px;
+        margin: 11px auto 2px auto;
+    }
 }
 
 #rep {
@@ -136,9 +169,64 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     position: relative;
     top: 0;
     left: 0;
-    height: 100%;
-}
+    width: calc(100% - $height) !important;
+    height: $height;
+    padding: 0 !important;
+    margin: 0;
 
+    > h2 { text-align: left; text-indent: 20px; margin-bottom: 15px; }
+    > h3 { width: 100%; text-align: center; top: -10px !important; }
+}
+    #rep-bar {
+        position: relative;
+        float: left;
+        display: block;
+        top: 0;
+        left: 30px;
+        width: 100% !important;
+        height: 51px;
+
+        > div:first-of-type, > div:last-of-type {
+            position: relative;
+            width: 51px;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        > div:first-of-type {
+            float: left;
+            background-image: url('/Images/rep_start.png');
+        }
+        
+        > div:last-of-type {
+            float: right;
+            background-image: url('/Images/rep_end.png');
+        }
+
+        > #xp {
+            position: absolute;
+            width: calc(100% - 100px);
+            left: 50px;
+            height: 12px;
+            top: 19px;
+            background-color: white;
+            z-index: 0;
+
+            > #xpDone {
+                position: relative;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: $green;
+                width: 0;
+            }
+        }
+    }
+
+#options {
+
+}
 
 #credits > div:first-of-type        { background-image: url("/Images/gcCredit.png"); }
 #bets > div:first-of-type           { background-image: url("/Images/stat_bets.png"); }

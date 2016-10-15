@@ -14,9 +14,24 @@
         <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
         <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
     </div>
-    <div>
-        <img src="~/Images/gears.png"/>
-        <h4>Options</h4>
+    <div id="userOptions">
+        <img src="~/Images/settings.png" />
+        <h3>Options</h3>
+    </div>
+</div>
+
+<div class="info" id="options">
+    <div id="changeEmail">
+        <img src="~/Images/mail.png" />
+        <h2>Modifier mon adresse courriel</h2>
+    </div>
+    <div id="changeImg">
+        <img src="~/Images/user.png" />
+        <h2>Modifier ma photo de profil</h2>
+    </div>
+    <div id="changePwd">
+        <img src="~/Images/lock.png" />
+        <h2>Modifier mon mot de passe</h2>
     </div>
 </div>
 
@@ -24,11 +39,17 @@
     <div class="info_logo" id="rank">
         <h2>RANK</h2>
         <img src="~/Images/ranks/@(Model.Level).png" />
-        <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
+        <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
     </div>
     <div id="rep">
         <h2>REPUTATION</h2>
-        <div id="rep-bar"></div>
+        <div id="rep-bar">
+            <div></div>
+            <div id="xp">
+                <div id="xpDone"></div>
+            </div>
+            <div></div>
+        </div>
         <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
     </div>
 </div>
@@ -120,18 +141,20 @@
 @section Scripts {
     <script>
         $(function () {
-            onResize();
-
             $(".info > div > a").each(function () {
                 $(this).parent().css("float", "right");
             });
             $(".info > div > :not(a)").each(function () {
                 $(this).parent().css("padding", "0 15px");
             });
+
+            onResize();
+            posRepBar(true);
         });
 
         $(window).resize(function () {
             onResize();
+            posRepBar(false);
         });
 
         function onResize() {
@@ -143,12 +166,17 @@
                 else
                     v_align($(this).children(), $(this), getHeightOfChilds($(this)))
             });
-
-            //var totalInfoHeight = 0;
-            //$(".info").each(function () { totalInfoHeight += $(this).outerHeight(); });
-            //v_align($(".info"), $(window), totalInfoHeight);
         }
 
-        
+        function posRepBar(animate) {
+            var repWidth = $(".info").width() - $("#rank").outerWidth() - 60;
+            var xpDoneWidth = (@Model.EXP / 1500) * 100 + '%';
+            $("#rep").width(repWidth);
+
+            if (animate)
+                $("#xpDone").animate({ width: xpDoneWidth }, 750, "linear");
+            else
+                $("#xpDone").width(xpDoneWidth);
+        }
     </script>
 }
