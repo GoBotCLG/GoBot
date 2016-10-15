@@ -38,7 +38,7 @@
 <div class="info">
     <div class="info_logo" id="rank">
         <h2>RANK</h2>
-        <img src="~/Images/ranks/@(Model.Level).png" />
+        <img src="~/Images/ranks/1.png"/>
         <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
     </div>
     <div id="rep">
@@ -140,6 +140,8 @@
 
 @section Scripts {
     <script>
+        var levels;
+
         $(function () {
             $(".info > div > a").each(function () {
                 $(this).parent().css("float", "right");
@@ -150,6 +152,12 @@
 
             onResize();
             posRepBar(true);
+            levels = @Model.Level;
+
+        });
+        
+        $(window).on('load', function() {
+            animateRanks(1);
         });
 
         $(window).resize(function () {
@@ -166,6 +174,16 @@
                 else
                     v_align($(this).children(), $(this), getHeightOfChilds($(this)))
             });
+        }
+
+        function animateRanks(i) {
+            setTimeout(function() {
+                $("#rank > img").attr('src', '/Images/ranks/' + i + '.png');
+                $("#rank > h2:last-of-type").text(i);
+
+                if (i < levels)
+                    animateRanks(i+ 1);
+            }, 750 / levels);
         }
 
         function posRepBar(animate) {

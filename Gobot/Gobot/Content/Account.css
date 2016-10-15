@@ -276,7 +276,8 @@ h5 {
     display: block;
     position: relative;
     width: 40px;
-    margin: 11px auto 2px auto; }
+    height: 50px;
+    margin: 10px auto 2px auto; }
 
 #rep {
   float: left;
