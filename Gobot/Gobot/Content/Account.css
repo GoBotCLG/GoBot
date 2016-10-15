@@ -115,12 +115,15 @@ img {
       height: 120px !important;
       margin-left: calc(50% - 120px /2) !important; } }
 
-button, a, h1, h2, h3, h4, h5, h6 {
+html, body {
+  min-height: 100%; }
+
+button, a, h1, h2, h3, h4, h5 {
   position: relative;
   display: block;
   text-align: center; }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5 {
   font: italic 900 40px Lato, Arial, sans-serif;
   color: #eeeeee;
   padding: 0;
@@ -138,21 +141,12 @@ h3 {
 
 h4 {
   font: 400 16px Lato, Arial, sans-serif;
-  color: #5f5f5f;
   padding: 0;
   margin: 0; }
 
 h5 {
-  font-size: 30px; }
-
-h6 {
-  font-size: 36px; }
-
-span {
-  font: 400 14px Lato, sans-serif; }
-
-green {
-  color: #51c24b; }
+  font: 400 14px Lato, sans-serif;
+  color: white; }
 
 .info {
   position: relative;
@@ -187,10 +181,10 @@ green {
     top: 0;
     left: 0;
     height: 130px; }
-    .info > div > button, .info > div a {
-      height: 100%;
-      top: 0;
-      left: 0; }
+  .info > div:not(#userInfo) > a {
+    height: 100%;
+    top: 0;
+    left: 0; }
   .info .info_logo {
     float: left;
     position: relative;
@@ -201,17 +195,65 @@ green {
     background-color: transparent;
     background-repeat: no-repeat;
     background-size: 62px; }
-  .info #rank {
-    background-color: #1b1b1b; }
-  .info #rep {
+
+.info:last-of-type {
+  margin-bottom: 25px; }
+
+#accountInfo {
+  margin-top: 63.4px; }
+  #accountInfo > div:first-of-type > img {
     float: left;
-    position: relative;
+    position: absolute;
+    top: -30%;
+    height: 128px;
+    width: 128px;
+    border-radius: 50%;
+    border: 10px solid #1f1f1f;
+    background-color: #1f1f1f;
+    margin-left: 10px; }
+  #accountInfo > div:last-of-type {
+    float: right; }
+
+#userInfo {
+  display: block;
+  width: auto;
+  float: left !important;
+  margin-left: 190px;
+  max-width: calc(100% - 390px);
+  min-width: 150px;
+  overflow: hidden;
+  padding: 0 4px 0 0 !important; }
+  #userInfo > h5 {
     top: 0;
     left: 0;
-    height: 100%; }
+    text-transform: uppercase;
+    text-align: left;
+    font: italic 900 80px Lato, Arial, sans-serif;
+    line-height: 72px;
+    color: #414141;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #686868;
+    letter-spacing: 1px; }
+  #userInfo > a {
+    display: block;
+    position: relative;
+    float: right;
+    right: 0 !important;
+    clear: both;
+    background-color: #232323;
+    height: auto;
+    width: auto !important;
+    padding: 0 !important; }
 
-#credits h4 {
-  text-align: right; }
+#rank {
+  background-color: #1b1b1b; }
+
+#rep {
+  float: left;
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%; }
 
 #credits > div:first-of-type {
   background-image: url("/Images/gcCredit.png"); }

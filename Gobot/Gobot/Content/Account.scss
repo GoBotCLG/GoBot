@@ -3,13 +3,15 @@
 $height: 130px;
 $infoBgColor: #232323;
 
-button, a, h1, h2, h3, h4, h5, h6 {
+html, body { min-height: 100%; }
+
+button, a, h1, h2, h3, h4, h5 {
     position: relative;
     display: block;
     text-align: center;
 }
 
-h1, h2, h3, h4, h5, h6 { 
+h1, h2, h3, h4, h5 { 
     font: italic 900 40px $font;
     color: $off-white; 
     padding: 0;
@@ -19,16 +21,9 @@ h1, h2, h3, h4, h5, h6 {
 h1 { font-size: 36px; line-height: 30px; }
 h2 { font-size: 24px; }
 h3 { font-size: 18px; }
-h4 { font: 400 16px $font; color: $lightGrey; padding: 0; margin: 0; }
-h5 { font-size: 30px; }
-h6 { font-size: 36px; }
-span { font: 400 14px Lato, sans-serif; }
+h4 { font: 400 16px $font; padding: 0; margin: 0; }
+h5 { font: 400 14px Lato, sans-serif; color: white;}
 
-.darkBG {
-    
-}
-
-green { color: $green; }
 .info {
     position: relative;
     float: left;
@@ -58,13 +53,8 @@ green { color: $green; }
         top: 0;
         left: 0;
         height: $height;
-
-        > button, a {
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
     }
+        > div:not(#userInfo) > a { height: 100%; top: 0; left: 0; }
     
 
     .info_logo {
@@ -78,49 +68,88 @@ green { color: $green; }
         background-repeat: no-repeat;
         background-size: 62px;
     }
+}
+    .info:last-of-type { margin-bottom: 25px; }
 
-    #rank {
-        background-color: #1b1b1b;
+#accountInfo {
+    $imgWidth: 128px;
+    margin-top: $imgWidth * 0.3 + 25px;
+
+    > div:first-of-type > img {
+        float: left;
+        position: absolute;
+        top: -30%;
+        height: $imgWidth;
+        width: $imgWidth;
+        border-radius: 50%;
+        border: 10px solid $darkerGrey;
+        background-color: $darkerGrey;
+        margin-left: 10px;
     }
 
-    #rep {
-        float: left;
-        position: relative;
+    > div:last-of-type {
+        float: right;
+    }
+}
+
+#userInfo {
+    display: block;
+    width: auto;
+    float: left !important;
+    margin-left: 190px;
+    max-width: calc(100% - 390px);
+    min-width: 150px;
+    overflow: hidden;
+    padding: 0 4px 0 0 !important;
+
+    > h5 {
         top: 0;
         left: 0;
-        height: 100%;
+        text-transform: uppercase;
+        text-align: left;
+        font: italic 900 80px $font;
+        line-height: 72px;
+        color: #414141;
+        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-color: #686868;
+        letter-spacing: 1px;
+    }
+    > a {
+        display: block;
+        position: relative; 
+        float: right;
+        right: 0 !important;
+        clear: both;
+        background-color: $infoBgColor;
+        height: auto;
+        width: auto !important;
+        padding: 0 !important;
     }
 }
 
-#credits {
-    h4 {
-        text-align: right;
-    }
-    > div:first-of-type {
-        background-image: url("/Images/gcCredit.png");
-    }
+#rank { 
+    background-color: #1b1b1b;
 }
 
-#bets {
-    > div:first-of-type {
-        background-image: url("/Images/stat_bets.png");
-    }
+#rep {
+    float: left;
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100%;
 }
 
-#creditStats {  
-    > div:first-of-type  {
-        background-image: url("/Images/stat_winLoss.png");
-    }
-}
 
-#transactions {
-    > div:first-of-type  {
-        background-image: url("/Images/stat_transactions.png");
-    }
-}
+#credits > div:first-of-type        { background-image: url("/Images/gcCredit.png"); }
+#bets > div:first-of-type           { background-image: url("/Images/stat_bets.png"); }
+#creditStats > div:first-of-type    { background-image: url("/Images/stat_winLoss.png"); }
+#transactions > div:first-of-type   { background-image: url("/Images/stat_transactions.png"); }
+#matches > div:first-of-type        { background-image: url("/Images/stat_matches.png"); }
 
-#matches {
-    > div:first-of-type  {
-        background-image: url("/Images/stat_matches.png");
-    }
+@media screen and (max-width: 1325px) {
+    //h1 { font-size: px; }
+    //h2 { font-size: px; }
+    //h1 { font-size: px; }
+    //h1 { font-size: px; }
+    //h1 { font-size: px; }
 }

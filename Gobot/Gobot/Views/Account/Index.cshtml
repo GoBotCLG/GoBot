@@ -6,18 +6,24 @@
 }
 @Styles.Render("~/Content/Account.css")
 
-<div id="accountInfo">
+<div class="info" id="accountInfo">
     <div>
         <img id="img" src="@Model.ProfilPic" />
-        <div id="border"></div>
     </div>
-    <span id="name">@Html.DisplayFor(model => model.Username)</span>
+    <div id="userInfo">
+        <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
+        <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
+    </div>
+    <div>
+        <img src="~/Images/gears.png"/>
+        <h4>Options</h4>
+    </div>
 </div>
 
 <div class="info">
     <div class="info_logo" id="rank">
         <h2>RANK</h2>
-        <img src="~/Images/rank.png" />
+        <img src="~/Images/ranks/@(Model.Level).png" />
         <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
     </div>
     <div id="rep">
@@ -31,7 +37,7 @@
     <div class="info_logo"></div>
     <div>
         <h1>@Html.DisplayFor(model => model.Credits)<b> GOBOT CREDITS</b></h1>
-        @*<h4>1 Gobot credit = 0.01$</h4>*@
+        @*<h4 class="grey">1 Gobot credit = 0.01$</h4>*@
     </div>
     <div>
         <a href="#" id="trade">
@@ -130,13 +136,17 @@
 
         function onResize() {
             h_align_window($(".info"));
-            var elems = $(".info > div:not(:first-of-type)");
+
             $(".info > div:not(:first-of-type)").each(function () {
                 if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
                     v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
                 else
                     v_align($(this).children(), $(this), getHeightOfChilds($(this)))
             });
+
+            //var totalInfoHeight = 0;
+            //$(".info").each(function () { totalInfoHeight += $(this).outerHeight(); });
+            //v_align($(".info"), $(window), totalInfoHeight);
         }
 
         
