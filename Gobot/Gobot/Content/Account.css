@@ -249,7 +249,7 @@ h5 {
   width: 130px;
   background-color: #1f1f1f;
   cursor: pointer; }
-  #userOptions > img {
+  #userOptions > #openOption {
     width: 60px;
     padding-top: 20px;
     padding-bottom: 8px;
@@ -259,13 +259,59 @@ h5 {
     text-transform: uppercase;
     font-weight: 900 !important;
     top: 0 !important; }
+  #userOptions > #closeOption {
+    display: none;
+    position: relative;
+    top: calc(50% - 30px) !important;
+    width: 60px;
+    height: 60px;
+    margin: 0 calc(50% - 30px); }
 
 #userOptions:hover {
   background-color: #1b1b1b; }
-  #userOptions:hover > img {
+  #userOptions:hover > #openOption {
     content: url("/Images/settings_hover.png"); }
+  #userOptions:hover > #closeOption {
+    content: url("/Images/close_red.png"); }
   #userOptions:hover > h3 {
     color: #ffbf5c; }
+
+#options > div {
+  width: 33.3%;
+  padding: 50px 0 !important;
+  height: auto;
+  cursor: pointer; }
+  #options > div > img {
+    display: block;
+    position: relative;
+    width: 180px;
+    margin: 0 auto; }
+  #options > div > h2 {
+    margin-top: 50px;
+    text-transform: uppercase;
+    width: 60%;
+    margin: 20px auto;
+    color: #626262; }
+
+#options > div:hover {
+  background-color: #1f1f1f; }
+  #options > div:hover > h2 {
+    color: #eeeeee; }
+
+#options > form {
+  width: 100%; }
+  #options > form > div {
+    height: 100%; }
+
+#optionForm {
+  width: 66.7%;
+  background-color: #232323; }
+
+#optionSubmit {
+  width: 33.3%;
+  background-color: #181818; }
+  #optionSubmit > input {
+    background: url("/Images/send.png") no-repeat center; }
 
 #rank > h2:first-of-type, #rep > h2:first-of-type {
   padding-top: 5px; }
@@ -333,28 +379,6 @@ h5 {
       height: 100%;
       background-color: #51c24b;
       width: 0; }
-
-#options > div {
-  width: 33.3%;
-  padding: 50px 0 !important;
-  height: auto;
-  cursor: pointer; }
-  #options > div > img {
-    display: block;
-    position: relative;
-    width: 180px;
-    margin: 0 auto; }
-  #options > div > h2 {
-    margin-top: 50px;
-    text-transform: uppercase;
-    width: 60%;
-    margin: 20px auto;
-    color: #626262; }
-
-#options > div:hover {
-  background-color: #1f1f1f; }
-  #options > div:hover > h2 {
-    color: #eeeeee; }
 
 #credits > div:first-of-type {
   background-image: url("/Images/gcCredit.png"); }

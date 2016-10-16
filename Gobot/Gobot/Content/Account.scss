@@ -132,7 +132,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     background-color: $darkerGrey;
     cursor: pointer;
 
-    > img {
+    > #openOption {
         width: 60px;
         padding-top: 20px;
         padding-bottom: 8px;
@@ -144,15 +144,77 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         font-weight: 900 !important; 
         top: 0 !important; 
     }
+
+    > #closeOption {
+        display: none;
+        position: relative;
+        top: calc(50% - 30px) !important;
+        width: 60px;
+        height: 60px;
+        margin: 0 calc(50% - 30px);
+    }
 }
     #userOptions:hover {
         background-color: #1b1b1b;
-        > img { content:url("/Images/settings_hover.png"); }
+        > #openOption { content:url("/Images/settings_hover.png"); }
+        > #closeOption { content:url("/Images/close_red.png"); }
         > h3 { color: $orange; }
     }
 
-#rank, #rep { > h2:first-of-type { padding-top: 5px; } }
+#options {
+    > div { 
+        width: 33.3%; 
+        padding: 50px 0 !important;
+        height: auto;
+        cursor: pointer;
 
+        > img {
+            display: block;
+            position: relative;
+            width: 180px;
+            margin: 0 auto;
+        }
+
+        > h2 {
+            margin-top: 50px;
+            text-transform: uppercase;
+            width: 60%;
+            margin: 20px auto;
+            color: $grey;
+        }
+    }
+
+    > div:hover {
+        background-color: #1f1f1f;
+        > h2 { color: $off-white; }
+    }
+}
+    #options > form {
+        width: 100%;
+
+        > div {
+            height: 100%;
+        }
+    }
+        #optionForm {
+            width: 66.7%;
+            background-color: $infoBgColor;
+
+            > input {
+
+            }
+        }
+
+        #optionSubmit {
+            width: 33.3%;
+            background-color: #181818;
+
+            > input {
+                background: url("/Images/send.png") no-repeat center;
+            }
+        }
+
+#rank, #rep { > h2:first-of-type { padding-top: 5px; } }
 #rank { 
     background-color: #1b1b1b;
 
@@ -224,35 +286,6 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
             }
         }
     }
-
-#options {
-    > div { 
-        width: 33.3%; 
-        padding: 50px 0 !important;
-        height: auto;
-        cursor: pointer;
-
-        > img {
-            display: block;
-            position: relative;
-            width: 180px;
-            margin: 0 auto;
-        }
-
-        > h2 {
-            margin-top: 50px;
-            text-transform: uppercase;
-            width: 60%;
-            margin: 20px auto;
-            color: $grey;
-        }
-    }
-
-    > div:hover {
-        background-color: #1f1f1f;
-        > h2 { color: $off-white; }
-    }
-}
 
 #credits > div:first-of-type        { background-image: url("/Images/gcCredit.png"); }
 #bets > div:first-of-type           { background-image: url("/Images/stat_bets.png"); }
