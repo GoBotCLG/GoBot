@@ -190,6 +190,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     }
 }
     #options > form {
+        height: 500px;
         width: 100%;
 
         > div {
@@ -197,6 +198,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         }
     }
         #optionForm {
+            float: left;
             width: 66.7%;
             background-color: $infoBgColor;
 
@@ -206,6 +208,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         }
 
         #optionSubmit {
+            float: right;
             width: 33.3%;
             background-color: #181818;
 
