@@ -153,7 +153,7 @@
             onResize();
             posRepBar(true);
             levels = @Model.Level;
-
+            posOptionTabs();
         });
         
         $(window).on('load', function() {
@@ -164,6 +164,24 @@
             onResize();
             posRepBar(false);
         });
+        
+        $(document).on("click", "#options > div", function() {
+            if ($(this).attr('id') != "optionSubmit" && $(this).attr('id') != "optionForm") {
+                $("#options > div").not($(this)).each(function() {
+                    if ($(this).is(":visible"))
+                        $(this).hide();
+                    else
+                        $(this).show();
+                });
+
+                if ($("#optionForm").length == 0)
+                    showForm($(this).attr("id"));
+                else {
+                    $("#optionForm").remove();
+                    $("#optionSubmit").remove();
+                }
+            }
+        });
 
         function onResize() {
             h_align_window($(".info"));
@@ -173,6 +191,13 @@
                     v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
                 else
                     v_align($(this).children(), $(this), getHeightOfChilds($(this)))
+            });
+
+            $(".info:not(#accountInfo) > div").has("a").each(function() {
+                if ($(window).width() <= 960)
+                    $(this).css("width", "100%");
+                else
+                    $(this).css("width", "auto");
             });
         }
 
@@ -186,6 +211,16 @@
             }, 750 / levels);
         }
 
+        function posOptionTabs() {
+            let maxOptionHeight = $("#changePwd").outerHeight();
+            let emailDiff = maxOptionHeight - $("#changeEmail").outerHeight();
+            let imgDiff = maxOptionHeight - $("#changeImg").outerHeight();
+            $("#changeEmail > img").css("margin-top", emailDiff / 2);
+            $("#changeEmail > h2").css("margin-top", emailDiff / 2 + 20);
+            $("#changeImg > img").css("margin-top", imgDiff / 2);
+            $("#changeImg > h2").css("margin-top", imgDiff / 2 + 20);
+        }
+
         function posRepBar(animate) {
             var repWidth = $(".info").width() - $("#rank").outerWidth() - 60;
             var xpDoneWidth = (@Model.EXP / 1500) * 100 + '%';
@@ -195,6 +230,22 @@
                 $("#xpDone").animate({ width: xpDoneWidth }, 750, "linear");
             else
                 $("#xpDone").width(xpDoneWidth);
+        }
+
+        function showForm(id) {
+            $("#options").append('<div id="optionForm"><div class="optionHeader"><img src="~/Images/option_' + id + '.png" /><h2>' + $('#' + id).find("h2").text() + '</h2></div></div>');
+            if (id == "changeImg") {
+
+            }
+            else if (id == "changePwd") {
+
+            }
+            else {
+
+            }
+
+            $("#options").append('<div id="optionSubmit"><div><img src="~/Images/send.png" /><h2>Confirmer</h2></div><div><img src="~/Images/close.png" /><h3>Annuler</h3></div><img src="~/Images/accountOption_triangle.png" /></div>');
+            $('#' + id).hide();
         }
     </script>
 }
