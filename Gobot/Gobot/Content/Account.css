@@ -308,13 +308,86 @@ h5 {
   float: left;
   width: 66.7%;
   background-color: #232323; }
+  #optionForm > div:not(:first-of-type) {
+    float: left;
+    clear: both;
+    margin: 30px 30% auto 30%;
+    width: 40%; }
+    #optionForm > div:not(:first-of-type) > h2 {
+      text-transform: uppercase;
+      text-align: left;
+      text-indent: 10px;
+      margin-bottom: 5px; }
+    #optionForm > div:not(:first-of-type) > input {
+      background-color: #232323;
+      border-bottom: 2px solid #626262;
+      width: 100%;
+      font: 400 30px Lato, Arial, sans-serif;
+      color: #eeeeee; }
+    #optionForm > div:not(:first-of-type) > input:focus {
+      border-color: #f16651; }
+
+.optionHeader {
+  float: left;
+  clear: both;
+  position: relative;
+  width: auto;
+  margin: 30px 0 20px 0; }
+  .optionHeader > #changeEmail_headerImg {
+    margin-top: 11px !important;
+    height: 40px !important; }
+  .optionHeader > img {
+    float: left;
+    height: 55px; }
+  .optionHeader > h2 {
+    float: left;
+    line-height: 55px;
+    text-indent: 30px;
+    text-transform: uppercase; }
 
 #optionSubmit {
   float: right;
   width: 33.3%;
   background-color: #181818; }
   #optionSubmit > input {
-    background: url("/Images/send.png") no-repeat center; }
+    position: relative;
+    background: url("/Images/send.png") no-repeat left;
+    width: 305px;
+    height: 126px;
+    color: #626262;
+    font: italic 900 24px Lato, Arial, sans-serif;
+    text-transform: uppercase;
+    text-align: right;
+    cursor: pointer; }
+  #optionSubmit > div {
+    margin-top: 60px;
+    display: block;
+    position: relative;
+    width: auto;
+    cursor: pointer; }
+    #optionSubmit > div > img {
+      display: block;
+      position: relative;
+      float: left;
+      height: 60px;
+      width: 60px; }
+    #optionSubmit > div > h3 {
+      display: block;
+      float: left;
+      height: 100%;
+      text-align: left;
+      text-indent: 30px;
+      line-height: 60px;
+      text-transform: uppercase;
+      color: #626262; }
+  #optionSubmit > input:hover, #optionSubmit > div:hover > h3 {
+    color: #eeeeee; }
+  #optionSubmit > img {
+    position: absolute;
+    right: calc(33.2%);
+    top: calc(50% - 34px);
+    width: 30px;
+    height: 69px; }
 
 #rank > h2:first-of-type, #rep > h2:first-of-type {
   padding-top: 5px; }

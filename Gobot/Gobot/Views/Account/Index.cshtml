@@ -17,29 +17,29 @@
     <div id="userOptions">
         <img id="openOption" src="~/Images/settings.png" />
         <h3>Options</h3>
-        <img id="closeOption" src="~/Images/close.png"/>
+        <img id="closeOption" src="~/Images/close.png" />
     </div>
 </div>
 
 @*<div class="info" id="options">
-    <div id="changeEmail">
-        <img src="~/Images/mail.png" />
-        <h2>Modifier mon adresse courriel</h2>
-    </div>
-    <div id="changeImg">
-        <img src="~/Images/user.png" />
-        <h2>Modifier ma photo de profil</h2>
-    </div>
-    <div id="changePwd">
-        <img src="~/Images/lock.png" />
-        <h2>Modifier mon mot de passe</h2>
-    </div>
-</div>*@
+        <div id="changeEmail">
+            <img src="~/Images/mail.png" />
+            <h2>Modifier mon adresse courriel</h2>
+        </div>
+        <div id="changeImg">
+            <img src="~/Images/user.png" />
+            <h2>Modifier ma photo de profil</h2>
+        </div>
+        <div id="changePwd">
+            <img src="~/Images/lock.png" />
+            <h2>Modifier mon mot de passe</h2>
+        </div>
+    </div>*@
 
 <div class="info">
     <div class="info_logo" id="rank">
         <h2>RANK</h2>
-        <img src="~/Images/ranks/1.png"/>
+        <img src="~/Images/ranks/1.png" />
         <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
     </div>
     <div id="rep">
@@ -80,19 +80,15 @@
     <div>
         <h1 id="wins">@Html.DisplayFor(model => model.Games)<grey> PARTIES</grey></h1>
     </div>
-    <div>
-        <h1 id="ratio">
-            @if (Model.Games == 0)
-            {
-                @:0
-            }
-            else
-            {
-                @(Math.Round((double)Model.Wins / Model.Games * 100));
-            }%<grey> PARTIES GAGNÉES</grey>
-        </h1>
-
-    </div>
+    @if (Model.Games > 0)
+    {
+        <div>
+            <h1 id="ratio">
+                @(Math.Round((double)Model.Wins / Model.Games * 100))
+                %<grey> PARTIES GAGNÉES</grey>
+            </h1>
+        </div>
+    }
 
 </div>
 
@@ -196,18 +192,24 @@
                 $("#options").append('<div id="changeEmail"><img src="/Images/mail.png"><h2>Modifier mon adresse courriel</h2></div>');
                 $("#options").append('<div id="changeImg"><img src="/Images/user.png"><h2 >Modifier ma photo de profil</h2></div>');
                 $("#options").append('<div id="changePwd"><img src="/Images/lock.png"><h2>Modifier mon mot de passe</h2></div>');
-                
+
                 $("#userOptions > h3, #openOption").hide();
                 $("#closeOption").show();
 
-                onResize();
                 posOptionTabs();
+                onResize();
             }
             else {
                 $("#options").remove();
                 $("#userOptions > h3, #openOption").show();
                 $("#closeOption").hide();
             }
+        });
+
+        $(document).on("focus", "form input", function () {
+            $(this).prev().css("color", "#f16651");
+        }).on("blur", "form input", function () {
+            $(this).prev().css("color", "#eee");
         });
 
         function onResize() {
@@ -260,8 +262,8 @@
         }
 
         function showForm(id) {
-            $("#options").append('<form action="/Account/Index" enctype="multipart/form-data" method="post"><div id="optionForm"><div class="optionHeader"><img src="/Images/option_' + id + '.png" /><h2>' + $('#' + id).find("h2").text() + '</h2></div></div></form>');
-            
+            $("#options").append('<form action="/Account/Index" enctype="multipart/form-data" method="post" autocomplete="off"><div id="optionForm"><div class="optionHeader"><img id="' + id + '_headerImg" src="/Images/option_' + id + '.png" /><h2>' + $('#' + id).find("h2").text() + '</h2></div></div></form>');
+
             if (id == "changeImg") {
                 $("#optionForm").append('<img id="UploadedImage" class="UploadedPoster" src="' + '@Url.Content(Model.ProfilPic)' + '"><input id="ImageUploader" name="ImageUploader" type="file">');
                 $("#optionForm").append('<input id="UploadButton" class="btn btn-primary" type="button" value="Choisir une image...">');
@@ -278,6 +280,11 @@
 
             $("#options > form").append('<div id="optionSubmit"><input type="submit" value="Confirmer" /><div><img src="/Images/close_red.png" /><h3>Annuler</h3></div><img class="triangle" src="/Images/accountOption_triangle.png" /></div>');
             $('#' + id).hide();
+
+            v_align_margin($("#optionSubmit > input"), $("#optionSubmit"), $("#optionSubmit > input").height());
+            h_align($("#optionSubmit > input"), $("#optionSubmit"), $("#optionSubmit > input").outerWidth());
+            h_align($("#optionSubmit > div"), $("#optionSubmit"), $("#optionSubmit > div > h3").width() + $("#optionSubmit > div > img").width());
+            h_align($(".optionHeader"), $("#optionForm"), $(".optionHeader").width());
         }
     </script>
 }

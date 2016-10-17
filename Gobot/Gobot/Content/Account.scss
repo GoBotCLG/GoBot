@@ -202,8 +202,58 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
             width: 66.7%;
             background-color: $infoBgColor;
 
+            > img {
+
+            }
+
             > input {
 
+            }
+
+            > div:not(:first-of-type) {
+                float: left;
+                clear: both;
+                margin: 30px 30% auto 30%;
+                width: 40%;
+
+                > h2 {
+                    text-transform: uppercase;
+                    text-align: left;
+                    text-indent: 10px;
+                    margin-bottom: 5px;
+                }
+
+                > input {
+                    background-color: $infoBgColor;
+                    border-bottom: 2px solid $grey;
+                    width: 100%;
+                    font: 400 30px $font;
+                    color: $off-white;
+                }
+
+                > input:focus { border-color: $menuColor; }
+            }
+        }
+        .optionHeader {
+            float: left;
+            clear: both;
+            position: relative;
+            width: auto;
+            margin: 30px 0 20px 0;
+
+            > #changeEmail_headerImg {
+                margin-top: 11px !important;
+                height: 40px !important;
+            }
+            > img {
+                float: left;
+                height: 55px;
+            }
+            > h2 {
+                float: left;
+                line-height: 55px;
+                text-indent: 30px;
+                text-transform: uppercase;
             }
         }
 
@@ -213,7 +263,50 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
             background-color: #181818;
 
             > input {
-                background: url("/Images/send.png") no-repeat center;
+                position: relative;
+                background: url("/Images/send.png") no-repeat left;
+                width: 305px;
+                height: 126px;
+                color: $grey;
+                font: italic 900 24px $font;
+                text-transform: uppercase;
+                text-align: right;
+                cursor: pointer;
+            }
+
+            > div {
+                margin-top: 60px;
+                display: block;
+                position: relative;
+                width: auto;
+                cursor: pointer;
+
+                > img {
+                    display: block;
+                    position: relative;
+                    float: left;
+                    height: 60px;
+                    width: 60px;
+                }
+                > h3 {
+                    display: block;
+                    float: left;
+                    height: 100%;
+                    text-align: left;
+                    text-indent: 30px;
+                    line-height: 60px;
+                    text-transform: uppercase;
+                    color: $grey;
+                }
+            }
+                > input:hover, > div:hover > h3 { color: $off-white; }
+
+            > img {
+                position: absolute;
+                right: calc(33.2%);
+                top: calc(50% - 34px);
+                width: 30px;
+                height: 69px;
             }
         }
 

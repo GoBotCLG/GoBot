@@ -190,6 +190,21 @@
         e.css("top", pos > 0 ? pos : 0);
     }
 
+    function v_align_margin(e, p, eH) {
+        var pos = p.height() / 2 - eH / 2;
+        e.css("margin-top", pos > 0 ? pos : 0);
+    }
+
+    function h_align(e, p) {
+        var pos = p.width() / 2 - e.width() / 2;
+        e.css("left", pos > 0 ? pos : 0);
+    }
+
+    function h_align(e, p, eW) {
+        var pos = p.width() / 2 - eW / 2;
+        e.css("left", pos > 0 ? pos : 0);
+    }
+
     function getHeightOfChilds(e) {
         var totalHeight = 0;
 
