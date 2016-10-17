@@ -308,6 +308,31 @@ h5 {
   float: left;
   width: 66.7%;
   background-color: #232323; }
+  #optionForm > img {
+    float: left;
+    clear: both;
+    margin: 40px calc(50% - 64px);
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 10px solid #181818; }
+  #optionForm > #ImageUploader {
+    display: none; }
+  #optionForm > #UploadButton {
+    cursor: pointer;
+    float: left;
+    clear: both;
+    color: #626262;
+    font: 400 30px Lato, Arial, sans-serif;
+    text-transform: uppercase;
+    width: 40%;
+    margin: 0 30%;
+    background-color: transparent;
+    border: 1px solid #626262;
+    padding: 10px; }
+  #optionForm > #UploadButton:hover {
+    color: #eeeeee;
+    border-color: #f16651; }
   #optionForm > div:not(:first-of-type) {
     float: left;
     clear: both;

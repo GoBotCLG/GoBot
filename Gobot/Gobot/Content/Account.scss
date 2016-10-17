@@ -203,12 +203,30 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
             background-color: $infoBgColor;
 
             > img {
-
+                float: left;
+                clear: both;
+                margin: 40px calc(50% - 64px);
+                width: 128px;
+                height: 128px;
+                border-radius: 50%;
+                border: 10px solid #181818;
             }
 
-            > input {
-
+            > #ImageUploader { display: none; }
+            > #UploadButton {
+                cursor: pointer;
+                float: left;
+                clear: both;
+                color: $grey;
+                font: 400 30px $font;
+                text-transform: uppercase;
+                width: 40%;
+                margin: 0 30%;
+                background-color: transparent;
+                border: 1px solid $grey;
+                padding: 10px;
             }
+                > #UploadButton:hover { color: $off-white; border-color: $menuColor; }
 
             > div:not(:first-of-type) {
                 float: left;

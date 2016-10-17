@@ -212,6 +212,14 @@
             $(this).prev().css("color", "#eee");
         });
 
+        $(document).on("click", "#UploadButton", function() {
+            $("#ImageUploader").trigger("click");
+        });
+        
+        $(document).on("change", "#ImageUploader", function(){
+            readURL(this);
+        });
+
         function onResize() {
             h_align_window($(".info"));
 
@@ -265,8 +273,8 @@
             $("#options").append('<form action="/Account/Index" enctype="multipart/form-data" method="post" autocomplete="off"><div id="optionForm"><div class="optionHeader"><img id="' + id + '_headerImg" src="/Images/option_' + id + '.png" /><h2>' + $('#' + id).find("h2").text() + '</h2></div></div></form>');
 
             if (id == "changeImg") {
-                $("#optionForm").append('<img id="UploadedImage" class="UploadedPoster" src="' + '@Url.Content(Model.ProfilPic)' + '"><input id="ImageUploader" name="ImageUploader" type="file">');
-                $("#optionForm").append('<input id="UploadButton" class="btn btn-primary" type="button" value="Choisir une image...">');
+                $("#optionForm").append('<img id="UploadedImage" src="' + '@Url.Content(Model.ProfilPic)' + '"><input id="ImageUploader" name="ImageUploader" type="file">');
+                $("#optionForm").append('<input id="UploadButton" type="button" value="Choisir une image...">');
             }
             else if (id == "changePwd") {
                 $("#optionForm").append('<div><h2>Ancien <grey>mot de passe</grey></h2><input name="oldPwd" type="password"/></div>');
@@ -285,6 +293,18 @@
             h_align($("#optionSubmit > input"), $("#optionSubmit"), $("#optionSubmit > input").outerWidth());
             h_align($("#optionSubmit > div"), $("#optionSubmit"), $("#optionSubmit > div > h3").width() + $("#optionSubmit > div > img").width());
             h_align($(".optionHeader"), $("#optionForm"), $(".optionHeader").width());
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+            
+                reader.onload = function (e) {
+                    $('#UploadedImage').attr('src', e.target.result);
+                }
+            
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 }
