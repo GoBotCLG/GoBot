@@ -276,27 +276,28 @@ h5 {
   #userOptions:hover > h3 {
     color: #ffbf5c; }
 
-#options > div {
-  width: 33.3%;
-  padding: 50px 0 !important;
-  height: auto;
-  cursor: pointer; }
-  #options > div > img {
-    display: block;
-    position: relative;
-    width: 180px;
-    margin: 0 auto; }
-  #options > div > h2 {
-    margin-top: 50px;
-    text-transform: uppercase;
-    width: 60%;
-    margin: 20px auto;
-    color: #626262; }
-
-#options > div:hover {
-  background-color: #1f1f1f; }
-  #options > div:hover > h2 {
-    color: #eeeeee; }
+#options {
+  height: 500px; }
+  #options > div {
+    width: 33.3%;
+    padding: 50px 0 !important;
+    height: auto;
+    cursor: pointer; }
+    #options > div > img {
+      display: block;
+      position: relative;
+      width: 180px;
+      margin: 0 auto; }
+    #options > div > h2 {
+      margin-top: 50px;
+      text-transform: uppercase;
+      width: 60%;
+      margin: 20px auto;
+      color: #626262; }
+  #options > div:hover {
+    background-color: #1f1f1f; }
+    #options > div:hover > h2 {
+      color: #eeeeee; }
 
 #options > form {
   height: 500px;
