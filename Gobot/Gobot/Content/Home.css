@@ -94,6 +94,16 @@ img {
       color: #eeeeee;
       border-color: #eeeeee; }
 
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 85%;
+  max-width: 1350px;
+  height: auto;
+  background-color: #232323;
+  margin: 2px auto; }
+
 @media screen and (max-width: 1200px) {
   #error_overlay > div {
     width: 75%;

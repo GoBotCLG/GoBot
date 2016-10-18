@@ -1,7 +1,6 @@
 ﻿@import 'global';
 
 $height: 130px;
-$infoBgColor: #232323;
 
 html, body { min-height: 100%; }
 
@@ -25,15 +24,6 @@ h4 { font: 400 16px $font; padding: 0; margin: 0; }
 h5 { font: 400 14px Lato, sans-serif; color: white;}
 
 .info {
-    position: relative;
-    float: left;
-    clear: both;
-    width: 85%;
-    max-width: 1350px;
-    height: auto;
-    background-color: $infoBgColor;
-    margin: 2px auto;
-    
     a { padding: 0 25px; }
     a:not(.whiteLink) { background-color: #202020; }
     a:not(.whiteLink):hover {
@@ -56,7 +46,6 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     }
         > div:not(#userInfo) > a { height: 100%; top: 0; left: 0; }
     
-
     .info_logo {
         float: left;
         position: relative;
@@ -167,7 +156,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
     > div { 
         width: 33.3%; 
         padding: 50px 0 !important;
-        height: auto;
+        height: calc(100% - 100px);
         cursor: pointer;
 
         > img {
@@ -191,6 +180,8 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         > h2 { color: $off-white; }
     }
 }
+    #changeImg > h2 { top: 0 !important; }
+
     #options > form {
         height: 500px;
         width: 100%;
@@ -222,8 +213,8 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
                 color: $grey;
                 font: 400 30px $font;
                 text-transform: uppercase;
-                width: 40%;
-                margin: 0 30%;
+                width: 50%;
+                margin: 0 25%;
                 background-color: transparent;
                 border: 1px solid $grey;
                 padding: 10px;

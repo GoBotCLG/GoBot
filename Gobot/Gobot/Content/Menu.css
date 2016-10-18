@@ -1,4 +1,5 @@
-﻿/* -------------------------------------------------------------------------------------------------------------------
+﻿@charset "UTF-8";
+/* -------------------------------------------------------------------------------------------------------------------
                                                     GENERAL ATTRIBUTES
  ------------------------------------------------------------------------------------------------------------------- */
 html, body {
@@ -94,6 +95,16 @@ img {
       color: #eeeeee;
       border-color: #eeeeee; }
 
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 85%;
+  max-width: 1350px;
+  height: auto;
+  background-color: #232323;
+  margin: 2px auto; }
+
 @media screen and (max-width: 1200px) {
   #error_overlay > div {
     width: 75%;
@@ -136,6 +147,17 @@ img {
     height: 65px;
     overflow: hidden;
     background-color: #f16651; }
+  #navBig .small, #navBig > #déconnection, #navBig > #contact, #navBig > #support, #navBig > #FAQ {
+    position: absolute;
+    height: 40px; }
+  #navBig > #déconnection {
+    bottom: 0; }
+  #navBig > #contact {
+    bottom: 50px; }
+  #navBig > #support {
+    bottom: 90px; }
+  #navBig > #FAQ {
+    bottom: 130px; }
   #navBig > #compte {
     height: 98px; }
     #navBig > #compte > div > img {
@@ -160,7 +182,7 @@ img {
     bottom: 0;
     width: 100%;
     height: auto;
-    margin-bottom: 25px; }
+    margin-bottom: 42px; }
     #navBig > #textLinks > a {
       position: relative;
       float: left;

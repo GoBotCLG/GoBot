@@ -16,9 +16,9 @@
 <body>
     <div id="navBig">
         <a id="compte" href="@Url.Action("Index", "Account")">
-            <div id="img"><img src="@Model.ProfilPic"/></div>
+            <div id="img"><img src="@Model.ProfilPic" /></div>
         </a>
-        <a id="matchs"  href="@Url.Action("Index", "Watch")"> 
+        <a id="matchs" href="@Url.Action("Index", "Watch")">
             <div style="background-image: url(@Url.Content("~/Images/matches.png"))"></div>
         </a>
         <a id="gagueure" href="@Url.Action("Index", "Bet")">
@@ -34,186 +34,200 @@
             <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
         </a>
 
-        <div id="textLinks">
-            <a class="textLink" href="@Url.Action("FAQ", "Support")">FAQ</a>
-            <a class="textLink" href="@Url.Action("Index", "Support")">Support</a>
-            <a class="textLink" href="@Url.Action("Contact", "Support")">Contact</a>
-        </div>
+
+        @*<div id="textLinks">
+            <a href="@Url.Action("FAQ", "Support")">FAQ</a>
+            <a href="@Url.Action("Index", "Support")">Support</a>
+            <a href="@Url.Action("Contact", "Support")">Contact</a>
+        </div>*@
+
+        <a id="FAQ" class="small" href="@Url.Action("FAQ", "Support")">
+            <div style="background-image: url(@Url.Content("~/Images/faq.png"))"></div>
+        </a>
+        <a id="support" class="small" href="@Url.Action("Index", "Support")">
+            <div style="background-image: url(@Url.Content("~/Images/support.png"))"></div>
+        </a>
+        <a id="contact" class="small" href="@Url.Action("Contact", "Support")">
+            <div style="background-image: url(@Url.Content("~/Images/contact.png"))"></div>
+        </a>
+        <a id="déconnection" class="small" href="@Url.Action("Logout", "Account")">
+            <div style="background-image: url(@Url.Content("~/Images/logout.png"))"></div>
+        </a>
     </div>
     @*<div id="navSmall">
-        <div class="row" id="second">
-            <div id="close"><img src="~/Images/close.png"/><span>Close Menu</span></div>
-        </div>
-        <div class="row" id="first">
-            <div class="box" id="bet"><img src="~/Images/bet.png"/><span>Bet</span></div>
-            <div class="box" id="matches"><img src="~/Images/matches.png" /><span>Matches</span></div>
-            <div class="box" id="shop"><img src="~/Images/shop.png" /><span>Shop</span></div>
-            <div class="box" id="menu"><img src="~/Images/inventory.png" /><span>Inventory</span></div>
-        </div>
-        <div class="row" id="third">
-            <div class="box" id="account"><img src="~/Images/account.png" /><span>Account</span></div>
-            <div class="box" id="team"><img src="~/Images/team.png" /><span>Teams</span></div>
-            <div class="box" id="faq"><img src="~/Images/faq.png" /><span>FAQ</span></div>
-            <div class="box" id="contact"><img src="~/Images/contact.png" /><span>Contact</span></div>
-        </div>
-    </div>*@
+            <div class="row" id="second">
+                <div id="close"><img src="~/Images/close.png"/><span>Close Menu</span></div>
+            </div>
+            <div class="row" id="first">
+                <div class="box" id="bet"><img src="~/Images/bet.png"/><span>Bet</span></div>
+                <div class="box" id="matches"><img src="~/Images/matches.png" /><span>Matches</span></div>
+                <div class="box" id="shop"><img src="~/Images/shop.png" /><span>Shop</span></div>
+                <div class="box" id="menu"><img src="~/Images/inventory.png" /><span>Inventory</span></div>
+            </div>
+            <div class="row" id="third">
+                <div class="box" id="account"><img src="~/Images/account.png" /><span>Account</span></div>
+                <div class="box" id="team"><img src="~/Images/team.png" /><span>Teams</span></div>
+                <div class="box" id="faq"><img src="~/Images/faq.png" /><span>FAQ</span></div>
+                <div class="box" id="contact"><img src="~/Images/contact.png" /><span>Contact</span></div>
+            </div>
+        </div>*@
     @RenderBody()
 
     <script>
-    // ERROR!!!!!! ACCOUNT ON HOVER TEXT CHANGES POSITION DEPENDING ON POSITION OF HOVER
+        // ERROR!!!!!! ACCOUNT ON HOVER TEXT CHANGES POSITION DEPENDING ON POSITION OF HOVER
 
-    var waterDropInterval;
-    var mobileWidth = 959;
+        var waterDropInterval;
+        var mobileWidth = 959;
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-    });
-
-    $(window).on('resize', function () {
-        //if ($(window).width() > mobileWidth) {
-        //    $(".textLink > div").remove();
-        //}
-        //else {
-        //    if ($(".textLink > div").length == 0)
-        //        $(".textLink").prepend("<div></div>");
-        //}
-
-        //$(".ink").css("border-radius", $("#menu").width());
-    });
-
-    // Get cursor position on each mousemove.
-    var cursor = { x: -1, y: -1 };
-    $(document).mousemove(function (event) {
-        cursor.x = event.pageX;
-        cursor.y = event.pageY;
-    });
-
-    $(document).on("mouseenter", "#navBig > a > div", function (e) {
-        // If tab is not active page
-        if (!$(this).parent().hasClass("active")) {
-            var parent = $(this).parent();
-
-            waterDrop(parent, e); // Add waterdrop effect
-            waterDropInterval = setInterval(function () {
-                waterDrop(parent, e);
-            }, 1000); // Set interval for waterdrop effect
-
-            showNavText($(this)); // Show descriptive text
-            var color = $(this).parent().css("background-color");
-            var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
-            for (var i = 0; i < colors.length; i++)
-                colors[i] = Math.round(colors[i] * 0.85); // Get background-color (bg *0.85)
-
-            color = "rgb(" + colors.join() + ")";
-
-            $(this).parent().css({ backgroundColor: color }); // Change background-color
-        }
-    });
-    $(document).on("mouseleave", "#navBig > a > div", function (e) {
-        if (!$(this).parent().hasClass("active")) {
-            clearInterval(waterDropInterval); // Remove waterdrop
-            hideNavText($(this)); // Remove text
-
-            $(this).parent().css({ backgroundColor: "#f16651" });
-        }
-    });
-
-    // Active page
-    $("#navBig > a > div").click(function () {
-        clearInterval(waterDropInterval); // Remove waterdrop
-        $("#navBig").stop(); // Stop animations of nav
-        $("#navBig").find(".active").removeClass("active");
-        $(this).parent().parent().find("a").css({ backgroundColor: "#f16651" });
-        $(this).parent().css({ backgroundColor: "#e3604c" });
-        $(this).parent().addClass("active");
-        hideNavText($(this)); // Hide text
-    });
-
-    function showNavText(elem) {
-        if ($(window).width() > mobileWidth) {
-            var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
-            elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
-
-            var scrollTop = $(window).scrollTop(), elementOffset = elem.offset().top, topPos = (elementOffset - scrollTop);
-            topPos += (elem.height() / 2 - $("#text").height() / 2);
-            var leftPos = -($("#text").width() + 40);
-            $("#text").css({
-                top: topPos,
-                left: leftPos
-            });
-        }
-    }
-    function hideNavText(elem) {
-        if ($(window).width() > mobileWidth)
-            $("#navBig > #text").remove();
-    }
-
-    function toMobile() {
-
-    }
-
-    function toDesktop() {
-
-    }
-
-    function waterDrop(parent, e) {
-        if (parent.find(".ink").length == 0)
-            parent.prepend("<span class='ink'></span>");
-
-        var ink = parent.find(".ink");
-        ink.removeClass("animate");
-
-        var d;
-        if (!ink.height() && !ink.width()) {
-            d = Math.max(parent.outerWidth(), parent.outerHeight());
-            ink.css({ height: d, width: d });
-        }
-
-        var x = cursor.x - parent.offset().left - ink.width() / 2;
-        var y = cursor.y - parent.offset().top - ink.height() / 2;
-
-        ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
-    }
-
-    function h_align_window(elem) {
-        var pos = ($(window).width() - $("#navBig").width()) / 2 - elem.width() / 2;
-        elem.css("left", pos);
-    }
-
-    function v_align_window(elem, parent) {
-        var pos = $(window).height() / 2 - elem.height() / 2;
-        elem.css("top", pos);
-    }
-
-    function v_align(e, p, eH) {
-        var pos = p.height() / 2 - eH / 2;
-        e.css("top", pos > 0 ? pos : 0);
-    }
-
-    function v_align_margin(e, p, eH) {
-        var pos = p.height() / 2 - eH / 2;
-        e.css("margin-top", pos > 0 ? pos : 0);
-    }
-
-    function h_align(e, p) {
-        var pos = p.width() / 2 - e.width() / 2;
-        e.css("left", pos > 0 ? pos : 0);
-    }
-
-    function h_align(e, p, eW) {
-        var pos = p.width() / 2 - eW / 2;
-        e.css("left", pos > 0 ? pos : 0);
-    }
-
-    function getHeightOfChilds(e) {
-        var totalHeight = 0;
-
-        e.children().each(function () {
-             totalHeight += $(this).outerHeight(true);
         });
 
-        return totalHeight;
-    }
+        $(window).on('resize', function () {
+            //if ($(window).width() > mobileWidth) {
+            //    $(".textLink > div").remove();
+            //}
+            //else {
+            //    if ($(".textLink > div").length == 0)
+            //        $(".textLink").prepend("<div></div>");
+            //}
+
+            //$(".ink").css("border-radius", $("#menu").width());
+        });
+
+        // Get cursor position on each mousemove.
+        var cursor = { x: -1, y: -1 };
+        $(document).mousemove(function (event) {
+            cursor.x = event.pageX;
+            cursor.y = event.pageY;
+        });
+
+        $(document).on("mouseenter", "#navBig > a > div", function (e) {
+            // If tab is not active page
+            if (!$(this).parent().hasClass("active")) {
+                var parent = $(this).parent();
+
+                waterDrop(parent, e); // Add waterdrop effect
+                waterDropInterval = setInterval(function () {
+                    waterDrop(parent, e);
+                }, 1000); // Set interval for waterdrop effect
+
+                showNavText($(this)); // Show descriptive text
+                var color = $(this).parent().css("background-color");
+                var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
+                for (var i = 0; i < colors.length; i++)
+                    colors[i] = Math.round(colors[i] * 0.85); // Get background-color (bg *0.85)
+
+                color = "rgb(" + colors.join() + ")";
+
+                $(this).parent().css({ backgroundColor: color }); // Change background-color
+            }
+        });
+        $(document).on("mouseleave", "#navBig > a > div", function (e) {
+            if (!$(this).parent().hasClass("active")) {
+                clearInterval(waterDropInterval); // Remove waterdrop
+                hideNavText($(this)); // Remove text
+
+                $(this).parent().css({ backgroundColor: "#f16651" });
+            }
+        });
+
+        // Active page
+        $("#navBig > a > div").click(function () {
+            clearInterval(waterDropInterval); // Remove waterdrop
+            $("#navBig").stop(); // Stop animations of nav
+            $("#navBig").find(".active").removeClass("active");
+            $(this).parent().parent().find("a").css({ backgroundColor: "#f16651" });
+            $(this).parent().css({ backgroundColor: "#e3604c" });
+            $(this).parent().addClass("active");
+            hideNavText($(this)); // Hide text
+        });
+
+        function showNavText(elem) {
+            if ($(window).width() > mobileWidth) {
+                var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
+                elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
+
+                var scrollTop = $(window).scrollTop(), elementOffset = elem.offset().top, topPos = (elementOffset - scrollTop);
+                topPos += (elem.height() / 2 - $("#text").height() / 2);
+                var leftPos = -($("#text").width() + 40);
+                $("#text").css({
+                    top: topPos,
+                    left: leftPos
+                });
+            }
+        }
+        function hideNavText(elem) {
+            if ($(window).width() > mobileWidth)
+                $("#navBig > #text").remove();
+        }
+
+        function toMobile() {
+
+        }
+
+        function toDesktop() {
+
+        }
+
+        function waterDrop(parent, e) {
+            if (parent.find(".ink").length == 0)
+                parent.prepend("<span class='ink'></span>");
+
+            var ink = parent.find(".ink");
+            ink.removeClass("animate");
+
+            var d;
+            if (!ink.height() && !ink.width()) {
+                d = Math.max(parent.outerWidth(), parent.outerHeight());
+                ink.css({ height: d, width: d });
+            }
+
+            var x = cursor.x - parent.offset().left - ink.width() / 2;
+            var y = cursor.y - parent.offset().top - ink.height() / 2;
+
+            ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
+        }
+
+        function h_align_window(elem) {
+            var pos = ($(window).width() - $("#navBig").width()) / 2 - elem.width() / 2;
+            elem.css("left", pos);
+        }
+
+        function v_align_window(elem, parent) {
+            var pos = $(window).height() / 2 - elem.height() / 2;
+            elem.css("top", pos);
+        }
+
+        function v_align(e, p, eH) {
+            var pos = p.height() / 2 - eH / 2;
+            e.css("top", pos > 0 ? pos : 0);
+        }
+
+        function v_align_margin(e, p, eH) {
+            var pos = p.height() / 2 - eH / 2;
+            e.css("margin-top", pos > 0 ? pos : 0);
+        }
+
+        function h_align(e, p) {
+            var pos = p.width() / 2 - e.width() / 2;
+            e.css("left", pos > 0 ? pos : 0);
+        }
+
+        function h_align(e, p, eW) {
+            var pos = p.width() / 2 - eW / 2;
+            e.css("left", pos > 0 ? pos : 0);
+        }
+
+        function getHeightOfChilds(e) {
+            var totalHeight = 0;
+
+            e.children().each(function () {
+                totalHeight += $(this).outerHeight(true);
+            });
+
+            return totalHeight;
+        }
     </script>
 
     @RenderSection("scripts", required: false)

@@ -27,6 +27,13 @@
         background-color: $menuColor;
     }
 
+    $smallHeight: 40px;
+    .small { position: absolute; height: $smallHeight; }
+        > #déconnection { @extend .small; bottom: 0; }
+        > #contact      { @extend .small; bottom: 10 + $smallHeight; }
+        > #support      { @extend .small; bottom: 10 + $smallHeight * 2; }
+        > #FAQ          { @extend .small; bottom: 10 + $smallHeight * 3; }
+
     > #compte { 
         $height: 98px;
         height: $height; 
@@ -58,7 +65,7 @@
         bottom: 0;
         width: 100%;
         height: auto;
-        margin-bottom: 25px;
+        margin-bottom: 42px;
 
         > a {
             position: relative;

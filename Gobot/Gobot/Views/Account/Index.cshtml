@@ -1,10 +1,10 @@
 ﻿@model Gobot.Models.User
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Mon compte";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Styles.Render("~/Content/Account.css")
+@Styles.Render("~/Content/Account.min.css")
 
 <div class="info" id="accountInfo">
     <div>
@@ -20,21 +20,6 @@
         <img id="closeOption" src="~/Images/close.png" />
     </div>
 </div>
-
-@*<div class="info" id="options">
-        <div id="changeEmail">
-            <img src="~/Images/mail.png" />
-            <h2>Modifier mon adresse courriel</h2>
-        </div>
-        <div id="changeImg">
-            <img src="~/Images/user.png" />
-            <h2>Modifier ma photo de profil</h2>
-        </div>
-        <div id="changePwd">
-            <img src="~/Images/lock.png" />
-            <h2>Modifier mon mot de passe</h2>
-        </div>
-    </div>*@
 
 <div class="info">
     <div class="info_logo" id="rank">
@@ -196,8 +181,8 @@
                 $("#userOptions > h3, #openOption").hide();
                 $("#closeOption").show();
 
-                posOptionTabs();
                 onResize();
+                posOptionTabs();
             }
             else {
                 $("#options").remove();
@@ -249,13 +234,22 @@
         }
 
         function posOptionTabs() {
-            let maxOptionHeight = $("#changePwd").outerHeight();
-            let emailDiff = maxOptionHeight - $("#changeEmail").outerHeight();
-            let imgDiff = maxOptionHeight - $("#changeImg").outerHeight();
-            $("#changeEmail > img").css("margin-top", emailDiff / 2);
-            $("#changeEmail > h2").css("margin-top", emailDiff / 2 + 20);
-            $("#changeImg > img").css("margin-top", imgDiff / 2);
-            $("#changeImg > h2").css("margin-top", imgDiff / 2 + 20);
+            let elems = ["#changeImg", "#changeEmail"];
+            for (var i = 0; i < elems.length; i++) {
+                var pwdImg = $("#changePwd > img").css("top").replace("px", "");
+                var pwdImgHeight = $("#changePwd > img").height() 
+                var elemImgHeight = $(elems[i] + " > img").height();
+                var total = parseFloat(pwdImg) + parseFloat(pwdImgHeight) - parseFloat(elemImgHeight);
+                $(elems[i] + "> img").attr("style", "top: " + total + "px !important;");
+                $(elems[i] + "> h2").attr("style", "top: " + total + "px !important;");
+            }
+            //let maxOptionHeight = $("#changePwd").outerHeight();
+            //let emailDiff = maxOptionHeight - $("#changeEmail").outerHeight();
+            //let imgDiff = maxOptionHeight - $("#changeImg").outerHeight();
+            //$("#changeEmail > img").css("margin-top", emailDiff / 2);
+            //$("#changeEmail > h2").css("margin-top", emailDiff / 2 + 20);
+            //$("#changeImg > img").css("margin-top", imgDiff / 2);
+            //$("#changeImg > h2").css("margin-top", imgDiff / 2 + 20);
         }
 
         function posRepBar(animate) {

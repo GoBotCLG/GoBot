@@ -20,6 +20,7 @@ $off-white: #eeeeee;
 $orange: #ffbf5c;
 
 $font: Lato, Arial, sans-serif;
+$infoBgColor: #232323;
 
 // GENERAL
 
@@ -109,6 +110,18 @@ img                         { border: 0; }
         }
          > a:hover, > button:hover { color: $off-white; border-color: $off-white; }
     }
+}
+
+
+.info {
+    position: relative;
+    float: left;
+    clear: both;
+    width: 85%;
+    max-width: 1350px;
+    height: auto;
+    background-color: $infoBgColor;
+    margin: 2px auto;
 }
 
 @media screen and (max-width:1200px) {
