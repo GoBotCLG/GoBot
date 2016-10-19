@@ -1,4 +1,5 @@
-﻿/* -------------------------------------------------------------------------------------------------------------------
+﻿@charset "UTF-8";
+/* -------------------------------------------------------------------------------------------------------------------
                                                     GENERAL ATTRIBUTES
  ------------------------------------------------------------------------------------------------------------------- */
 html, body {
@@ -41,16 +42,16 @@ img {
   visibility: hidden;
   opacity: 0; }
 
-.grey {
+.grey, grey {
   color: #626262; }
 
-.green {
+.green, green {
   color: #51c24b; }
 
-.red {
+.red, red {
   color: #963434; }
 
-.white {
+.white, white {
   color: white; }
 
 #error_overlay, #js_error {
@@ -94,6 +95,16 @@ img {
       color: #eeeeee;
       border-color: #eeeeee; }
 
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 85%;
+  max-width: 1350px;
+  height: auto;
+  background-color: #232323;
+  margin: 2px auto; }
+
 @media screen and (max-width: 1200px) {
   #error_overlay > div {
     width: 75%;
@@ -136,19 +147,28 @@ img {
     height: 65px;
     overflow: hidden;
     background-color: #f16651; }
-  #navBig > #account {
+  #navBig .small, #navBig > #déconnection, #navBig > #contact, #navBig > #support, #navBig > #FAQ {
+    position: absolute;
+    height: 40px; }
+  #navBig > #déconnection {
+    bottom: 0; }
+  #navBig > #contact {
+    bottom: 50px; }
+  #navBig > #support {
+    bottom: 90px; }
+  #navBig > #FAQ {
+    bottom: 130px; }
+  #navBig > #compte {
     height: 98px; }
-    #navBig > #account > #img {
-      background-size: 56px 56px; }
-    #navBig > #account > #border {
+    #navBig > #compte > div > img {
       position: absolute;
-      top: 17px;
-      left: 13px;
       width: 56px;
       height: 56px;
+      top: 17px;
+      left: 13px !important;
+      margin: 0 auto !important;
       border-radius: 50%;
-      border: 4px solid black;
-      opacity: 0.30; }
+      border: 4px solid rgba(0, 0, 0, 0.3); }
   #navBig > a > div {
     position: relative;
     top: 0;
@@ -163,7 +183,7 @@ img {
     bottom: 0;
     width: 100%;
     height: auto;
-    margin-bottom: 25px; }
+    margin-bottom: 42px; }
     #navBig > #textLinks > a {
       position: relative;
       float: left;
@@ -201,12 +221,13 @@ img {
       height: 100%;
       background-image: url(../Images/triangle.png);
       background-position: center; }
-  #navBig .active {
+  #navBig .active, #navBig .active_anim {
     left: -10px;
     background-color: #e3604c;
     border-right: 10px solid #a84739;
     border-top: 1px solid #cc5644;
-    border-bottom: 1px solid #cc5644;
+    border-bottom: 1px solid #cc5644; }
+  #navBig .active_anim {
     transition: left 0.1s linear; }
 
 .ink {

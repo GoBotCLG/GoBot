@@ -27,23 +27,26 @@
         background-color: $menuColor;
     }
 
-    > #account { 
+    $smallHeight: 40px;
+    .small { position: absolute; height: $smallHeight; }
+        > #déconnection { @extend .small; bottom: 0; }
+        > #contact      { @extend .small; bottom: 10 + $smallHeight; }
+        > #support      { @extend .small; bottom: 10 + $smallHeight * 2; }
+        > #FAQ          { @extend .small; bottom: 10 + $smallHeight * 3; }
+
+    > #compte { 
         $height: 98px;
         height: $height; 
 
-        > #img { background-size: 56px 56px; }
-        > #border {
-            $borderHeight: 56px;
-            $borderWidth: 4px;
-
+        > div > img { 
             position: absolute;
-            top: $height / 2 - $borderHeight / 2 - $borderWidth;
-            left: ($navWidth - $borderHeight) / 2 - $borderWidth;
             width: 56px;
-            height: $borderHeight;
+            height: 56px;
+            top: ($height - 64px) / 2;
+            left: 13px !important;
+            margin: 0 auto !important;
             border-radius: 50%;
-            border: $borderWidth solid black;
-            opacity: 0.30;
+            border: 4px solid rgba(0,0,0,0.3);
         }
     }
 
@@ -63,7 +66,7 @@
         bottom: 0;
         width: 100%;
         height: auto;
-        margin-bottom: 25px;
+        margin-bottom: 42px;
 
         > a {
             position: relative;
@@ -121,8 +124,8 @@
         border-right: 10px solid $menuColor_active_borderRight;
         border-top: 1px solid $menuColor_active_borderTop;
         border-bottom: 1px solid $menuColor_active_borderTop;
-        transition: left 0.1s linear;
     }
+    .active_anim { @extend .active; transition: left 0.1s linear; }
 }
 
 .ink {

@@ -19,7 +19,9 @@ namespace Gobot.Controllers
             }
 
             MySQLWrapper Bd = new MySQLWrapper();
-            Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+            User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
+            Session["User"] = user;
+            Session["User_img"] = user.ProfilPic;
 
             return View((User)Session["User"]);
         }
@@ -201,6 +203,13 @@ namespace Gobot.Controllers
         public ActionResult AddCredit()
         {
             return View();
+        }
+
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            Session.Abandon();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

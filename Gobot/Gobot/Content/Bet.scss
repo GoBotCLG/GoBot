@@ -1,0 +1,23 @@
+﻿@import 'global';
+
+$height: 100px;
+
+.info {
+    > div {
+        float: left; 
+        position: relative;
+        top: 0;
+        left: 0;
+        height: $height;
+   
+        > img { 
+            position: relative;
+            width: 60px;
+            height: 60px;
+            top: ($height - 70px) / 2;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 5px solid rgba(0,0,0,0.3);
+        }
+    }
+}

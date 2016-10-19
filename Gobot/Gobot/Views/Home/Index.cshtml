@@ -291,6 +291,12 @@
         function removePx(s) {
             return s.substring(0, s.indexOf('px'));
         }
+
+        $("#popOut_login > form > input").focus(function () {
+            $(this).prev().css("color", "#f16651");
+        }).blur(function () {
+            $(this).prev().css("color", "#626262");
+        });
     </script>
 </body>
 </html>

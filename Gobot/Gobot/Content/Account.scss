@@ -2,40 +2,38 @@
 
 $height: 130px;
 
+html, body { min-height: 100%; }
 
-button, a, h1, h2, h3, h4, h5, h6 {
+button, a, h1, h2, h3, h4, h5 {
     position: relative;
     display: block;
+    text-align: center;
 }
 
-h1, h2, h3, h4, h5, h6 { 
+h1, h2, h3, h4, h5 { 
     font: italic 900 40px $font;
     color: $off-white; 
     padding: 0;
     margin: 0;
 }
 
-h1 { font-size: 40px; line-height: 32px; }
+h1 { font-size: 36px; line-height: 30px; }
 h2 { font-size: 24px; }
 h3 { font-size: 18px; }
-h4 { font: 400 16px $font; color: $lightGrey; padding: 0; margin: 0; }
-h5 { font-size: 30px; }
-h6 { font-size: 36px; }
-span { font: 300 14px Lato, sans-serif; }
-
-.darkBG {
-    
-}
+h4 { font: 400 16px $font; padding: 0; margin: 0; }
+h5 { font: 400 14px Lato, sans-serif; color: white;}
 
 .info {
-    position: relative;
-    float: left;
-    clear: both;
-    width: 85%;
-    max-width: 1350px;
-    height: auto;
-    background-color: #232323;
-    margin: 2px auto;
+    a { padding: 0 25px; }
+    a:not(.whiteLink) { background-color: #202020; }
+    a:not(.whiteLink):hover {
+        background-color: #1b1b1b;
+        > .grey { color: $orange; }
+    }
+
+    .whiteLink { background-color: $off-white !important; color: $infoBgColor !important; }
+        .whiteLink > h2 { color: $infoBgColor; }
+        .whiteLink:hover { background-color: $orange !important; }
 
     b { color: $lightGrey !important; font-weight: inherit; }
 
@@ -45,14 +43,9 @@ span { font: 300 14px Lato, sans-serif; }
         top: 0;
         left: 0;
         height: $height;
-
-        > button, a {
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
     }
-
+        > div:not(#userInfo) > a { height: 100%; top: 0; left: 0; }
+    
     .info_logo {
         float: left;
         position: relative;
@@ -64,61 +57,361 @@ span { font: 300 14px Lato, sans-serif; }
         background-repeat: no-repeat;
         background-size: 62px;
     }
+}
+    .info:last-of-type { margin-bottom: 25px; }
 
-    #rank {
-        background-color: #1b1b1b;
+#accountInfo {
+    $imgWidth: 128px;
+    margin-top: $imgWidth * 0.3 + 25px;
+
+    > div:first-of-type > img {
+        float: left;
+        position: absolute;
+        top: -30%;
+        height: $imgWidth;
+        width: $imgWidth;
+        border-radius: 50%;
+        border: 10px solid $darkerGrey;
+        background-color: $darkerGrey;
+        margin-left: 10px;
     }
 
-    #rep {
-        float: left;
-        position: relative;
+    > div:last-of-type {
+        float: right;
+    }
+}
+
+#userInfo {
+    display: block;
+    width: auto;
+    float: left !important;
+    margin-left: 190px;
+    max-width: calc(100% - 390px);
+    min-width: 150px;
+    overflow: hidden;
+    padding: 0 4px 0 0 !important;
+
+    > h5 {
         top: 0;
         left: 0;
-        height: 100%;
+        text-transform: uppercase;
+        text-align: left;
+        font: italic 900 80px $font;
+        line-height: 72px;
+        color: #414141;
+        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-color: #686868;
+        letter-spacing: 1px;
+    }
+    > a {
+        display: block;
+        position: relative; 
+        float: right;
+        right: 0 !important;
+        clear: both;
+        background-color: $infoBgColor;
+        height: auto;
+        width: auto !important;
+        padding: 0 !important;
     }
 }
 
-#credits {
-    h4 {
-        text-align: right;
+#userOptions {
+    width: $height;
+    background-color: $darkerGrey;
+    cursor: pointer;
+
+    > #openOption {
+        width: 60px;
+        padding-top: 20px;
+        padding-bottom: 8px;
+        margin: 0 35px;
     }
-    > div:first-of-type {
-        background-image: url("/Images/gcCredit.png");
+    > h3 { 
+        color: #404040; 
+        text-transform: uppercase; 
+        font-weight: 900 !important; 
+        top: 0 !important; 
+    }
+
+    > #closeOption {
+        display: none;
+        position: relative;
+        top: calc(50% - 30px) !important;
+        width: 60px;
+        height: 60px;
+        margin: 0 calc(50% - 30px);
+    }
+}
+    #userOptions:hover {
+        background-color: #1b1b1b;
+        > #openOption { content:url("/Images/settings_hover.png"); }
+        > #closeOption { content:url("/Images/close_red.png"); }
+        > h3 { color: $orange; }
+    }
+
+#options {
+    height: 500px;
+
+    > div { 
+        width: 33.3%; 
+        padding: 50px 0 !important;
+        height: calc(100% - 100px);
+        cursor: pointer;
+
+        > img {
+            display: block;
+            position: relative;
+            width: 180px;
+            margin: 0 auto;
+        }
+
+        > h2 {
+            margin-top: 50px;
+            text-transform: uppercase;
+            top: 0 !important;
+            width: 60%;
+            margin: 20px auto;
+            color: $grey;
+        }
+    }
+
+    > div:hover {
+        background-color: #1f1f1f;
+        > h2 { color: $off-white; }
+    }
+}
+    #changeImg > h2 { top: 0 !important; }
+
+    #options > form {
+        height: 500px;
+        width: 100%;
+
+        > div { height: 100%; }
+    }
+        #optionForm {
+            float: left;
+            width: 66.7%;
+            background-color: $infoBgColor;
+
+            > img {
+                float: left;
+                clear: both;
+                margin: 40px calc(50% - 64px);
+                width: 128px;
+                height: 128px;
+                border-radius: 50%;
+                border: 10px solid #181818;
+            }
+
+            > #ImageUploader { display: none; }
+            > #UploadButton {
+                cursor: pointer;
+                float: left;
+                clear: both;
+                color: $grey;
+                font: 400 30px $font;
+                text-transform: uppercase;
+                width: 50%;
+                margin: 0 25%;
+                background-color: transparent;
+                border: 1px solid $grey;
+                padding: 10px;
+                white-space: normal;
+            }
+                > #UploadButton:hover { color: $off-white; border-color: $menuColor; }
+
+            > div:not(:first-of-type) {
+                float: left;
+                clear: both;
+                margin: 30px 30% auto 30%;
+                width: 40%;
+
+                > h2 {
+                    text-transform: uppercase;
+                    text-align: left;
+                    text-indent: 10px;
+                    margin-bottom: 5px;
+                }
+
+                > input {
+                    background-color: $infoBgColor;
+                    border-bottom: 2px solid $grey;
+                    width: 100%;
+                    font: 400 30px $font;
+                    color: $off-white;
+                }
+
+                > input:focus { border-color: $menuColor; }
+            }
+        }
+        .optionHeader {
+            float: left;
+            clear: both;
+            position: relative;
+            width: auto;
+            margin: 30px 0 20px 0;
+
+            > #changeEmail_headerImg {
+                margin-top: 11px !important;
+                height: 40px !important;
+            }
+            > img {
+                float: left;
+                height: 55px;
+            }
+            > h2 {
+                float: left;
+                line-height: 55px;
+                text-indent: 30px;
+                text-transform: uppercase;
+            }
+        }
+
+        #optionSubmit {
+            float: right;
+            width: 33.3%;
+            background-color: #181818;
+
+            > input {
+                position: relative;
+                background: url("/Images/send.png") no-repeat left;
+                width: 305px;
+                height: 126px;
+                color: $grey;
+                font: italic 900 24px $font;
+                text-transform: uppercase;
+                text-align: right;
+                cursor: pointer;
+            }
+
+            > div {
+                margin-top: 60px;
+                display: block;
+                position: relative;
+                width: auto;
+                cursor: pointer;
+
+                > img {
+                    display: block;
+                    position: relative;
+                    float: left;
+                    height: 60px;
+                    width: 60px;
+                }
+                > h3 {
+                    display: block;
+                    float: left;
+                    height: 100%;
+                    text-align: left;
+                    text-indent: 30px;
+                    line-height: 60px;
+                    text-transform: uppercase;
+                    color: $grey;
+                }
+            }
+                > input:hover, > div:hover > h3 { color: $off-white; }
+
+            > img {
+                position: absolute;
+                right: calc(33.2%);
+                top: calc(50% - 34px);
+                width: 30px;
+                height: 69px;
+            }
+        }
+
+#rank, #rep { > h2:first-of-type { padding-top: 5px; } }
+#rank { 
+    background-color: #1b1b1b;
+
+    > img { 
+        display: block;
+        position: relative;
+        width: 40px;
+        height: 50px;
+        margin: 10px auto 2px auto;
     }
 }
 
-#bets {
-    > div:first-of-type {
-        background-image: url("/Images/stat_bets.png");
+#rep {
+    float: left;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: calc(100% - $height) !important;
+    height: $height;
+    padding: 0 !important;
+    margin: 0;
+
+    > h2 { text-align: left; text-indent: 20px; margin-bottom: 15px; }
+    > h3 { width: 100%; text-align: center; top: -10px !important; }
+}
+    #rep-bar {
+        position: relative;
+        float: left;
+        display: block;
+        top: 0;
+        left: 30px;
+        width: 100% !important;
+        height: 51px;
+
+        > div:first-of-type, > div:last-of-type {
+            position: relative;
+            width: 51px;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        > div:first-of-type {
+            float: left;
+            background-image: url('/Images/rep_start.png');
+        }
+        
+        > div:last-of-type {
+            float: right;
+            background-image: url('/Images/rep_end.png');
+        }
+
+        > #xp {
+            position: absolute;
+            width: calc(100% - 100px);
+            left: 50px;
+            height: 12px;
+            top: 19px;
+            background-color: white;
+            z-index: 0;
+
+            > #xpDone {
+                position: relative;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: $green;
+                width: 0;
+            }
+        }
     }
+
+#credits > div:first-of-type        { background-image: url("/Images/gcCredit.png"); }
+#bets > div:first-of-type           { background-image: url("/Images/stat_bets.png"); }
+#creditStats > div:first-of-type    { background-image: url("/Images/stat_winLoss.png"); }
+#transactions > div:first-of-type   { background-image: url("/Images/stat_transactions.png"); }
+#matches > div:first-of-type        { background-image: url("/Images/stat_matches.png"); }
+
+@media screen and (max-width: 1325px) {
+    #rep > h2 { margin-bottom: 20px; }
+    #rank > h2 { margin-bottom: 15px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 19px; }
+    h3 { font-size: 15px; }
+    h4 { font-size: 13px; }
+    h5 { font-size: 12px; }
 }
 
-#creditStats {  
-    > div:first-of-type  {
-        background-image: url("/Images/stat_winLoss.png");
-    }
-}
-
-/*#creditStats, #transactions {
-    button, a {
-        background-color: $darkerGrey;
-    }
-}*/
-
-#transactions {
-    > div:first-of-type  {
-        background-image: url("/Images/stat_transactions.png");
-    }
-}
-
-#matches {
-    > div:first-of-type  {
-        background-image: url("/Images/stat_matches.png");
-    }
-}
-
-.overlaid {
-	-webkit-transform: scale(0.97);
-	transform: scale(0.97);
-    overflow: hidden;
+@media screen and (max-width: 1100px) {
+    h1 { font-size: 23px; }
+    h2 { font-size: 16px; }
+    h3 { font-size: 14px; }
 }

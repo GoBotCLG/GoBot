@@ -67,12 +67,7 @@ namespace Gobot.Controllers
                     User sessionuser = new User();
                     sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
                     sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
-                    if(UserResult.Rows[0]["Image"].GetType() != typeof(System.DBNull))
-                    {
-                        byte[] imagebytes = (byte[])UserResult.Rows[0]["Image"];
-                        TypeConverter tc = TypeDescriptor.GetConverter(typeof(System.Drawing.Bitmap));
-                        sessionuser.ProfilPic = (System.Drawing.Bitmap)tc.ConvertFrom(imagebytes);
-                    }                    
+                    sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString();
                     sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
                     sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
                     sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
@@ -82,7 +77,7 @@ namespace Gobot.Controllers
                     sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
                     Session["User"] = sessionuser;
 
-                    return RedirectToAction("Index", "Watch");
+                    return RedirectToAction("Index", "Account");
                 }
                 else
                 {

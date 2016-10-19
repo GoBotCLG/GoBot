@@ -1,29 +1,41 @@
 ﻿@model Gobot.Models.User
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Mon compte";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Styles.Render("~/Content/Account.css")
+@Styles.Render("~/Content/Account.min.css")
 
-<div id="accountInfo">
+<div class="info" id="accountInfo">
     <div>
-        <img id="img" src="~/Images/anonymous.png" />
-        <div id="border"></div>
+        <img id="img" src="@Model.ProfilPic" />
     </div>
-    <span id="name">@Html.DisplayFor(model => model.Username)</span>
-    <button id="test">test</button>
+    <div id="userInfo">
+        <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
+        <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
+    </div>
+    <div id="userOptions">
+        <img id="openOption" src="~/Images/settings.png" />
+        <h3>Options</h3>
+        <img id="closeOption" src="~/Images/close.png" />
+    </div>
 </div>
 
 <div class="info">
     <div class="info_logo" id="rank">
         <h2>RANK</h2>
-        <img src="~/Images/rank.png" />
-        <h2><grey>@Html.DisplayFor(model => model.Level)</grey></h2>
+        <img src="~/Images/ranks/1.png" />
+        <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
     </div>
     <div id="rep">
         <h2>REPUTATION</h2>
-        <div id="rep-bar"></div>
+        <div id="rep-bar">
+            <div></div>
+            <div id="xp">
+                <div id="xpDone"></div>
+            </div>
+            <div></div>
+        </div>
         <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
     </div>
 </div>
@@ -31,90 +43,255 @@
 <div class="info" id="credits">
     <div class="info_logo"></div>
     <div>
-        <h1>@Html.DisplayFor(model => model.Credits) <b>GOBOT CREDITS</b></h1>
-        <h4>1 Gobot credit = 0.01$</h4>
+        <h1>@Html.DisplayFor(model => model.Credits)<b> GOBOT CREDITS</b></h1>
+        @*<h4 class="grey">1 Gobot credit = 0.01$</h4>*@
     </div>
     <div>
-        <a href="#" id="buy"><h6>ACHETER</h6></a>
-    </div>
-    <div>
-        <a href="#" id="trade">
-            <h5>REGARDER UNE</h5>
-            <h2><b>ANNONCE</b></h2>
+        <a href="@Url.Action("Index", "Bet")" id="trade">
+            <h2>REGARDER UNE</h2>
+            <h3 class="grey">ANNONCE</h3>
         </a>
+    </div>
+    <div>
+        <a class="whiteLink" href="#" id="buy"><h2>ACHETER</h2></a>
     </div>
 </div>
 
 <div class="info" id="bets">
     <div class="info_logo"></div>
     <div>
-        <h1 id="total">300 <b>VICTOIRES</b></h1>
+        <h1 id="total">@Html.DisplayFor(model => model.Wins)<grey> VICTOIRES</grey></h1>
     </div>
     <div>
-        <h1 id="wins">150<b>PARTIES</b></h1>
+        <h1 id="wins">@Html.DisplayFor(model => model.Games)<grey> PARTIES</grey></h1>
     </div>
-    <div>
-        <h1 id="ratio">50% <b>PARTIES GAGNÉES</b></h1>
-    </div>
+    @if (Model.Games > 0)
+    {
+        <div>
+            <h1 id="ratio">
+                @(Math.Round((double)Model.Wins / Model.Games * 100))
+                %<grey> PARTIES GAGNÉES</grey>
+            </h1>
+        </div>
+    }
+
 </div>
 
 <div class="info" id="creditStats">
     <div class="info_logo"></div>
     <div>
-        <h1 id="wonLoss"><b>850</b>/<b>400</b>VICTOIRES/DÉFAITES</h1>
+        <h1 id="wonLoss"><green>850</green>/<red>400</red> GAGNÉS/PERDUS</h1>
     </div>
     <div>
-        <h1>200<b>ACHETÉS</b></h1>
+        <h1>0<grey> ACHETÉS</grey></h1>
     </div>
-    <a href="#" class="darkBG">
-        <h5>ACHETER DES CRÉDITS</h5>
-        <h4><grey>DE GOBOTTER</grey></h4>
-    </a>
+    <div>
+        <a href="#" class="darkBG">
+            <h2>ACHETER DES CRÉDITS</h2>
+            <h3 class="grey">DE GOBOTTER</h3>
+        </a>
+    </div>
 </div>
 
 <div class="info" id="transactions">
     <div class="info_logo"></div>
     <div>
-        <h1 id="fromGB">8 <b>OBJETS ACHETÉS</b></h1>
-        <h2>DE GOBOTTER</h2>
+        <h1 id="fromGB">0<grey> OBJETS ACHETÉS</grey></h1>
+        <h2 class="grey">DE GOBOTTER</h2>
     </div>
     <div>
-        <h1>525 <b>CRÉDITS TOTAL</b></h1>
+        <h1>525<grey> CRÉDITS TOTAL</grey></h1>
     </div>
     <div>
-        <button><h3><grey>MES</grey></h3> <h5>TRANSACTIONS</h5></button>
+        <a><h3 class="grey">MES</h3> <h2>TRANSACTIONS</h2></a>
     </div>
 </div>
 
 <div class="info" id="matches">
     <div class="info_logo"></div>
     <div>
-        <h1>250<b>PARTIES REGARDÉES</b></h1>
+        <h1>0<grey> PARTIES REGARDÉES</grey></h1>
     </div>
     <div>
-        <h1>CLOUD6<b>ÉQUIPE FAVORITE</b></h1>
+        <h1>CLOUD6<grey> ÉQUIPE FAVORITE</grey></h1>
     </div>
     <div>
-        <a><h2>VOIR LES</h2><h1>ÉQUIPES</h1></a>
+        <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        var levels;
+
         $(function () {
+            $(".info > div > a").each(function () {
+                $(this).parent().css("float", "right");
+            });
+            $(".info > div > :not(a)").each(function () {
+                $(this).parent().css("padding", "0 15px");
+            });
+
             onResize();
+            posRepBar(true);
+            levels = @Model.Level;
+        });
+
+        $(window).on('load', function() {
+            animateRanks(1);
         });
 
         $(window).resize(function () {
             onResize();
+            posRepBar(false);
+        });
+
+        $(document).on("click", "#options > div", function() {
+            $("#options > div").not($(this)).each(function() {
+                if ($(this).is(":visible"))
+                    $(this).hide();
+                else
+                    $(this).show();
+            });
+
+            if ($("#optionForm").length == 0)
+                showForm($(this).attr("id"));
+            else {
+                $("#optionForm").remove();
+                $("#optionSubmit").remove();
+            }
+        });
+
+        $(document).on("click", "#optionSubmit:first-child", function() {
+            // SUBMIT FORM INFORMATION
+        });
+
+        $(document).on("click", "#optionSubmit:last-child", function() {
+            $("#options > form").remove();
+            $("#options > div").show();
+        });
+
+        $(document).on("click", "#userOptions", function() {
+            if ($("#options").length == 0) {
+                $('<div class="info" id="options"></div>').insertAfter("#accountInfo");
+                $("#options").append('<div id="changeEmail"><img src="/Images/mail.png"><h2>Modifier mon adresse courriel</h2></div>');
+                $("#options").append('<div id="changeImg"><img src="/Images/user.png"><h2 >Modifier ma photo de profil</h2></div>');
+                $("#options").append('<div id="changePwd"><img src="/Images/lock.png"><h2>Modifier mon mot de passe</h2></div>');
+
+                $("#userOptions > h3, #openOption").hide();
+                $("#closeOption").show();
+                
+                onResize();
+                posOptionTabs();
+            }
+            else {
+                $("#options").remove();
+                $("#userOptions > h3, #openOption").show();
+                $("#closeOption").hide();
+            }
+        });
+
+        $(document).on("focus", "form input", function () {
+            $(this).prev().css("color", "#f16651");
+        }).on("blur", "form input", function () {
+            $(this).prev().css("color", "#eee");
+        });
+
+        $(document).on("click", "#UploadButton", function() {
+            $("#ImageUploader").trigger("click");
+        });
+        
+        $(document).on("change", "#ImageUploader", function(){
+            readURL(this);
         });
 
         function onResize() {
             h_align_window($(".info"));
-            var elems = $(".info > div:not(:first-of-type)");
+
             $(".info > div:not(:first-of-type)").each(function () {
-                v_align($(this).children(), $(this), getHeightOfChilds($(this)))
+                if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
+                    v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
+                else
+                    v_align($(this).children(), $(this), getHeightOfChilds($(this)))
             });
+
+            $(".info:not(#accountInfo) > div").has("a").each(function() {
+                if ($(window).width() <= 960)
+                    $(this).css("width", "100%");
+                else
+                    $(this).css("width", "auto");
+            });
+        }
+
+        function animateRanks(i) {
+            setTimeout(function() {
+                $("#rank > img").attr('src', '/Images/ranks/' + i + '.png');
+                $("#rank > h2:last-of-type").text(i);
+
+                if (i < levels)
+                    animateRanks(i+ 1);
+            }, 750 / levels);
+        }
+
+        function posOptionTabs() {
+            let elems = ["#changeImg", "#changeEmail"];
+            for (var i = 0; i < elems.length; i++) {
+                var pwdImg = $("#changePwd > img").css("top").replace("px", "");
+                var pwdImgHeight = $("#changePwd > img").height() 
+                var elemImgHeight = $(elems[i] + " > img").height();
+                var total = parseFloat(pwdImg) + parseFloat(pwdImgHeight) - parseFloat(elemImgHeight);
+                $(elems[i] + "> img").attr("style", "top: " + total + "px !important;");
+                $(elems[i] + "> h2").attr("style", "top: " + total + "px !important;");
+            }
+        }
+
+        function posRepBar(animate) {
+            var repWidth = $(".info").width() - $("#rank").outerWidth() - 60;
+            var xpDoneWidth = (@Model.EXP / 1500) * 100 + '%';
+            $("#rep").width(repWidth);
+
+            if (animate)
+                $("#xpDone").animate({ width: xpDoneWidth }, 750, "linear");
+            else
+                $("#xpDone").width(xpDoneWidth);
+        }
+
+        function showForm(id) {
+            $("#options").append('<form action="/Account/Index" enctype="multipart/form-data" method="post" autocomplete="off"><div id="optionForm"><div class="optionHeader"><img id="' + id + '_headerImg" src="/Images/option_' + id + '.png" /><h2>' + $('#' + id).find("h2").text() + '</h2></div></div></form>');
+
+            if (id == "changeImg") {
+                $("#optionForm").append('<img id="UploadedImage" src="' + '@Url.Content(Model.ProfilPic)' + '"><input id="ImageUploader" name="ImageUploader" type="file">');
+                $("#optionForm").append('<input id="UploadButton" type="button" value="Choisir une image...">');
+            }
+            else if (id == "changePwd") {
+                $("#optionForm").append('<div><h2>Ancien <grey>mot de passe</grey></h2><input name="oldPwd" type="password"/></div>');
+                $("#optionForm").append('<div><h2>Nouveau <grey>mot de passe</grey></h2><input name="newPwd" type="password"/></div>');
+                $("#optionForm").append('<div><h2>Confirmer <grey>mot de passe</grey></h2><input name="confirmPwd" type="password"/></div>');
+            }
+            else {
+                $("#optionForm").append('<div><h2>Nouvelle<grey> adresse courriel</grey></h2><input name="newEmail" type="text"/></div>');
+                $("#optionForm").append('<div><h2>Confirmer<grey> adresse courriel</grey></h2><input name="confirmEmail" type="text"/></div>');
+            }
+
+            $("#options > form").append('<div id="optionSubmit"><input type="submit" value="Confirmer" /><div><img src="/Images/close_red.png" /><h3>Annuler</h3></div><img class="triangle" src="/Images/accountOption_triangle.png" /></div>');
+            $('#' + id).hide();
+
+            v_align_margin($("#optionSubmit > input"), $("#optionSubmit"), $("#optionSubmit > input").height());
+            h_align($("#optionSubmit > input"), $("#optionSubmit"), $("#optionSubmit > input").outerWidth());
+            h_align($("#optionSubmit > div"), $("#optionSubmit"), $("#optionSubmit > div > h3").width() + $("#optionSubmit > div > img").width());
+            h_align($(".optionHeader"), $("#optionForm"), $(".optionHeader").width());
+        }
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+            
+                reader.onload = function (e) {
+                    $('#UploadedImage').attr('src', e.target.result);
+                }
+            
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>
 }
