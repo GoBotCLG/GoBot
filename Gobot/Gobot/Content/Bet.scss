@@ -16,9 +16,7 @@ $height: 100px;
         }
     }
 
-    .sqr {
-        width: 80px;
-    }
+    .sqr { width: 80px; }
 }
 
 .time {
@@ -26,8 +24,12 @@ $height: 100px;
     > h3 { color: $grey; }
 }
 
+.vs {
+    position: absolute;
+    > h1 { font-size: 50px; font-style: normal; }
+}
 .team {
-    > div:first-of-type {
+    > .text {
         width: calc(100% - 200px);
     }
     > .img {
@@ -37,9 +39,11 @@ $height: 100px;
         background: no-repeat center;
 
     }
+    h1, h3 { text-transform: uppercase; }
 }
 
 .team1 {
+    h1, h3 { text-indent: 10px; text-align: left; }
     > .img {
         float: left;
         -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
@@ -48,9 +52,7 @@ $height: 100px;
 }
 
 .team2 {
-    h1, h2 {
-        text-align: right;
-    }
+    h1, h3 { left: -10px; text-align: right; }
     > .img {
         position: relative;
         float: right;
@@ -62,6 +64,7 @@ $height: 100px;
 
 .manageBet {
     height: $height;
+
     > div {
         position: relative;
         background: no-repeat center;

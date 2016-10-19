@@ -197,7 +197,13 @@ img {
   .time > h3 {
     color: #626262; }
 
-.team > div:first-of-type {
+.vs {
+  position: absolute; }
+  .vs > h1 {
+    font-size: 50px;
+    font-style: normal; }
+
+.team > .text {
   width: calc(100% - 200px); }
 
 .team > .img {
@@ -206,12 +212,20 @@ img {
   width: 200px;
   background: no-repeat center; }
 
+.team h1, .team h3 {
+  text-transform: uppercase; }
+
+.team1 h1, .team1 h3 {
+  text-indent: 10px;
+  text-align: left; }
+
 .team1 > .img {
   float: left;
   -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%); }
 
-.team2 h1, .team2 h2 {
+.team2 h1, .team2 h3 {
+  left: -10px;
   text-align: right; }
 
 .team2 > .img {
