@@ -9,15 +9,96 @@ $height: 100px;
         top: 0;
         left: 0;
         height: $height;
-   
-        > img { 
-            position: relative;
-            width: 60px;
-            height: 60px;
-            top: ($height - 70px) / 2;
-            margin: 0 auto;
-            border-radius: 50%;
-            border: 5px solid rgba(0,0,0,0.3);
+
+        > div {
+            float: left;
+            height: 100%;
         }
     }
+
+    .sqr {
+        width: 80px;
+    }
+}
+
+.time {
+    background-color: $darkGrey2;
+    > h3 { color: $grey; }
+}
+
+.team {
+    > div:first-of-type {
+        width: calc(100% - 200px);
+    }
+    > .img {
+	    display: block;
+        height: $height;
+        width: 200px;
+        background: no-repeat center;
+
+    }
+}
+
+.team1 {
+    > .img {
+        float: left;
+        -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+        clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+    }
+}
+
+.team2 {
+    h1, h2 {
+        text-align: right;
+    }
+    > .img {
+        position: relative;
+        float: right;
+        right: 0;
+        -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+        clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+.manageBet {
+    height: $height;
+    > div {
+        position: relative;
+        background: no-repeat center;
+        background-size: 25px 25px;
+        cursor: pointer;
+        opacity: 0.75;
+        padding: 0;
+        margin: 0;
+
+        > div {
+            display: none;
+            position: relative;
+            top: 0 !important;
+            width: 100px;
+            left: -100px;
+            height: $height;
+            background-color: inherit;
+
+           > h2 {
+               text-transform: uppercase;
+               font-weight: 400;
+               height: $height;
+               line-height: $height;
+               padding-left: 20px;
+           }
+        }
+    }
+
+    > .create { background-image: url("/Images/addBet.png"); background-color: $green; }
+    > .remove { background-image: url("/Images/removeBet.png"); background-color: $red; }
+    > .edit { 
+        background-image: url("/Images/editBet.png"); 
+        background-size: 32px 25px; 
+        background-color: #454545; 
+    }
+
+    > div:hover {opacity: 1; transition: 0.1s; > div { display: block; } }
+    > .create:hover, .remove:hover { background-size: 32px 32px; }
+    > .edit:hover { background-size: 41px 32px; }
 }

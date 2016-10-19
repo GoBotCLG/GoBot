@@ -24,6 +24,20 @@
             <a href="http://enable-javascript.com/fr/" target="_blank">Comment activer mon Javascript?</a>
         </div>
     </noscript>
+
+    @{
+        if (ViewBag.Error != null && ViewBag.Error != "")
+        {
+            <div id="error_overlay">
+                <div>
+                    <div id="error_overlay_image"></div>
+                    <h1>@ViewBag.Error</h1>
+                    <button id="close_errorOverlay">Fermer</button>
+                </div>
+            </div>
+        }
+    }
+
     <div id="header">
         <div id="sub">
             <h1>VOUS N'ÊTES PAS CONNECTÉ.</h1>

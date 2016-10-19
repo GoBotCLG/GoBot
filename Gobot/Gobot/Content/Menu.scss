@@ -31,8 +31,7 @@
     .small { position: absolute; height: $smallHeight; }
         > #déconnection { @extend .small; bottom: 0; }
         > #contact      { @extend .small; bottom: 10 + $smallHeight; }
-        > #support      { @extend .small; bottom: 10 + $smallHeight * 2; }
-        > #FAQ          { @extend .small; bottom: 10 + $smallHeight * 3; }
+        > #FAQ          { @extend .small; bottom: 10 + $smallHeight * 2; }
 
     > #compte { 
         $height: 98px;

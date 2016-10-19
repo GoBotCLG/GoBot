@@ -4,25 +4,6 @@ $height: 130px;
 
 html, body { min-height: 100%; }
 
-button, a, h1, h2, h3, h4, h5 {
-    position: relative;
-    display: block;
-    text-align: center;
-}
-
-h1, h2, h3, h4, h5 { 
-    font: italic 900 40px $font;
-    color: $off-white; 
-    padding: 0;
-    margin: 0;
-}
-
-h1 { font-size: 36px; line-height: 30px; }
-h2 { font-size: 24px; }
-h3 { font-size: 18px; }
-h4 { font: 400 16px $font; padding: 0; margin: 0; }
-h5 { font: 400 14px Lato, sans-serif; color: white;}
-
 .info {
     a { padding: 0 25px; }
     a:not(.whiteLink) { background-color: #202020; }
@@ -399,19 +380,3 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
 #creditStats > div:first-of-type    { background-image: url("/Images/stat_winLoss.png"); }
 #transactions > div:first-of-type   { background-image: url("/Images/stat_transactions.png"); }
 #matches > div:first-of-type        { background-image: url("/Images/stat_matches.png"); }
-
-@media screen and (max-width: 1325px) {
-    #rep > h2 { margin-bottom: 20px; }
-    #rank > h2 { margin-bottom: 15px; }
-    h1 { font-size: 28px; }
-    h2 { font-size: 19px; }
-    h3 { font-size: 15px; }
-    h4 { font-size: 13px; }
-    h5 { font-size: 12px; }
-}
-
-@media screen and (max-width: 1100px) {
-    h1 { font-size: 23px; }
-    h2 { font-size: 16px; }
-    h3 { font-size: 14px; }
-}

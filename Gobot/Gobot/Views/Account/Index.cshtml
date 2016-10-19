@@ -6,6 +6,19 @@
 }
 @Styles.Render("~/Content/Account.min.css")
 
+@{
+    if (ViewBag.Error != null && ViewBag.Error != "")
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="error_overlay_image"></div>
+                <h1>@ViewBag.Error</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+}
+
 <div class="info" id="accountInfo">
     <div>
         <img id="img" src="@Model.ProfilPic" />
@@ -162,15 +175,10 @@
             }
         });
 
-        $(document).on("click", "#optionSubmit:first-child", function() {
-            // SUBMIT FORM INFORMATION
-        });
-
         $(document).on("click", "#optionSubmit:last-child", function() {
             $("#options > form").remove();
             $("#options > div").show();
         });
-
         $(document).on("click", "#userOptions", function() {
             if ($("#options").length == 0) {
                 $('<div class="info" id="options"></div>').insertAfter("#accountInfo");
@@ -200,7 +208,6 @@
         $(document).on("click", "#UploadButton", function() {
             $("#ImageUploader").trigger("click");
         });
-        
         $(document).on("change", "#ImageUploader", function(){
             readURL(this);
         });
@@ -243,6 +250,7 @@
                 $(elems[i] + "> img").attr("style", "top: " + total + "px !important;");
                 $(elems[i] + "> h2").attr("style", "top: " + total + "px !important;");
             }
+            $("#changePwd > h2").attr("style", "top: " + $("#changePwd > img").css("top").replace("px", "") + "px !important;");
         }
 
         function posRepBar(animate) {

@@ -4,18 +4,180 @@
 }
 @Styles.Render("~/Content/Bet.min.css")
 
-<div>
-    <table>
-        <thead>
-            <tr>
-                <th>Équipe commençant T: </th><th>Équipe commençant CT: </th><th></th>
-            </tr>
-        </thead>
-        @{
-            foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)ViewBag.Matches)
-            {
+@{
+    if (ViewBag.Error != null && ViewBag.Error != "")
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="error_overlay_image"></div>
+                <h1>@ViewBag.Error</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+}
 
+@*@{
+    if (((List<Gobot.Models.Match>)ViewBag.Matches).Count > 0)
+    {
+        foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)ViewBag.Matches)
+        {
+            <div class="info">
+                <div class="time">@m.Date.TimeOfDay.ToString("HH:mm")</div>
+
+                <div class="team1">
+                    <img src="~/Images/@(m.Teams[0].Name).png" />
+                    <div>
+                        <h1>@m.Teams[0].Name</h1>
+                        <h2>5000$</h2>
+                    </div>
+                </div>
+                <div class="vs"><h1>VS</h1></div>
+                <div class="team2">
+                    <div><img src="~/Images/@(m.Teams[1].Name).png" /></div>
+                    <div>
+                        <h1>@m.Teams[1].Name</h1>
+                        <h2>5000$</h2>
+                    </div>
+                </div>
+
+                <div class="manageBet">
+                    @{
+                        // if user placed bet
+                        if (true)
+                        {
+                            <div class="create"></div>
+                        }
+                        else
+                        {
+                            <div class="remove"></div>
+                            <div class="edit"></div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="noMatch">
+            <h1>Aucune partie à venir. Réessayez plus tard.</h1>
+        </div>
+    }
+}*@
+
+<div class="info">
+    <div class="time sqr"><h3>12:00</h3></div>
+
+    <div class="team team1">
+        <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
+        <div>
+            <h1>Cloud6</h1>
+            <h2>5000$</h2>
+        </div>
+    </div>
+    <div class="vs"><h1>VS</h1></div>
+    <div class="team team2">
+        <div>
+            <h1>LRG</h1>
+            <h2>5000$</h2>
+        </div>
+        <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
+    </div>
+
+    <div class="manageBet">
+        @{
+            // if user placed bet
+            if (true)
+            {
+                <div class="create sqr"><div><h2>Miser</h2></div></div>
+            }
+            else
+            {
+                <div class="remove sqr"><div><h2>Retirer</h2></div></div>
+                <div class="edit sqr"><div><h2>Modifier</h2></div></div>
             }
         }
-    </table>
+    </div>
 </div>
+
+<div class="info">
+    <div class="time sqr"><h3>12:00</h3></div>
+
+    <div class="team team1">
+        <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
+        <div>
+            <h1>Cloud6</h1>
+            <h2>5000$</h2>
+        </div>
+    </div>
+    <div class="vs"><h1>VS</h1></div>
+    <div class="team team2">
+        <div>
+            <h1>LRG</h1>
+            <h2>5000$</h2>
+        </div>
+        <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
+    </div>
+
+    <div class="manageBet">
+        @{
+            // if user placed bet
+            if (false)
+            {
+                <div class="create sqr"><div><h2>Miser</h2></div></div>
+            }
+            else
+            {
+                <div class="remove sqr"><div><h2>Retirer</h2></div></div>
+                <div class="edit sqr"><div><h2>Modifier</h2></div></div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            onResize();
+        });
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        $(".manageBet > .edit").mouseenter(function () {
+            $(".manageBet > .remove").css("left", -100);
+        }).mouseleave(function () {
+            $(".manageBet > .remove").css("left", 0);
+        });
+
+        function onResize() {
+            resizeInfo();
+            h_align_window($(".info"));
+
+            $(".info > div").each(function () {
+                if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
+                    v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
+                else
+                    v_align($(this).children(), $(this), getHeightOfChilds($(this)))
+            });
+        }
+
+        function resizeInfo() {
+            $(".info").each(function () {
+                let total = 0;
+
+                $(this).find("> div").each(function () {
+                    if (!$(this).hasClass("team"))
+                        total += $(this).width();
+                });
+
+                $(this).find(".team").css("width", ($(".info").width() - total) / 2);
+            });
+
+            //let count = $(".info > .sqr").length;
+            //$(".team").width(($(".info").width() - (".sqr").width() * count) / 2);
+        }
+    </script>
+}

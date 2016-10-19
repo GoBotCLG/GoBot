@@ -27,18 +27,15 @@
         <a id="équipes" href="#">
             <div style="background-image: url(@Url.Content("~/Images/teams.png"))"></div>
         </a>
-        <a id="inventaire" href="#">
+        @*<a id="inventaire" href="#">
             <div style="background-image: url(@Url.Content("~/Images/inventory.png"))"></div>
-        </a>
+        </a>*@
         @*<a id="magasin" href="@Url.Action("Index", "Shop")">
             <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
         </a>*@
 
         <a id="FAQ" class="small" href="#">
             <div style="background-image: url(@Url.Content("~/Images/faq.png"))"></div>
-        </a>
-        <a id="support" class="small" href="#">
-            <div style="background-image: url(@Url.Content("~/Images/support.png"))"></div>
         </a>
         <a id="contact" class="small" href="#">
             <div style="background-image: url(@Url.Content("~/Images/contact.png"))"></div>
@@ -70,7 +67,7 @@
 
         $(document).on("mouseenter", "#navBig > a > div", function (e) {
             // If tab is not active page
-            if (!$(this).parent().hasClass("active")) {
+            if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
                 var parent = $(this).parent();
 
                 waterDrop(parent, e); // Add waterdrop effect
@@ -89,7 +86,7 @@
                 $(this).parent().css({ backgroundColor: color }); // Change background-color
             }
         }).on("mouseleave", "#navBig > a > div", function (e) {
-            if (!$(this).parent().hasClass("active")) {
+            if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
                 clearInterval(waterDropInterval); // Remove waterdrop
                 hideNavText($(this)); // Remove text
 
@@ -115,6 +112,7 @@
                 clearInterval(waterDropInterval); // Remove waterdrop
                 $("#navBig").stop(); // Stop animations of nav
                 $("#navBig").find(".active").removeClass("active");
+                $("#navBig").find(".active_anim").removeClass("active_anim");
                 e.parent().parent().find("a").css({ backgroundColor: "#f16651" });
                 e.parent().css({ backgroundColor: "#e3604c" });
                 e.parent().addClass(animate ? "active_anim" : "active");
@@ -159,43 +157,9 @@
 
             ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
         }
-
-        function h_align_window(elem) {
-            var pos = ($(window).width() - $("#navBig").width()) / 2 - elem.width() / 2;
-            elem.css("left", pos);
-        }
-        function v_align_window(elem, parent) {
-            var pos = $(window).height() / 2 - elem.height() / 2;
-            elem.css("top", pos);
-        }
-        function v_align(e, p, eH) {
-            var pos = p.height() / 2 - eH / 2;
-            e.css("top", pos > 0 ? pos : 0);
-        }
-        function v_align_margin(e, p, eH) {
-            var pos = p.height() / 2 - eH / 2;
-            e.css("margin-top", pos > 0 ? pos : 0);
-        }
-        function h_align(e, p) {
-            var pos = p.width() / 2 - e.width() / 2;
-            e.css("left", pos > 0 ? pos : 0);
-        }
-        function h_align(e, p, eW) {
-            var pos = p.width() / 2 - eW / 2;
-            e.css("left", pos > 0 ? pos : 0);
-        }
-
-        function getHeightOfChilds(e) {
-            var totalHeight = 0;
-
-            e.children().each(function () {
-                totalHeight += $(this).outerHeight(true);
-            });
-
-            return totalHeight;
-        }
     </script>
 
-    @RenderSection("scripts", required: false)
+    @RenderSection("scripts", required: false);
+    @Scripts.Render("~/Scripts/global.js");
 </body>
 </html>

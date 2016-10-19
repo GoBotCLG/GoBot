@@ -125,18 +125,143 @@ img {
       height: 120px !important;
       margin-left: calc(50% - 120px /2) !important; } }
 
+.info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5 {
+  position: relative;
+  display: block;
+  text-align: center; }
+
+.info h1, .info h2, .info h3, .info h4, .info h5 {
+  font: italic 900 40px Lato, Arial, sans-serif;
+  color: #eeeeee;
+  padding: 0;
+  margin: 0; }
+
+.info h1 {
+  font-size: 36px;
+  line-height: 30px; }
+
+.info h2 {
+  font-size: 24px; }
+
+.info h3 {
+  font-size: 18px; }
+
+.info h4 {
+  font: 400 16px Lato, Arial, sans-serif;
+  padding: 0;
+  margin: 0; }
+
+.info h5 {
+  font: 400 14px Lato, sans-serif;
+  color: white; }
+
+@media screen and (max-width: 1325px) {
+  .info #rep > h2 {
+    margin-bottom: 20px; }
+  .info #rank > h2 {
+    margin-bottom: 15px; }
+  .info h1 {
+    font-size: 28px; }
+  .info h2 {
+    font-size: 19px; }
+  .info h3 {
+    font-size: 15px; }
+  .info h4 {
+    font-size: 13px; }
+  .info h5 {
+    font-size: 12px; } }
+
+@media screen and (max-width: 1100px) {
+  .info h1 {
+    font-size: 23px; }
+  .info h2 {
+    font-size: 16px; }
+  .info h3 {
+    font-size: 14px; } }
+
 .info > div {
   float: left;
   position: relative;
   top: 0;
   left: 0;
   height: 100px; }
-  .info > div > img {
+  .info > div > div {
+    float: left;
+    height: 100%; }
+
+.info .sqr {
+  width: 80px; }
+
+.time {
+  background-color: #2d2d2d; }
+  .time > h3 {
+    color: #626262; }
+
+.team > div:first-of-type {
+  width: calc(100% - 200px); }
+
+.team > .img {
+  display: block;
+  height: 100px;
+  width: 200px;
+  background: no-repeat center; }
+
+.team1 > .img {
+  float: left;
+  -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%); }
+
+.team2 h1, .team2 h2 {
+  text-align: right; }
+
+.team2 > .img {
+  position: relative;
+  float: right;
+  right: 0;
+  -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%); }
+
+.manageBet {
+  height: 100px; }
+  .manageBet > div {
     position: relative;
-    width: 60px;
-    height: 60px;
-    top: 15px;
-    margin: 0 auto;
-    border-radius: 50%;
-    border: 5px solid rgba(0, 0, 0, 0.3); }
+    background: no-repeat center;
+    background-size: 25px 25px;
+    cursor: pointer;
+    opacity: 0.75;
+    padding: 0;
+    margin: 0; }
+    .manageBet > div > div {
+      display: none;
+      position: relative;
+      top: 0 !important;
+      width: 100px;
+      left: -100px;
+      height: 100px;
+      background-color: inherit; }
+      .manageBet > div > div > h2 {
+        text-transform: uppercase;
+        font-weight: 400;
+        height: 100px;
+        line-height: 100px;
+        padding-left: 20px; }
+  .manageBet > .create {
+    background-image: url("/Images/addBet.png");
+    background-color: #51c24b; }
+  .manageBet > .remove {
+    background-image: url("/Images/removeBet.png");
+    background-color: #963434; }
+  .manageBet > .edit {
+    background-image: url("/Images/editBet.png");
+    background-size: 32px 25px;
+    background-color: #454545; }
+  .manageBet > div:hover {
+    opacity: 1;
+    transition: 0.1s; }
+    .manageBet > div:hover > div {
+      display: block; }
+  .manageBet > .create:hover, .manageBet .remove:hover {
+    background-size: 32px 32px; }
+  .manageBet > .edit:hover {
+    background-size: 41px 32px; }
 

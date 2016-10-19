@@ -18,33 +18,36 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Watch");
             }
 
-            MySQLWrapper Bd = new MySQLWrapper();
+            //MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable InfoLiveMatch = Bd.Procedure("IsMatchCurrent");
-            JObject[] Teams = new JObject[2];
-            if (InfoLiveMatch.Rows[0]["Team1"].ToString() != "")
-            {
-                Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
-                Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
+            //DataTable InfoLiveMatch = Bd.Procedure("IsMatchCurrent");
 
-            }
-            else
-            {
-                Teams[0] = new JObject();
-                Teams[1] = new JObject();
-            }
-            List<OdbcParameter> idTeam = new List<OdbcParameter>();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
-            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
-            Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
-            idTeam.Clear();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
-            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
-            Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
+            //if (InfoLiveMatch.Rows.Count > 0)
+            //{
+            //    JObject[] Teams = new JObject[2];
+            //    if (InfoLiveMatch.Rows[0]["Team1"].ToString() != "")
+            //    {
+            //        Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
+            //        Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
+            //    }
+            //    else
+            //    {
+            //        Teams[0] = new JObject();
+            //        Teams[1] = new JObject();
+            //    }
+            //    List<OdbcParameter> idTeam = new List<OdbcParameter>();
+            //    idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            //    DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+            //    Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
+            //    Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
+            //    idTeam.Clear();
+            //    idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            //    DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
+            //    Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
+            //    Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
 
-            ViewBag.LiveStats = Teams;
+            //    ViewBag.LiveStats = Teams;
+            //}
             return View();
         }
 
@@ -60,30 +63,31 @@ namespace Gobot.Controllers
                 parameters.Add(username);
                 DataTable pass = Bd.Select("user", "Username = ?", parameters, "Password");
                 
-                DataTable UserResult = Bd.Procedure("Connect", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
-
-                if (UserResult.Rows.Count > 0)
+                if (pass.Rows.Count > 0)
                 {
-                    User sessionuser = new User();
-                    sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
-                    sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
-                    sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString();
-                    sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
-                    sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
-                    sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
-                    sessionuser.Games = (int)UserResult.Rows[0]["Game"];
-                    sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
-                    sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
-                    sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
-                    Session["User"] = sessionuser;
+                    DataTable UserResult = Bd.Procedure("Connect", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
 
-                    return RedirectToAction("Index", "Account");
+                    if (UserResult.Rows.Count > 0)
+                    {
+                        User sessionuser = new User();
+                        sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
+                        sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
+                        sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString();
+                        sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                        sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
+                        sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                        sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                        sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                        sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                        sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                        Session["User"] = sessionuser;
+
+                        return RedirectToAction("Index", "Account");
+                    }
                 }
-                else
-                {
-                    ViewBag.Error = "Nom d'utilisateur ou mot de passe invalide.";
-                    return View(user);
-                }
+
+                ViewBag.Error = "Nom d'utilisateur ou mot de passe invalide.";
+                return View(user);
             }
 
             return View(user);

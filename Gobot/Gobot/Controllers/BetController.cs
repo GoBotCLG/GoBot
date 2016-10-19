@@ -15,6 +15,9 @@ namespace Gobot.Controllers
         // GET: Bet
         public ActionResult Index()
         {
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+            
             MySQLWrapper Bd = new MySQLWrapper();
             List<Match> Matches = new List<Match>();
             List<Bet> Bets = new List<Bet>();
@@ -30,10 +33,10 @@ namespace Gobot.Controllers
                 for(int i = 0; i < 2; i++)
                 {
                     DataTable teams = Bd.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", (int)row["Team_IdTeam" + (i + 1).ToString()]));
-                    t.Id = (int)teams.Rows[i]["IdTeam"];
-                    t.Name = teams.Rows[i]["Name"].ToString();
-                    t.Wins = (int)teams.Rows[i]["Win"];
-                    t.Games = (int)teams.Rows[i]["Game"];
+                    //t.Id = (int)teams.Rows[i]["IdTeam"];
+                    //t.Name = teams.Rows[i]["Name"].ToString();
+                    //t.Wins = (int)teams.Rows[i]["Win"];
+                    //t.Games = (int)teams.Rows[i]["Game"];
 
                     //for(int j = 0; j < 5; j++)
                     //{
@@ -71,10 +74,8 @@ namespace Gobot.Controllers
         [HttpPost]
         public JsonResult Add(int MatchId, int TeamId, int Amount)
         {
-            if(Session["User"] != null)
-            {
+            if(Session["User"] == null)
                 return Json(0);
-            }
             else
             {
                 MySQLWrapper Bd = new MySQLWrapper();
@@ -133,10 +134,8 @@ namespace Gobot.Controllers
         [HttpPost]
         public JsonResult Remove(int BetId)
         {
-            if((User)Session["User"] != null)
-            {
+            if((User)Session["User"] == null)
                 return Json(0);
-            }
             else
             {
                 MySQLWrapper Bd = new MySQLWrapper();
