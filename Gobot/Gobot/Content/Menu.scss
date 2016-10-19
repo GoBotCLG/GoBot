@@ -39,11 +39,12 @@
         height: $height; 
 
         > div > img { 
-            position: relative;
+            position: absolute;
             width: 56px;
             height: 56px;
             top: ($height - 64px) / 2;
-            margin: 0 auto;
+            left: 13px !important;
+            margin: 0 auto !important;
             border-radius: 50%;
             border: 4px solid rgba(0,0,0,0.3);
         }
@@ -123,8 +124,8 @@
         border-right: 10px solid $menuColor_active_borderRight;
         border-top: 1px solid $menuColor_active_borderTop;
         border-bottom: 1px solid $menuColor_active_borderTop;
-        transition: left 0.1s linear;
     }
+    .active_anim { @extend .active; transition: left 0.1s linear; }
 }
 
 .ink {

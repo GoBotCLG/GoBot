@@ -301,6 +301,7 @@ h5 {
     #options > div > h2 {
       margin-top: 50px;
       text-transform: uppercase;
+      top: 0 !important;
       width: 60%;
       margin: 20px auto;
       color: #626262; }
@@ -343,7 +344,8 @@ h5 {
     margin: 0 25%;
     background-color: transparent;
     border: 1px solid #626262;
-    padding: 10px; }
+    padding: 10px;
+    white-space: normal; }
   #optionForm > #UploadButton:hover {
     color: #eeeeee;
     border-color: #f16651; }

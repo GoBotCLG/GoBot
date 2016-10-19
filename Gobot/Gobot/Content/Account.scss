@@ -169,6 +169,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         > h2 {
             margin-top: 50px;
             text-transform: uppercase;
+            top: 0 !important;
             width: 60%;
             margin: 20px auto;
             color: $grey;
@@ -186,9 +187,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
         height: 500px;
         width: 100%;
 
-        > div {
-            height: 100%;
-        }
+        > div { height: 100%; }
     }
         #optionForm {
             float: left;
@@ -218,6 +217,7 @@ h5 { font: 400 14px Lato, sans-serif; color: white;}
                 background-color: transparent;
                 border: 1px solid $grey;
                 padding: 10px;
+                white-space: normal;
             }
                 > #UploadButton:hover { color: $off-white; border-color: $menuColor; }
 

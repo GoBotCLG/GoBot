@@ -21,6 +21,7 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
             User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
             Session["User"] = user;
+            Session["User_img"] = user.ProfilPic;
 
             return View((User)Session["User"]);
         }
