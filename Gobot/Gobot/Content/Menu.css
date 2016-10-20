@@ -43,7 +43,7 @@ img {
   opacity: 0; }
 
 .grey, grey {
-  color: #626262; }
+  color: #626262 !important; }
 
 .green, green {
   color: #51c24b; }
@@ -53,6 +53,12 @@ img {
 
 .white, white {
   color: white; }
+
+.orange, orange {
+  color: #ffbf5c; }
+
+.offw, offw {
+  color: #eeeeee; }
 
 #error_overlay, #js_error {
   position: fixed;
@@ -95,16 +101,6 @@ img {
       color: #eeeeee;
       border-color: #eeeeee; }
 
-.info {
-  position: relative;
-  float: left;
-  clear: both;
-  width: 85%;
-  max-width: 1350px;
-  height: auto;
-  background-color: #232323;
-  margin: 2px auto; }
-
 @media screen and (max-width: 1200px) {
   #error_overlay > div {
     width: 75%;
@@ -126,35 +122,38 @@ img {
       height: 120px !important;
       margin-left: calc(50% - 120px /2) !important; } }
 
-.info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5 {
+.info {
   position: relative;
-  display: block;
-  text-align: center; }
-
-.info h1, .info h2, .info h3, .info h4, .info h5 {
-  font: italic 900 40px Lato, Arial, sans-serif;
-  color: #eeeeee;
-  padding: 0;
-  margin: 0; }
-
-.info h1 {
-  font-size: 36px;
-  line-height: 30px; }
-
-.info h2 {
-  font-size: 24px; }
-
-.info h3 {
-  font-size: 18px; }
-
-.info h4 {
-  font: 400 16px Lato, Arial, sans-serif;
-  padding: 0;
-  margin: 0; }
-
-.info h5 {
-  font: 400 14px Lato, sans-serif;
-  color: white; }
+  float: left;
+  clear: both;
+  width: 85%;
+  max-width: 1350px;
+  height: auto;
+  background-color: #232323;
+  margin: 2px auto; }
+  .info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5 {
+    position: relative;
+    display: block;
+    text-align: center; }
+  .info h1, .info h2, .info h3, .info h4, .info h5 {
+    font: italic 900 40px Lato, Arial, sans-serif;
+    color: #eeeeee;
+    padding: 0;
+    margin: 0; }
+  .info h1 {
+    font-size: 36px;
+    line-height: 30px; }
+  .info h2 {
+    font-size: 24px; }
+  .info h3 {
+    font-size: 18px; }
+  .info h4 {
+    font: 400 16px Lato, Arial, sans-serif;
+    padding: 0;
+    margin: 0; }
+  .info h5 {
+    font: 400 14px Lato, sans-serif;
+    color: white; }
 
 @media screen and (max-width: 1325px) {
   .info #rep > h2 {

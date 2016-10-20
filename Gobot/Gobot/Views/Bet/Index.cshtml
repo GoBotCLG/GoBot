@@ -18,53 +18,53 @@
 }
 
 @*@{
-    if (((List<Gobot.Models.Match>)ViewBag.Matches).Count > 0)
-    {
-        foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)ViewBag.Matches)
+        if (((List<Gobot.Models.Match>)ViewBag.Matches).Count > 0)
         {
-            <div class="info">
-                <div class="time">@m.Date.TimeOfDay.ToString("HH:mm")</div>
+            foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)ViewBag.Matches)
+            {
+                <div class="info">
+                    <div class="time">@m.Date.TimeOfDay.ToString("HH:mm")</div>
 
-                <div class="team1">
-                    <img src="~/Images/@(m.Teams[0].Name).png" />
-                    <div>
-                        <h1>@m.Teams[0].Name</h1>
-                        <h2>5000$</h2>
+                    <div class="team1">
+                        <img src="~/Images/@(m.Teams[0].Name).png" />
+                        <div>
+                            <h1>@m.Teams[0].Name</h1>
+                            <h2>5000$</h2>
+                        </div>
+                    </div>
+                    <div class="vs"><h1>VS</h1></div>
+                    <div class="team2">
+                        <div><img src="~/Images/@(m.Teams[1].Name).png" /></div>
+                        <div>
+                            <h1>@m.Teams[1].Name</h1>
+                            <h2>5000$</h2>
+                        </div>
+                    </div>
+
+                    <div class="manageBet">
+                        @{
+                            // if user placed bet
+                            if (true)
+                            {
+                                <div class="create"></div>
+                            }
+                            else
+                            {
+                                <div class="remove"></div>
+                                <div class="edit"></div>
+                            }
+                        }
                     </div>
                 </div>
-                <div class="vs"><h1>VS</h1></div>
-                <div class="team2">
-                    <div><img src="~/Images/@(m.Teams[1].Name).png" /></div>
-                    <div>
-                        <h1>@m.Teams[1].Name</h1>
-                        <h2>5000$</h2>
-                    </div>
-                </div>
-
-                <div class="manageBet">
-                    @{
-                        // if user placed bet
-                        if (true)
-                        {
-                            <div class="create"></div>
-                        }
-                        else
-                        {
-                            <div class="remove"></div>
-                            <div class="edit"></div>
-                        }
-                    }
-                </div>
+            }
+        }
+        else
+        {
+            <div class="noMatch">
+                <h1>Aucune partie à venir. Réessayez plus tard.</h1>
             </div>
         }
-    }
-    else
-    {
-        <div class="noMatch">
-            <h1>Aucune partie à venir. Réessayez plus tard.</h1>
-        </div>
-    }
-}*@
+    }*@
 
 <div class="info">
     <div class="time sqr"><h3>12:00</h3></div>
@@ -73,14 +73,14 @@
         <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
         <div class="text">
             <h1>Cloud6</h1>
-            <h3>5000$</h3>
+            <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
         </div>
     </div>
     <div class="vs"><h1>VS</h1></div>
     <div class="team team2">
         <div class="text">
             <h1>LRG</h1>
-            <h3>5000$</h3>
+            <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
         </div>
         <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
     </div>
@@ -107,15 +107,16 @@
     <div class="team team1">
         <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
         <div class="text">
-            <h1>Cloud6</h1>
-            <h3>5000$</h3>
+            <h1 style="color: #51c24b !important;">Cloud6</h1>
+            <h4 class="grey">Votre mise <offw class="green">500</offw>GC</h4>
+            <h4 class="grey">Mise Totale <offw class="green">5000</offw>GC</h4>
         </div>
     </div>
     <div class="vs"><h1>VS</h1></div>
     <div class="team team2">
         <div class="text">
             <h1>LRG</h1>
-            <h3>5000$</h3>
+            <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
         </div>
         <div class="img" style="background-image: url(/Images/csgo.jpg);"></div>
     </div>
@@ -136,6 +137,35 @@
     </div>
 </div>
 
+@*<div class="info" id="bet_chooseTeam">
+    <div style="background-image: url(/Images/csgo.jpg)"></div>
+    <div class="separator"><div class="square"></div></div>
+    <div style="background-image: url(/Images/csgo.jpg)"></div>
+</div>
+
+<div class="info" id="bet_placeBet">
+    <div class="smaller" style="background-image: url(/Images/csgo.jpg)"></div>
+    <div class="separator"><div class="square"></div></div>
+    @using (Html.BeginForm())
+    {
+        <div>
+            <h4>Crédits disponibles</h4><h4><orange class="baseGC">4500</orange> GC</h4>
+        </div>
+        <div>
+            <h4>-</h4><h4><red class="deductGC">700</red> GC</h4>
+        </div>
+        <div>
+            <h4>=</h4><h4 class="remainGC">3800<white>GC</white></h4>
+        </div>
+        <div class="betSelector">
+            <div class="sub"></div>
+            <input type="number" />
+            <div class="add"></div>
+        </div>
+        <a href="#">Ajouter des crédits</a>
+    }
+</div>*@
+
 @section Scripts {
     <script>
         $(function () {
@@ -146,11 +176,72 @@
             onResize();
         });
 
+        $(".manageBet > div").mouseenter(function () {
+            $(this).find("> div").css("left", -($(this).find("> div").find("h2").outerWidth()));
+        });
+
         $(".manageBet > .edit").mouseenter(function () {
-            $(".manageBet > .remove").css("left", -100);
+            $(".manageBet > .remove").css("left", -($(this).find("> div").find("h2").outerWidth()));
         }).mouseleave(function () {
             $(".manageBet > .remove").css("left", 0);
         });
+
+        $(document).on("click", ".manageBet > .create", function () {
+            $("#bet_chooseTeam").remove();
+            $("#bet_placeBet").remove();
+            $('<div class="info" id="bet_chooseTeam"></div>').insertAfter($(this).closest(".info"));
+            $("#bet_chooseTeam").append('<div style="background-image: url(/Images/csgo.jpg)"></div>');
+            $("#bet_chooseTeam").append('<div class="separator"><div class="square"></div></div>');
+            $("#bet_chooseTeam").append('<div style="background-image: url(/Images/csgo.jpg)"></div>');
+            onResize();
+        });
+
+        $(document).on("click", ".manageBet > .remove", function () {
+            window.location.href = "@Url.Action("Remove", "Bet")";
+        });
+
+        $(document).on("click", "#bet_chooseTeam > div:not(.separator)", function () {
+            let selectedTeam = $(this).is(':first-child') ? 1 : 2;
+            let teamId = $(this).parent().prev().find(".team" + selectedTeam).attr("id");
+            createBetForm($(this).parent(), teamId, selectedTeam);
+        });
+
+        $(".manageBet > .edit").click(function () {
+            let teams = $(this).closest(".info").find("> .team");
+            var teamId;
+            var teamNum = 1;
+           
+            teams.each(function () {
+                let count = $(this).find("h4").length;
+                if (count == 2) 
+                    teamId = $(this).attr("id");
+            });
+
+            createBetForm($(this).closest(".info"), teamId);
+            onResize();
+        });
+
+        function createBetForm(e, id, pos) {
+            $("#bet_placeBet").remove();
+            $('<div class="info" id="bet_placeBet"></div>').insertAfter(e);
+            $("#bet_chooseTeam").remove();
+
+            if (pos == 1)
+                $("#bet_placeBet").append('<div class="teamImg" style="background-image: url(/Images/csgo.jpg)"></div>');
+
+            $("#bet_placeBet").append('<div class="separator"><div class="square"></div></div>');
+            $("#bet_placeBet").append('<form action="/" method="post"></form>');
+            $("#bet_placeBet > form").append('<div><h2>Crédits disponibles</h2><h2><orange class="baseGC">4500</orange> GC</h2></div>');
+            $("#bet_placeBet > form").append('<div><h2>-</h2><h2><red class="deductGC">700</red> GC</h2></div>');
+            $("#bet_placeBet > form").append('<div class="betSelector"></div>');
+            $("#bet_placeBet > form > .betSelector").append('<div class="sub"></div><input type="number" /><div class="add"></div>');
+            $("#bet_placeBet > form").append('<a href="#">Ajouter des crédits</a>');
+
+            if (pos == 2)
+                $("#bet_placeBet").append('<div class="teamImg" style="background-image: url(/Images/csgo.jpg)"></div>');
+
+            onResize();
+        }
 
         function onResize() {
             resizeInfo();
@@ -175,9 +266,6 @@
 
                 $(this).find(".team").css("width", ($(".info").width() - total) / 2);
             });
-
-            //let count = $(".info > .sqr").length;
-            //$(".team").width(($(".info").width() - (".sqr").width() * count) / 2);
         }
     </script>
 }

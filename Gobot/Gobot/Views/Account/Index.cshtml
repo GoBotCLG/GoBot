@@ -190,7 +190,10 @@
                 $("#closeOption").show();
                 
                 onResize();
-                posOptionTabs();
+                setTimeout(function() {
+                    posOptionTabs();
+                    $("#options").show();
+                }, 50);
             }
             else {
                 $("#options").remove();

@@ -46,10 +46,12 @@ img                         { border: 0; }
 .show { visibility: visible; opacity: 1; }
 .hide { visibility: hidden; opacity: 0; }
 
-.grey, grey   { color: $grey; }
+.grey, grey   { color: $grey !important; }
 .green, green  { color: $green; }
 .red, red    { color: $red; }
 .white, white  { color: white; }
+.orange, orange { color: $orange; }
+.offw, offw { color: $off-white; }
 
 @mixin box-shadow($params){
     -webkit-box-shadow: $params rgba(0,0,0,1);
@@ -64,6 +66,12 @@ img                         { border: 0; }
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+@mixin rotate($rot) {
+    -ms-transform: rotate($rot);
+    -webkit-transform: rotate($rot); 
+    transform: rotate($rot);
 }
 
 #error_overlay, #js_error {
@@ -113,18 +121,6 @@ img                         { border: 0; }
     }
 }
 
-
-.info {
-    position: relative;
-    float: left;
-    clear: both;
-    width: 85%;
-    max-width: 1350px;
-    height: auto;
-    background-color: $infoBgColor;
-    margin: 2px auto;
-}
-
 @media screen and (max-width:1200px) {
     #error_overlay > div {
         width: 75%;
@@ -145,6 +141,15 @@ img                         { border: 0; }
 }
 
 .info {
+    position: relative;
+    float: left;
+    clear: both;
+    width: 85%;
+    max-width: 1350px;
+    height: auto;
+    background-color: $infoBgColor;
+    margin: 2px auto;
+
     button, a, h1, h2, h3, h4, h5 {
         position: relative;
         display: block;

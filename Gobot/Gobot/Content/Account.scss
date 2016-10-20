@@ -9,7 +9,7 @@ html, body { min-height: 100%; }
     a:not(.whiteLink) { background-color: #202020; }
     a:not(.whiteLink):hover {
         background-color: #1b1b1b;
-        > .grey { color: $orange; }
+        > .grey { color: $orange !important; }
     }
 
     .whiteLink { background-color: $off-white !important; color: $infoBgColor !important; }
@@ -132,6 +132,7 @@ html, body { min-height: 100%; }
     }
 
 #options {
+    display: none;
     height: 500px;
 
     > div { 
