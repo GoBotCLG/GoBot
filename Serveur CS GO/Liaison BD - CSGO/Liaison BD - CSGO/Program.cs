@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -65,10 +66,12 @@ namespace Liaison_BD___CSGO
             string[] CTIds = new string[5];
             string[] TIds = new string[5];
 
+            StreamWriter OutFile = new StreamWriter("")
+
             if(TeamCT == 0)
             {
                 DataTable Bots = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-
+                
             }
             else
             {
