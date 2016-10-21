@@ -66,15 +66,47 @@ namespace Liaison_BD___CSGO
             string[] CTIds = new string[5];
             string[] TIds = new string[5];
 
-            StreamWriter OutFile = new StreamWriter("")
+            StreamWriter OutFile = new StreamWriter(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\cfg\gamestart.cfg", false);
 
-            if(TeamCT == 0)
+            OutFile.Write("bot_kick; ");
+            DataTable BotsCT;
+            DataTable BotsT;
+
+            if (TeamCT == 0)
             {
-                DataTable Bots = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-                
+                BotsCT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
+                BotsT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
             }
             else
             {
+                BotsT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
+                BotsCT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+            }
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                OutFile.Write("bot_add ct \"" + BotsCT.Rows[i]["BotName"].ToString() + "\"; ");
+                OutFile.Write("bot_add t \"" + BotsT.Rows[i]["BotName"].ToString() + "\"; ");
+            }
+            OutFile.Write("mp_warmup_end; log on;");
+            OutFile.Flush();
+            OutFile.Close();
+        }
+
+        private static void StopMatch()
+        {
+            IntPtr window = Serveur.MainWindowHandle;
+            SetForegroundWindow(window);
+            SendKeys.SendWait("log off");
+            SendKeys.SendWait("{ENTER}");
+            SendKeys.SendWait("bot_kick");
+            SendKeys.SendWait("{ENTER}");
+
+            StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
+            while (!InLog.EndOfStream)
+            {
+                string ligne = InLog.ReadLine();
 
             }
         }
@@ -93,11 +125,53 @@ namespace Liaison_BD___CSGO
             {
                 UploadScores();
             }
+            else if(e.ProgressPercentage == 3)
+            {
+                StopMatch();
+            }
         }
 
         private static void UploadScores()
         {
-            
+            StreamReader InRound = new StreamReader(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
+
+            int TotalCT = 0;
+            int TotalT = 0;
+
+            while (!InRound.EndOfStream)
+            {
+                string ligne = InRound.ReadLine();
+                if(CurrentRoundNumber > 6)
+                {
+                    if(ligne.Contains("FirstHalfScore"))
+                    {
+                        InRound.ReadLine();                             //{
+                        ligne = InRound.ReadLine();                     //  "team1"     "2"
+                        TotalCT = int.Parse(ligne.Split('"')[3]);
+                        ligne = InRound.ReadLine();                     //  "team2"     "3"
+                        TotalT = int.Parse(ligne.Split('"')[3]);
+                        InRound.ReadLine();                             //}
+                        InRound.ReadLine();                             //SecondHalfScore
+                        InRound.ReadLine();                             //{
+                        ligne = InRound.ReadLine();                     //  "team1"     "4"
+                        TotalCT += int.Parse(ligne.Split('"')[3]);
+                        ligne = InRound.ReadLine();                     //  "team2"     "1"
+                        TotalT += int.Parse(ligne.Split('"')[3]);
+                        break;
+                    }
+                }
+                else
+                {
+                    InRound.ReadLine();                             //{
+                    ligne = InRound.ReadLine();                     //  "team1"     "2"
+                    TotalCT = int.Parse(ligne.Split('"')[3]);
+                    ligne = InRound.ReadLine();                     //  "team2"     "3"
+                    TotalT = int.Parse(ligne.Split('"')[3]);
+                    break;
+                }
+            }
+
+            //Call procedure SetScoresMatchCourrant
         }
 
         private static void StartMatch()
