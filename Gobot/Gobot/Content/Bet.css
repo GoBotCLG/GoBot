@@ -209,7 +209,8 @@ img {
   display: block;
   height: 100px;
   width: 200px;
-  background: no-repeat center; }
+  background: no-repeat center;
+  background-size: 100%; }
 
 .team h1, .team h4 {
   text-transform: uppercase; }
@@ -292,6 +293,8 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; }
 
 #bet_chooseTeam {
+  border-top: 4px solid #232323;
+  top: -4px;
   height: 300px; }
   #bet_chooseTeam > div:not(.separator) {
     position: relative;
@@ -300,18 +303,37 @@ input[type=number]::-webkit-outer-spin-button {
     height: 100%;
     width: 50%;
     background: no-repeat center;
+    background-size: 100%;
     cursor: pointer; }
+    #bet_chooseTeam > div:not(.separator) > h1 {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 995 !important;
+      opacity: 0;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.85);
+      line-height: 300px;
+      font-size: 60px !important; }
   #bet_chooseTeam > div:not(.separator):hover {
-    background-size: 150%;
+    background-size: 120%;
     transition: 0.5s; }
-  #bet_chooseTeam > .separator {
+    #bet_chooseTeam > div:not(.separator):hover > h1 {
+      opacity: 1; }
+
+#bet_chooseTeam, #bet_placeBet, #getCredits {
+  margin-bottom: 6px; }
+  #bet_chooseTeam > .separator, #bet_placeBet > .separator, #getCredits > .separator {
     position: absolute;
     height: 100%;
     width: 4px;
     left: calc(50% - 2px);
     background-color: #1f1f1f;
     z-index: 999; }
-    #bet_chooseTeam > .separator > div {
+    #bet_chooseTeam > .separator > div, #bet_placeBet > .separator > div, #getCredits > .separator > div {
       position: relative;
       height: 50px;
       width: 50px;
@@ -321,14 +343,139 @@ input[type=number]::-webkit-outer-spin-button {
       -webkit-transform: rotate(45deg);
       transform: rotate(45deg); }
 
+#bet_placeBet > .separator.left {
+  left: calc(40% - 2px) !important; }
+
+#bet_placeBet > .separator.right {
+  left: calc(60% - 2px) !important; }
+
 #bet_placeBet {
+  border-top: 4px solid #232323;
+  top: -4px;
   height: 300px; }
   #bet_placeBet > .teamImg {
     position: relative;
-    float: left;
     display: block;
+    float: left;
     height: 100%;
     width: 40%;
     background: no-repeat center;
-    cursor: pointer; }
+    background-size: 100%;
+    cursor: default; }
+  #bet_placeBet > form {
+    float: left;
+    width: 60%; }
+    #bet_placeBet > form > div:not(.betSelector) > h2 {
+      display: block;
+      width: auto;
+      float: left;
+      left: 0;
+      text-transform: uppercase;
+      text-align: right;
+      color: #626262; }
+    #bet_placeBet > form > div:not(.betSelector) > h2:first-of-type {
+      width: 50%;
+      text-align: right;
+      right: 10px; }
+    #bet_placeBet > form > div:not(.betSelector) > h2:last-of-type {
+      clear: right;
+      margin-left: 10px; }
+    #bet_placeBet > form > input, #bet_placeBet > form > a {
+      position: absolute;
+      float: left;
+      clear: both;
+      height: 80px;
+      width: 60%;
+      bottom: 0;
+      font: italic 900 40px Lato, Arial, sans-serif;
+      line-height: 80px;
+      color: #626262;
+      text-transform: uppercase;
+      cursor: pointer;
+      background-color: transparent; }
+    #bet_placeBet > form > input.left, #bet_placeBet > form > a.left {
+      left: 0; }
+    #bet_placeBet > form > input.right, #bet_placeBet > form > a.right {
+      left: 40%; }
+    #bet_placeBet > form > input:hover {
+      color: #1f1f1f;
+      background-color: #51c24b;
+      border-color: #51c24b; }
+    #bet_placeBet > form > a:hover {
+      color: #1f1f1f;
+      background-color: #626262;
+      border-color: #626262; }
+  #bet_placeBet > form > div:first-of-type {
+    margin-top: 25px; }
+
+.betSelector {
+  position: relative;
+  float: left;
+  clear: both;
+  width: auto;
+  margin-top: 20px; }
+  .betSelector > input {
+    float: left;
+    height: 50px;
+    width: 45%;
+    border: 0;
+    padding: 10px 0;
+    text-indent: 20px;
+    font: 400 40px Lato, Arial, sans-serif; }
+  .betSelector > div {
+    float: left;
+    position: relative;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    background-position: center !important;
+    background-size: 25px 25px !important;
+    background-repeat: no-repeat !important;
+    opacity: 0.8; }
+  .betSelector > .sub {
+    background: #963434 url(/Images/removeBet.png); }
+  .betSelector > .add {
+    background: #51c24b url(/Images/addBet.png); }
+  .betSelector > .sub:hover, .betSelector > .add:hover {
+    opacity: 1;
+    transition: 0.3s;
+    background-size: 29px !important; }
+
+h6 {
+  font: italic 900 60px Lato, Arial, sans-serif;
+  color: #eeeeee;
+  text-transform: uppercase;
+  width: 100%;
+  text-align: center;
+  margin: 90px 0 70px 0; }
+
+#header {
+  background-color: #323232; }
+
+#getCredits {
+  margin-bottom: 25px;
+  background-color: #323232; }
+  #getCredits > a {
+    float: left;
+    width: 50%;
+    background-color: #232323; }
+    #getCredits > a > h1 {
+      text-transform: uppercase;
+      margin: 50px 0; }
+  #getCredits > a:first-of-type > h1 {
+    color: #f16651; }
+  #getCredits > a:first-of-type:hover {
+    background-color: #f16651; }
+    #getCredits > a:first-of-type:hover > h1 {
+      color: #232323; }
+  #getCredits > a:last-of-type > h1 {
+    color: #eeeeee; }
+  #getCredits > a:last-of-type:hover {
+    background-color: #eeeeee; }
+    #getCredits > a:last-of-type:hover > h1 {
+      color: #232323; }
+  #getCredits > .separator {
+    background-color: #232323; }
+    #getCredits > .separator > div {
+      background-color: #232323; }
 

@@ -49,6 +49,10 @@ function h_align(e, p, eW) {
     var pos = p.width() / 2 - eW / 2;
     e.css("left", pos > 0 ? pos : 0);
 }
+function h_align_margin(e, p, eW) {
+    var pos = p.width() / 2 - eW / 2;
+    e.css("margin-left", pos > 0 ? pos : 0);
+}
 
 function getHeightOfChilds(e) {
     var totalHeight = 0;
@@ -58,4 +62,14 @@ function getHeightOfChilds(e) {
     });
 
     return totalHeight;
+}
+
+function getWidthOfChilds(e) {
+    var totalWidth = 0;
+
+    e.children().each(function () {
+        totalWidth += $(this).outerWidth(true);
+    });
+
+    return totalWidth;
 }
