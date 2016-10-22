@@ -22,6 +22,7 @@ $orange: #ffbf5c;
 
 $font: Lato, Arial, sans-serif;
 $infoBgColor: #232323;
+$maxContainerWidth: 1350px;
 
 // GENERAL
 
@@ -52,6 +53,19 @@ img                         { border: 0; }
 .white, white  { color: white; }
 .orange, orange { color: $orange; }
 .offw, offw { color: $off-white; }
+
+#header {
+    background-color: $darkGrey;
+
+    h6 {
+        font: italic 900 60px $font;
+        color: $off-white;
+        text-transform: uppercase;
+        width: 100%;
+        text-align: center;
+        margin: 90px 0 70px 0;
+    }
+}
 
 @mixin box-shadow($params){
     -webkit-box-shadow: $params rgba(0,0,0,1);
@@ -145,7 +159,7 @@ img                         { border: 0; }
     float: left;
     clear: both;
     width: 85%;
-    max-width: 1350px;
+    max-width: $maxContainerWidth;
     height: auto;
     background-color: $infoBgColor;
     margin: 2px auto;

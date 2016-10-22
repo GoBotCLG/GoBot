@@ -1,0 +1,103 @@
+﻿@import 'global';
+
+$teamH: 250px;
+.teams {
+    max-width: $teamH * 5 + 6px;
+    margin: 0 auto;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.team {
+    position: relative;
+    float: left;
+    height: $teamH;
+    width: $teamH;
+    border: 1px solid $grey;
+    border-left: 0;
+    background-color: $infoBgColor;
+    cursor: pointer;
+
+    .overlay {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background-color: rgba(0,0,0,0.85);
+        opacity: 0;
+
+        > h1 {
+            width: 100%;
+            height: 100%;
+            line-height: 250px !important;
+            color: $off-white;
+            font: italic 900 40px $font;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            opacity: 0;
+        }
+    }
+
+    .triangle {
+        position: relative;
+        top: 100%;
+        -webkit-clip-path: polygon(50% 50%, 0 0, 100% 0);
+        clip-path: polygon(50% 50%, 0 0, 100% 0);
+        border: 1px solid $grey;
+        border-top: 0 !important;
+    }
+}
+    .team:hover {
+        > .overlay {
+            > h1 { opacity: 1; transition: 1s; }
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+            transition: 0.3s;
+        }
+    }
+
+.team_info {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: auto;
+}
+
+.players {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: auto;
+}
+
+.player {
+    position: relative;
+    float: left;
+    width: 100%;
+    max-width: $maxContainerWidth / 5;
+
+    > h1 {
+
+    }
+
+    > div {
+        > div {
+
+        }
+        > h2 {
+
+        }
+    }
+}
+
+.acc { background-image: url('/Images/accuracy.png') }
+.r-time { background-image: url('/Images/reactionTime.png') }
+.kd { background-image: url('/Images/killDeath.png') }
+
+.leftBox {
+    border-left: 1px solid $grey;
+}

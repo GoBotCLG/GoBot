@@ -1,0 +1,153 @@
+﻿@model Gobot.Models.Team
+
+@{
+    ViewBag.Title = "Teams";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/Teams.min.css")
+
+<div class="info" id="header">
+    <h6>Équipes</h6>
+</div>
+
+<div class="teams">
+    <div class="team">
+        <div class="overlay"><h1>CLOUD6</h1></div>
+        <div class="triangle"></div>
+    </div>
+    <div class="team">
+        <div class="overlay"><h1>CLOUD6</h1></div>
+        <div class="triangle"></div>
+    </div>
+    <div class="team">
+        <div class="overlay"><h1>CLOUD6</h1></div>
+        <div class="triangle"></div>
+    </div>
+    <div class="team">
+        <div class="overlay"><h1>CLOUD6</h1></div>
+        <div class="triangle"></div>
+    </div>
+    <div class="team">
+        <div class="overlay"><h1>CLOUD6</h1></div>
+        <div class="triangle"></div>
+    </div>
+    <div class="team_info">
+        <div>
+            <h6>CLOUD6</h6>
+            <h1 class="grey">48 PARTIES GAGNÉES, 40 PERDUES. 98 PARTIES JOUÉES.</h1>
+        </div>
+        <div class="players">
+            <div class="player">
+                <h1>ADAM</h1>
+                <div>
+                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
+                    <h2 class="grey">fusil d'assaut</h2>
+                </div>
+                <div>
+                    <div class="acc"></div>
+                    <h2 class="grey">1.25</h2>
+                </div>
+                <div>
+                    <div class="r-time"></div>
+                    <h2 class="grey">1</h2>
+                </div>
+                <div>
+                    <div class="kd"></div>
+                    <h2 class="grey">2.0</h2>
+                </div>
+            </div>
+            <div class="player">
+                <h1>ADAM</h1>
+                <div>
+                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
+                    <h2 class="grey">fusil d'assaut</h2>
+                </div>
+                <div>
+                    <div class="acc"></div>
+                    <h2 class="grey">1.25</h2>
+                </div>
+                <div>
+                    <div class="r-time"></div>
+                    <h2 class="grey">1</h2>
+                </div>
+                <div>
+                    <div class="kd"></div>
+                    <h2 class="grey">2.0</h2>
+                </div>
+            </div>
+            <div class="player">
+                <h1>ADAM</h1>
+                <div>
+                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
+                    <h2 class="grey">fusil d'assaut</h2>
+                </div>
+                <div>
+                    <div class="acc"></div>
+                    <h2 class="grey">1.25</h2>
+                </div>
+                <div>
+                    <div class="r-time"></div>
+                    <h2 class="grey">1</h2>
+                </div>
+                <div>
+                    <div class="kd"></div>
+                    <h2 class="grey">2.0</h2>
+                </div>
+            </div>
+            <div class="player">
+                <h1>ADAM</h1>
+                <div>
+                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
+                    <h2 class="grey">fusil d'assaut</h2>
+                </div>
+                <div>
+                    <div class="acc"></div>
+                    <h2 class="grey">1.25</h2>
+                </div>
+                <div>
+                    <div class="r-time"></div>
+                    <h2 class="grey">1</h2>
+                </div>
+                <div>
+                    <div class="kd"></div>
+                    <h2 class="grey">2.0</h2>
+                </div>
+            </div>
+            <div class="player">
+                <h1>ADAM</h1>
+                <div>
+                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
+                    <h2 class="grey">fusil d'assaut</h2>
+                </div>
+                <div>
+                    <div class="acc"></div>
+                    <h2 class="grey">1.25</h2>
+                </div>
+                <div>
+                    <div class="r-time"></div>
+                    <h2 class="grey">1</h2>
+                </div>
+                <div>
+                    <div class="kd"></div>
+                    <h2 class="grey">2.0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+
+        });
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        function onResize() {
+            setWidthFromChilds($(".team"), 5);
+        }
+    </script>
+}

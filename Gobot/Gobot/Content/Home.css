@@ -59,6 +59,16 @@ img {
 .offw, offw {
   color: #eeeeee; }
 
+#header {
+  background-color: #323232; }
+  #header h6 {
+    font: italic 900 60px Lato, Arial, sans-serif;
+    color: #eeeeee;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    margin: 90px 0 70px 0; }
+
 #error_overlay, #js_error {
   position: fixed;
   top: 0;
@@ -225,7 +235,8 @@ body {
     font: italic 900 30px Lato, Arial, sans-serif;
     padding: 16px 0;
     text-align: center;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    z-index: 999; }
   #sub > a:hover {
     border-color: #9a483b;
     -webkit-box-shadow: 1px 1px 14px -4px black;
@@ -246,7 +257,8 @@ body {
       float: left; }
       #login > form > .left > div {
         position: relative;
-        margin: 0 106px 0 16%; }
+        margin: 0 106px 0 16%;
+        z-index: 999; }
         #login > form > .left > div > label {
           display: block;
           float: left;

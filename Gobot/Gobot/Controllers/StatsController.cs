@@ -20,7 +20,7 @@ namespace Gobot.Controllers
             return View();
         }
 
-        public ActionResult Team(string TeamId)
+        public ActionResult Teams()
         {
             //Get team info
             return View();

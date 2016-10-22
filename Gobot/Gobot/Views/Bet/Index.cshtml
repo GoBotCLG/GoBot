@@ -150,7 +150,6 @@
         $(".manageBet > div").mouseenter(function () {
             $(this).find("> div").css("left", -($(this).find("> div").find("h2").outerWidth()));
         });
-
         $(".manageBet > .edit").mouseenter(function () {
             $(".manageBet > .remove").css("left", -($(this).find("> div").find("h2").outerWidth()));
         }).mouseleave(function () {
@@ -170,9 +169,31 @@
             $("#bet_chooseTeam").append('<div style="background-image: url(/Images/' + teamNames[1].toLowerCase() + '.png)"><h1>' + teamNames[1].toUpperCase() + '</h1></div>');
             onResize();
         });
-
         $(document).on("click", ".manageBet > .remove", function () {
             window.location.href = "@Url.Action("Remove", "Bet")";
+        });
+        $(".manageBet > .edit").click(function () {
+            let teams = $(this).closest(".info").find("> .team");
+            var teamId;
+            var teamNum = 1;
+            var teamName;
+
+            var i = 1;
+            teams.each(function () {
+                let count = $(this).find("h4").length;
+                if (count == 2) {
+                    teamNum = i;
+                    teamName = $(this).find("> .text > h1 > green").text();
+                    teamId = $(this).attr("id");
+                }
+                i++;
+            });
+
+            createBetForm($(this).closest(".info"), teamId, teamNum, teamName);
+
+            var toAdd = $(this).closest(".info").find(".team" + teamNum + " > .text > h4:last-of-type > green").text();
+            changeBetValue($(".betSelector > .add"), parseInt(toAdd));
+            onResize();
         });
 
         $(document).on("click", "#bet_chooseTeam > div:not(.separator)", function () {
@@ -185,19 +206,12 @@
 
         $(document).on("click", ".betSelector > .sub", function () {
             changeBetValue($(this), -1);
-            changeCoinsValue();
-            posCreditsInfo();
-            changeSubmit();
         });
         $(document).on("click", ".betSelector > .add", function () {
             changeBetValue($(this), 1);
-            changeCoinsValue();
-            posCreditsInfo();
-            changeSubmit();
         });
         $(document).on("input", ".betSelector > input", function () {
             changeCoinsValue();
-            posCreditsInfo();
 
             $(this).attr("value", $(this).val());
             changeSubmit();
@@ -222,6 +236,8 @@
             var deduct = $(".betSelector > input").val();
             $(".deductGC").text(deduct.length == 0 ? 0 : deduct);
             $(".remainGC").text(parseInt($(".baseGC").text()) - $(".betSelector > input").val());
+            posCreditsInfo();
+            changeSubmit();
         }
         function changeBetValue(e, change) {
             var input = e.parent().find("input");
@@ -232,28 +248,9 @@
                 input.attr("value", (val + change).toString());
                 input.val((val + change).toString());
             }
+
+            changeCoinsValue();
         }
-
-        $(".manageBet > .edit").click(function () {
-            let teams = $(this).closest(".info").find("> .team");
-            var teamId;
-            var teamNum = 1;
-            var teamName;
-
-            var i = 1;
-            teams.each(function () {
-                let count = $(this).find("h4").length;
-                if (count == 2) {
-                    teamNum = i;
-                    teamName = $(this).find("> .text > h1 > green").text();
-                    teamId = $(this).attr("id");
-                }
-                i++;
-            });
-
-            createBetForm($(this).closest(".info"), teamId, teamNum, teamName);
-            onResize();
-        });
 
         function createBetForm(e, id, pos, teamName) {
             $("#bet_placeBet").remove();
