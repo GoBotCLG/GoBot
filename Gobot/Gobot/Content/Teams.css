@@ -189,8 +189,9 @@ img {
     font-size: 14px; } }
 
 .teams {
-  max-width: 1256px;
-  margin: 0 auto;
+  position: relative;
+  width: auto;
+  height: auto;
   padding-left: 50px;
   padding-right: 50px; }
 
@@ -200,14 +201,13 @@ img {
   height: 250px;
   width: 250px;
   border: 1px solid #626262;
-  border-left: 0;
   background-color: #232323;
   cursor: pointer; }
   .team .overlay {
     position: relative;
-    top: 50%;
-    left: 50%;
-    width: 0;
+    top: 100%;
+    left: 0;
+    width: 100%;
     height: 0;
     background-color: rgba(0, 0, 0, 0.85);
     opacity: 0; }
@@ -222,17 +222,17 @@ img {
       text-align: center;
       opacity: 0; }
   .team .triangle {
-    position: relative;
+    position: absolute;
     top: 100%;
+    left: calc(50% - 25px);
+    width: 50px;
+    height: 50px;
     -webkit-clip-path: polygon(50% 50%, 0 0, 100% 0);
     clip-path: polygon(50% 50%, 0 0, 100% 0);
-    border: 1px solid #626262;
-    border-top: 0 !important; }
+    background-color: #626262; }
 
 .team:hover > .overlay {
-  left: 0;
   top: 0;
-  width: 100%;
   height: 100%;
   opacity: 1;
   transition: 0.3s; }
@@ -266,7 +266,4 @@ img {
 
 .kd {
   background-image: url("/Images/killDeath.png"); }
-
-.leftBox {
-  border-left: 1px solid #626262; }
 

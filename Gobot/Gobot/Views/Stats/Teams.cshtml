@@ -1,7 +1,7 @@
 ﻿@model Gobot.Models.Team
 
 @{
-    ViewBag.Title = "Teams";
+    ViewBag.Title = "Équipes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/Content/Teams.min.css")
@@ -139,15 +139,39 @@
 @section Scripts {
     <script>
         $(function () {
-
+            onResize();
         });
 
         $(window).resize(function () {
             onResize();
         });
 
+        $(document).on("click", ".team", function () {
+            insertTeamInfo($(this));
+        });
+
         function onResize() {
             setWidthFromChilds($(".team"), 5);
+            h_align_window($("#header"));
+        }
+
+        function insertTeamInfo(e) {
+            var clicked = $(".team").index(e) + 1;
+            var eRow = getElemPerRows($(".teams"));
+
+            var totalE = $(".team").length;
+            var insertAfter = eRow * Math.floor(clicked % eRow == 0 ? clicked / eRow : clicked / eRow + 1);
+            if (insertAfter > totalE)
+                insertAfter = totalE;
+
+            $(".team_info").remove();
+            $(getTeamInfo(e.find("> h1").text())).insertAfter($(".teams > :nth-child(" + insertAfter + ")"))
+        }
+        function getTeamInfo(teamName) {
+            return '<div class="team_info"><h1>nope</h1></div>';
+        }
+        function getElemPerRows(p) {
+            return Math.floor(p.width() / p.find("> :nth-child(2)").outerWidth());
         }
     </script>
 }

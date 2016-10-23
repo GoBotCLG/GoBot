@@ -26,8 +26,9 @@ $(document).on("click", "#close_errorOverlay", function () {
 });
 
 function h_align_window(e) {
-    var pos = ($(window).width() - $("#navBig").width()) / 2 - e.width() / 2;
-    e.css("left", pos);
+    var windowWidth = $("#navBig").length == 0 ? $(window).width() : $(window).width() - $("#navBig").width();
+    var pos = windowWidth / 2 - e.outerWidth() / 2;
+    e.css("left", pos > 0 ? pos : 0);
 }
 function v_align_window(e) {
     var pos = $(window).height() / 2 - e.height() / 2;
@@ -78,11 +79,24 @@ function setWidthFromChilds(e, maxE) {
     var padding = e.parent().css("padding-left").replace("px", "");
     var windowWidth = $("#navBig").length == 0 ? $(window).width() : $(window).width() - $("#navBig").width();
     windowWidth -= padding * 2; // padding on each side
-    //var maxWidth = e.parent().find(e).length * e.width() * maxE;
 
-    var numE = e.parent().find("> " + e.attr("class")).length;
-    var eRow = windowWidth / maxE > maxE ? maxE : Math.floor(windowWidth / maxE);
-    var maxWidth = eRow * e.outerWidth();
+    var numE = e.length;
+    var eRow = windowWidth / e.outerWidth() > maxE ? maxE : Math.floor(windowWidth / e.outerWidth());
 
-    
+    if ((e.parent().width() > eRow * e.outerWidth()) || (e.parent().width() < eRow * e.outerWidth())) {
+        var maxWidth = 0;
+        var i = 0;
+        e.each(function () {
+            maxWidth += i < eRow ? $(this).outerWidth() : 0;
+            $(this).css({
+                top: -(Math.floor(i / eRow)),
+                left: -(i % eRow)
+            });
+            i++;
+
+        });
+        e.parent().css("width", maxWidth);
+    }
+
+    h_align_window(e.parent());
 }
