@@ -76,7 +76,12 @@ $height: 100px;
         padding: 0;
         margin: 0;
 
-        > div {
+        > a {
+            height: 100%;
+            width: 100%;
+        }
+
+        div {
             display: none;
             position: absolute;
             top: 0 !important;

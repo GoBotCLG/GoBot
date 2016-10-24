@@ -1,4 +1,4 @@
-﻿@model Gobot.Models.Team
+﻿@model IEnumerable<Gobot.Models.Team>
 
 @{
     ViewBag.Title = "Équipes";
@@ -11,132 +11,31 @@
 </div>
 
 <div class="teams">
+    @{
+        foreach (Gobot.Models.Team team in (List<Gobot.Models.Team>)Model)
+        {
+            <div class="team" style="background-image: url('@(team.Name.ToLower()).png');">
+                <div class="overlay"><h1>@team.Name</h1></div>
+            </div>
+        }
+    }
+</div>
+
+<div class="teams">
     <div class="team">
         <div class="overlay"><h1>CLOUD6</h1></div>
-        <div class="triangle"></div>
     </div>
     <div class="team">
         <div class="overlay"><h1>CLOUD6</h1></div>
-        <div class="triangle"></div>
     </div>
     <div class="team">
         <div class="overlay"><h1>CLOUD6</h1></div>
-        <div class="triangle"></div>
     </div>
     <div class="team">
         <div class="overlay"><h1>CLOUD6</h1></div>
-        <div class="triangle"></div>
     </div>
     <div class="team">
         <div class="overlay"><h1>CLOUD6</h1></div>
-        <div class="triangle"></div>
-    </div>
-    <div class="team_info h">
-        <div>
-            <h6>CLOUD6</h6>
-            <div class="team_matches">
-                <h2 class="grey">48 PARTIES GAGNÉES</h2>
-                <h2 class="grey">40 PERDUES</h2>
-                <h2 class="grey">98 PARTIES JOUÉES</h2>
-            </div>
-        </div>
-        <div class="players">
-            <div class="player">
-                <h1>ADAM</h1>
-                <div>
-                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
-                    <h2 class="grey">fusil d'assaut</h2>
-                </div>
-                <div>
-                    <div class="acc"></div>
-                    <h2 class="grey">1.25</h2>
-                </div>
-                <div>
-                    <div class="r-time"></div>
-                    <h2 class="grey">1</h2>
-                </div>
-                <div>
-                    <div class="kd"></div>
-                    <h2 class="grey">2.0</h2>
-                </div>
-            </div>
-            <div class="player">
-                <h1>ADAM</h1>
-                <div>
-                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
-                    <h2 class="grey">fusil d'assaut</h2>
-                </div>
-                <div>
-                    <div class="acc"></div>
-                    <h2 class="grey">1.25</h2>
-                </div>
-                <div>
-                    <div class="r-time"></div>
-                    <h2 class="grey">1</h2>
-                </div>
-                <div>
-                    <div class="kd"></div>
-                    <h2 class="grey">2.0</h2>
-                </div>
-            </div>
-            <div class="player">
-                <h1>ADAM</h1>
-                <div>
-                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
-                    <h2 class="grey">fusil d'assaut</h2>
-                </div>
-                <div>
-                    <div class="acc"></div>
-                    <h2 class="grey">1.25</h2>
-                </div>
-                <div>
-                    <div class="r-time"></div>
-                    <h2 class="grey">1</h2>
-                </div>
-                <div>
-                    <div class="kd"></div>
-                    <h2 class="grey">2.0</h2>
-                </div>
-            </div>
-            <div class="player">
-                <h1>ADAM</h1>
-                <div>
-                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
-                    <h2 class="grey">fusil d'assaut</h2>
-                </div>
-                <div>
-                    <div class="acc"></div>
-                    <h2 class="grey">1.25</h2>
-                </div>
-                <div>
-                    <div class="r-time"></div>
-                    <h2 class="grey">1</h2>
-                </div>
-                <div>
-                    <div class="kd"></div>
-                    <h2 class="grey">2.0</h2>
-                </div>
-            </div>
-            <div class="player">
-                <h1>ADAM</h1>
-                <div>
-                    <div class="gun" style="background-image:url('~/Images/guns/ak-47.png')"></div>
-                    <h2 class="grey">fusil d'assaut</h2>
-                </div>
-                <div>
-                    <div class="acc"></div>
-                    <h2 class="grey">1.25</h2>
-                </div>
-                <div>
-                    <div class="r-time"></div>
-                    <h2 class="grey">1</h2>
-                </div>
-                <div>
-                    <div class="kd"></div>
-                    <h2 class="grey">2.0</h2>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -169,13 +68,43 @@
                 insertAfter = totalE;
 
             $(".team_info").remove();
-            $(getTeamInfo(e.find("> h1").text())).insertAfter($(".teams > :nth-child(" + insertAfter + ")"));
+            $(".triangle").remove();
+            $(".allow_overflow").each(function () { $(this).removeClass("allow_overflow"); });
+            createTeamInfo(e.find("h1").text(), $(".teams > :nth-child(" + insertAfter + ")"));
 
-            $(".team_info").css("width", $(".teams").width() - (eRow + 1));
+            $(".team_info").css({
+                "width": $(".teams").width() - (eRow + 1),
+                "top": -(Math.floor(clicked / eRow) + (clicked % eRow == 0 ? 0 : 1))
+            });
+            h_align($(".players"), $(".team_info"), $(".players").width());
+            e.append('<div class="triangle"></div>');
+            e.addClass("allow_overflow");
+            $('html,body').animate({ scrollTop: $(".team_info").offset().top - 10 }, 'normal');
+        }
+        function createTeamInfo(teamName, prev) {
+            var team = getTeamInfo(teamName);
+
+            $('<div class="team_info h"></div>').insertAfter(prev);
+            $(".team_info").append("<div><h6>" + team.name + "</h6></div>");
+            $(".team_info > div").append('<div class="team_matches"></div>');
+            $(".team_matches").append('<h2 class="grey">' + team.wins + ' PARTIES GAGNÉES</h2>');
+            $(".team_matches").append('<h2 class="grey">' + (parseInt(team.games) - parseInt(team.wins)) + ' PERDUES</h2>');
+            $(".team_matches").append('<h2 class="grey">' + team.games + ' PARTIES JOUÉES</h2>');
+
+            $(".team_info").append('<div class="players"></div>');
+            for (let i = 0; i < team.players.length; i++) {
+                $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
+                $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + team.players[i].gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
+                $(".player:last-child").append('<div><div class="acc"></div><h2 class="grey">' + team.players[i].acc + '</h2></div>');
+                $(".player:last-child").append('<div><div class="r-time"></div><h2 class="grey">' + team.players[i].rTime + '</h2></div>');
+                $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
+            }
         }
         function getTeamInfo(teamName) {
-            return '<div class="team_info"><h1>nope</h1></div>';
+            // JSON returned by server ------ TO DO
+            return JSON.parse('{"name":"Cloud6", "wins":"10", "games":"15", "players":[{"name":"Adam", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Rekt", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Dild", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Salt", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"John", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}]}');
         }
+
         function getElemPerRows(p) {
             return Math.floor(p.width() / p.find("> :nth-child(2)").outerWidth());
         }

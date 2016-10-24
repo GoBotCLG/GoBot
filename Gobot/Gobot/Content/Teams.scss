@@ -16,9 +16,10 @@ $teamH: 250px;
     border: 1px solid $grey;
     background-color: $infoBgColor;
     cursor: pointer;
+    overflow: hidden;
 
     .overlay {
-        position: relative;
+        position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
@@ -27,6 +28,7 @@ $teamH: 250px;
         opacity: 0;
 
         > h1 {
+            position: absolute;
             width: 100%;
             height: 100%;
             line-height: 250px !important;
@@ -42,12 +44,12 @@ $teamH: 250px;
     .triangle {
         position: absolute;
         top: 100%;
-        left: calc(50% - 25px);
-        width: 50px;
-        height: 50px;
-        -webkit-clip-path: polygon(50% 50%, 0 0, 100% 0);
-        clip-path: polygon(50% 50%, 0 0, 100% 0);
-        background-color: $grey;
+        left: 0;
+        width: 100%;
+        height: 26px;
+        background: url('/Images/teams_triangle.png') no-repeat center;
+        background-size: 59px/26px;
+        z-index: 999;
     }
 }
     .team:hover {
@@ -60,6 +62,7 @@ $teamH: 250px;
             transition: 0.3s;
         }
     }
+        .allow_overflow { overflow: visible; }
 
 .team_info {
     position: relative;
@@ -79,9 +82,10 @@ $teamH: 250px;
         font: italic 900 60px $font;
         color: $off-white;
         text-align: right;
+        text-transform: uppercase;
         right: 30px !important;
         padding: 0;
-        margin: 55px 0 80px 0;
+        margin: 55px 0 0 0;
     }
     .team_matches {
         float: left;
@@ -95,19 +99,20 @@ $teamH: 250px;
 .players {
     position: relative;
     float: left;
-    width: 100%;
     height: auto;
+    margin-top: 40px;
 }
 
 .player {
     position: relative;
     float: left;
-    width: 100%;
+    width: auto;
+    padding: 20px 40px 40px 40px;
     max-width: $teamH * 5 / 6;
-    min-width: 200px;
 
     > h1 {
-
+        text-transform: uppercase;
+        margin-bottom: 10px;
     }
 
     > div {
@@ -115,7 +120,9 @@ $teamH: 250px;
 
         }
         > h2 {
-
+            font-size: 20px;
+            text-transform: uppercase;
+            text-align: left;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Gobot.Models.Match>
+
+@{
     ViewBag.Title = "Gager";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -17,31 +19,93 @@
     }
 }
 
-@*@{
-        if (((List<Gobot.Models.Match>)ViewBag.Matches).Count > 0)
-        {
-            foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)ViewBag.Matches)
-            {
-                
-            }
-        }
-        else
-        {
-            <div class="info" id="header">
-                <h6>Aucune partie à venir. Réessayez plus tard.</h6>
-            </div>
-        }
-    }*@
-
-<div class="info" id="header">
-    <h6>Misez sur les parties à venir!</h6>
-</div>
+@{
+    if (((List<Gobot.Models.Match>)Model).Count > 0)
+    {
+        <div class="info" id="header">
+            <h6>Misez sur les parties à venir!</h6>
+        </div>
+    }
+    else
+    {
+        <div class="info" id="header">
+            <h6>Aucune partie à venir. Réessayez plus tard.</h6>
+        </div>
+    }
+}
 
 <div class="info" id="getCredits">
     <a href="#"><h1>Acheter plus de crédits</h1></a>
     <div class="separator"><div></div></div>
     <a href="#"><h1>Visionner une publicité</h1></a>
 </div>
+
+@{
+    if (((List<Gobot.Models.Match>)Model).Count > 0)
+    {
+        foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)Model)
+        {
+            <div class="info">
+                <div class="time sqr"><h3>@m.Date.TimeOfDay</h3></div>
+
+                <div class="team team1">
+                    <div class="img" style="background-image: url(/Images/@(m.Teams[0].Name.ToLower()).png);"></div>
+                    <div class="text">
+                        @{
+                            // if user placed bet on team1
+                            if (false)
+                            {
+                                <h1><green>@(m.Teams[0].Name)</green></h1>
+                                <h4 class="grey">Mise Totale<green> 5000</green>GC</h4>
+                                <h4 class="grey">Votre mise<green> 500</green>GC</h4>
+                            }
+                            else
+                            {
+                                <h1>@(m.Teams[0].Name)</h1>
+                                <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="vs"><h1>VS</h1></div>
+                <div class="team team2">
+                    <div class="text">
+                        @{
+                            // if user placed bet on team2
+                            if (false)
+                            {
+                                <h1><green>@(m.Teams[1].Name)</green></h1>
+                                <h4 class="grey">Mise Totale<green> 5000</green>GC</h4>
+                                <h4 class="grey">Votre mise<green> 500</green>GC</h4>
+                            }
+                            else
+                            {
+                                <h1>@(m.Teams[1].Name)</h1>
+                                <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
+                            }
+                        }
+                    </div>
+                    <div class="img" style="background-image: url(/Images/@(m.Teams[1].Name.ToLower()).png);"></div>
+                </div>
+
+                <div class="manageBet">
+                    @{
+                        // if user placed bet
+                        if (false)
+                        {
+                            <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { id = m.Id })"></a><div><h2>Retirer</h2></div></div>
+                            <div class="edit sqr"><div><h2>Modifier</h2></div></div>
+                        }
+                        else
+                        {
+                            <div class="create sqr"><div><h2>Miser</h2></div></div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    }
+}
 
 <div class="info">
     <div class="time sqr"><h3>12:00</h3></div>
@@ -79,7 +143,7 @@
             // if user placed bet
             if (false)
             {
-                <div class="remove sqr"><div><h2>Retirer</h2></div></div>
+                <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { id = 5 })"></a><div><h2>Retirer</h2></div></div>
                 <div class="edit sqr"><div><h2>Modifier</h2></div></div>
             }
             else
@@ -126,7 +190,7 @@
             // if user placed bet
             if (true)
             {
-                <div class="remove sqr"><div><h2>Retirer</h2></div></div>
+                <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { id = 5 })"></a><div><h2>Retirer</h2></div></div>
                 <div class="edit sqr"><div><h2>Modifier</h2></div></div>
             }
             else
@@ -168,9 +232,6 @@
             $("#bet_chooseTeam").append('<div class="separator"><div class="square"></div></div>');
             $("#bet_chooseTeam").append('<div style="background-image: url(/Images/' + teamNames[1].toLowerCase() + '.png)"><h1>' + teamNames[1].toUpperCase() + '</h1></div>');
             onResize();
-        });
-        $(document).on("click", ".manageBet > .remove", function () {
-            window.location.href = "@Url.Action("Remove", "Bet")";
         });
         $(".manageBet > .edit").click(function () {
             let teams = $(this).closest(".info").find("> .team");
