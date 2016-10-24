@@ -154,16 +154,7 @@ img                         { border: 0; }
     }
 }
 
-.info {
-    position: relative;
-    float: left;
-    clear: both;
-    width: 85%;
-    max-width: $maxContainerWidth;
-    height: auto;
-    background-color: $infoBgColor;
-    margin: 2px auto;
-
+.info, .h {
     button, a, h1, h2, h3, h4, h5 {
         position: relative;
         display: block;
@@ -182,6 +173,17 @@ img                         { border: 0; }
     h3 { font-size: 18px; }
     h4 { font: 400 16px $font; padding: 0; margin: 0; }
     h5 { font: 400 14px Lato, sans-serif; color: white;}
+}
+
+.info {
+    position: relative;
+    float: left;
+    clear: both;
+    width: 85%;
+    max-width: $maxContainerWidth;
+    height: auto;
+    background-color: $infoBgColor;
+    margin: 2px auto;
 }
 
 @media screen and (max-width: 1325px) {

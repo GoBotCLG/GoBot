@@ -131,6 +131,36 @@ img {
       height: 120px !important;
       margin-left: calc(50% - 120px /2) !important; } }
 
+.info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5, .h button, .h a, .h h1, .h h2, .h h3, .h h4, .h h5 {
+  position: relative;
+  display: block;
+  text-align: center; }
+
+.info h1, .info h2, .info h3, .info h4, .info h5, .h h1, .h h2, .h h3, .h h4, .h h5 {
+  font: italic 900 40px Lato, Arial, sans-serif;
+  color: #eeeeee;
+  padding: 0;
+  margin: 0; }
+
+.info h1, .h h1 {
+  font-size: 36px;
+  line-height: 30px; }
+
+.info h2, .h h2 {
+  font-size: 24px; }
+
+.info h3, .h h3 {
+  font-size: 18px; }
+
+.info h4, .h h4 {
+  font: 400 16px Lato, Arial, sans-serif;
+  padding: 0;
+  margin: 0; }
+
+.info h5, .h h5 {
+  font: 400 14px Lato, sans-serif;
+  color: white; }
+
 .info {
   position: relative;
   float: left;
@@ -140,29 +170,6 @@ img {
   height: auto;
   background-color: #232323;
   margin: 2px auto; }
-  .info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5 {
-    position: relative;
-    display: block;
-    text-align: center; }
-  .info h1, .info h2, .info h3, .info h4, .info h5 {
-    font: italic 900 40px Lato, Arial, sans-serif;
-    color: #eeeeee;
-    padding: 0;
-    margin: 0; }
-  .info h1 {
-    font-size: 36px;
-    line-height: 30px; }
-  .info h2 {
-    font-size: 24px; }
-  .info h3 {
-    font-size: 18px; }
-  .info h4 {
-    font: 400 16px Lato, Arial, sans-serif;
-    padding: 0;
-    margin: 0; }
-  .info h5 {
-    font: 400 14px Lato, sans-serif;
-    color: white; }
 
 @media screen and (max-width: 1325px) {
   .info #rep > h2 {
@@ -238,13 +245,37 @@ img {
   transition: 0.3s; }
   .team:hover > .overlay > h1 {
     opacity: 1;
-    transition: 1s; }
+    transition: 0.3s;
+    transition-delay: 0.2s; }
 
 .team_info {
   position: relative;
   float: left;
   width: 100%;
-  height: auto; }
+  height: auto;
+  top: -1px;
+  background-color: #232323;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #626262; }
+  .team_info h6 {
+    float: left;
+    position: relative;
+    width: 50%;
+    font: italic 900 60px Lato, Arial, sans-serif;
+    color: #eeeeee;
+    text-align: right;
+    right: 30px !important;
+    padding: 0;
+    margin: 55px 0 80px 0; }
+  .team_info .team_matches {
+    float: left;
+    width: 50%; }
+    .team_info .team_matches > h2 {
+      text-align: left;
+      text-indent: 30px; }
+    .team_info .team_matches > h2:first-of-type {
+      margin-top: 45px; }
 
 .players {
   position: relative;
@@ -256,7 +287,8 @@ img {
   position: relative;
   float: left;
   width: 100%;
-  max-width: 270px; }
+  max-width: 208.33333px;
+  min-width: 200px; }
 
 .acc {
   background-image: url("/Images/accuracy.png"); }

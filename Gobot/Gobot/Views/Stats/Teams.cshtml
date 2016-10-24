@@ -31,10 +31,14 @@
         <div class="overlay"><h1>CLOUD6</h1></div>
         <div class="triangle"></div>
     </div>
-    <div class="team_info">
+    <div class="team_info h">
         <div>
             <h6>CLOUD6</h6>
-            <h1 class="grey">48 PARTIES GAGNÉES, 40 PERDUES. 98 PARTIES JOUÉES.</h1>
+            <div class="team_matches">
+                <h2 class="grey">48 PARTIES GAGNÉES</h2>
+                <h2 class="grey">40 PERDUES</h2>
+                <h2 class="grey">98 PARTIES JOUÉES</h2>
+            </div>
         </div>
         <div class="players">
             <div class="player">
@@ -165,7 +169,9 @@
                 insertAfter = totalE;
 
             $(".team_info").remove();
-            $(getTeamInfo(e.find("> h1").text())).insertAfter($(".teams > :nth-child(" + insertAfter + ")"))
+            $(getTeamInfo(e.find("> h1").text())).insertAfter($(".teams > :nth-child(" + insertAfter + ")"));
+
+            $(".team_info").css("width", $(".teams").width() - (eRow + 1));
         }
         function getTeamInfo(teamName) {
             return '<div class="team_info"><h1>nope</h1></div>';
