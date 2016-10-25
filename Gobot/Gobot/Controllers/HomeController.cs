@@ -72,14 +72,56 @@ namespace Gobot.Controllers
                         User sessionuser = new User();
                         sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
                         sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
-                        sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString();
-                        sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                        sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString().Replace("=\"\" ", "/");
+                        if (UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.Credits = (int)UserResult.Rows[0]["Credit"];
+                        }
+                        else
+                        {
+                            sessionuser.Credits = 0;
+                        }
                         sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
-                        sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
-                        sessionuser.Games = (int)UserResult.Rows[0]["Game"];
-                        sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
-                        sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
-                        sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                        if(UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.Wins = (int)UserResult.Rows[0]["Win"];
+                        }
+                        else
+                        {
+                            sessionuser.Wins = 0;
+                        }
+                        if (UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.Games = (int)UserResult.Rows[0]["Game"];
+                        }
+                        else
+                        {
+                            sessionuser.Games = 0;
+                        }
+                        if (UserResult.Rows[0]["TotalCredit"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.TotalCredits = (int)UserResult.Rows[0]["TotalCredit"];
+                        }
+                        else
+                        {
+                            sessionuser.TotalCredits = 0;
+                        }
+                        if (UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.EXP = (int)UserResult.Rows[0]["EXP"];
+                        }
+                        else
+                        {
+                            sessionuser.EXP = 0;
+                        }
+                        if (UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull))
+                        {
+                            sessionuser.Level = (int)UserResult.Rows[0]["LVL"];
+                        }
+                        else
+                        {
+                            sessionuser.Level = 1;
+                        }
                         Session["User"] = sessionuser;
 
                         return RedirectToAction("Index", "Account");
@@ -124,9 +166,8 @@ namespace Gobot.Controllers
             DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
             Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
             Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
-
-            ViewBag.LiveStats = Teams;
-            return Json(Teams);
+            
+            return Json(Teams.ToString(), JsonRequestBehavior.AllowGet);
         }
     }
 }
