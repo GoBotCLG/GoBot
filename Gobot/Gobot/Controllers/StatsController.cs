@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Gobot.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,10 +21,10 @@ namespace Gobot.Controllers
             return View();
         }
 
-        public ActionResult Team(string TeamId)
+        public ActionResult Teams()
         {
             //Get team info
-            return View();
+            return View(new List<Team>());
         }
 
         public JsonResult Team(string TeamId, string json)

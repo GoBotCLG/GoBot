@@ -76,7 +76,12 @@ $height: 100px;
         padding: 0;
         margin: 0;
 
-        > div {
+        > a {
+            height: 100%;
+            width: 100%;
+        }
+
+        div {
             display: none;
             position: absolute;
             top: 0 !important;
@@ -277,31 +282,20 @@ $betH: 300px;
             height: 70px;
             cursor: pointer;
             background-position: center !important;
-            background-size: 25px 25px !important; 
+            background-size: 25px 14px !important; 
             background-repeat: no-repeat !important;
             opacity: 0.8;
         }
             > .sub {
-                background: $red url(/Images/removeBet.png);
+                background: $red url(/Images/sortDown.png);
             }
             > .add {
-                background: $green url(/Images/addBet.png);
+                background: $green url(/Images/sortUp.png);
             }
 
-            > .sub:hover, > .add:hover { opacity: 1; transition: 0.3s; background-size: 29px !important; }
-    }
-
-    h6 {
-        font: italic 900 60px $font;
-        color: $off-white;
-        text-transform: uppercase;
-        width: 100%;
-        text-align: center;
-        margin: 90px 0 70px 0;
-    }
-
-    #header {
-        background-color: $darkGrey;
+            > .sub:hover, > .add:hover { opacity: 1; transition: 0.3s; background-size: 29px 16px !important; }
+            > .add:active { background-position:  top !important; }
+            > .sub:active { background-position: bottom !important; }
     }
 
     #getCredits {
@@ -321,5 +315,11 @@ $betH: 300px;
         > a:last-of-type    { > h1 { color: $off-white; } }
             > a:last-of-type:hover    { background-color: $off-white; > h1 { color: $infoBgColor; }  }
 
-        > .separator { background-color: $infoBgColor; > div { background-color: $infoBgColor; } }
+        > .separator { 
+            background-color: $infoBgColor; 
+            > div { 
+                top: calc(50% - 25px) !important;
+                background-color: $infoBgColor; 
+            } 
+        }
     }

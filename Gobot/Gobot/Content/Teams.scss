@@ -1,0 +1,132 @@
+﻿@import 'global';
+
+$teamH: 250px;
+.teams {
+    position: relative;
+    width: auto;
+    height: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.team {
+    position: relative;
+    float: left;
+    height: $teamH;
+    width: $teamH;
+    border: 1px solid $grey;
+    background-color: $infoBgColor;
+    cursor: pointer;
+    overflow: hidden;
+
+    .overlay {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 0;
+        background-color: rgba(0,0,0,0.85);
+        opacity: 0;
+
+        > h1 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            line-height: 250px !important;
+            color: $off-white;
+            font: italic 900 40px $font;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            opacity: 0;
+        }
+    }
+
+    .triangle {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: 26px;
+        background: url('/Images/teams_triangle.png') no-repeat center;
+        background-size: 59px/26px;
+        z-index: 999;
+    }
+}
+    .team:hover {
+        > .overlay {
+            > h1 { opacity: 1; transition: 0.3s; transition-delay: 0.2s; }
+
+            top: 0;
+            height: 100%;
+            opacity: 1;
+            transition: 0.3s;
+        }
+    }
+        .allow_overflow { overflow: visible; }
+
+.team_info {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: auto;
+    top: -1px;
+    background-color: $infoBgColor;
+    padding: 0;
+    margin: 0;
+    border: 1px solid $grey;
+
+    h6 {
+        float: left;
+        position: relative;
+        width: 50%;
+        font: italic 900 60px $font;
+        color: $off-white;
+        text-align: right;
+        text-transform: uppercase;
+        right: 30px !important;
+        padding: 0;
+        margin: 55px 0 0 0;
+    }
+    .team_matches {
+        float: left;
+        width: 50%;
+
+        > h2 { text-align: left; text-indent: 30px; }
+        > h2:first-of-type { margin-top: 45px; }
+    }
+}
+
+.players {
+    position: relative;
+    float: left;
+    height: auto;
+    margin-top: 40px;
+}
+
+.player {
+    position: relative;
+    float: left;
+    width: auto;
+    padding: 20px 40px 40px 40px;
+    max-width: $teamH * 5 / 6;
+
+    > h1 {
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    > div {
+        > div {
+
+        }
+        > h2 {
+            font-size: 20px;
+            text-transform: uppercase;
+            text-align: left;
+        }
+    }
+}
+
+.acc { background-image: url('/Images/accuracy.png') }
+.r-time { background-image: url('/Images/reactionTime.png') }
+.kd { background-image: url('/Images/killDeath.png') }

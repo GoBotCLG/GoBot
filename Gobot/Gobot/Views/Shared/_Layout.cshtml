@@ -24,7 +24,7 @@
         <a id="gagueure" href="@Url.Action("Index", "Bet")">
             <div style="background-image: url(@Url.Content("~/Images/bet.png"))"></div>
         </a>
-        <a id="équipes" href="#">
+        <a id="équipes" href="@Url.Action("Teams", "Stats")">
             <div style="background-image: url(@Url.Content("~/Images/teams.png"))"></div>
         </a>
         @*<a id="inventaire" href="#">
@@ -46,120 +46,120 @@
     </div>
     @RenderBody()
 
-    <script>
-        var waterDropInterval;
-        var mobileWidth = 959;
+<script>
+    var waterDropInterval;
+    var mobileWidth = 959;
 
-        $(document).ready(function () {
-            setCurrentTab();
-        });
+    $(document).ready(function () {
+        setCurrentTab();
+    });
 
-        $(window).on('resize', function () {
+    $(window).on('resize', function () {
 
-        });
+    });
 
-        // Get cursor position on each mousemove.
-        var cursor = { x: -1, y: -1 };
-        $(document).mousemove(function (event) {
-            cursor.x = event.pageX;
-            cursor.y = event.pageY;
-        });
+    // Get cursor position on each mousemove.
+    var cursor = { x: -1, y: -1 };
+    $(document).mousemove(function (event) {
+        cursor.x = event.pageX;
+        cursor.y = event.pageY;
+    });
 
-        $(document).on("mouseenter", "#navBig > a > div", function (e) {
-            // If tab is not active page
-            if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
-                var parent = $(this).parent();
+    $(document).on("mouseenter", "#navBig > a > div", function (e) {
+        // If tab is not active page
+        if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
+            var parent = $(this).parent();
 
-                waterDrop(parent, e); // Add waterdrop effect
-                waterDropInterval = setInterval(function () {
-                    waterDrop(parent, e);
-                }, 1000); // Set interval for waterdrop effect
+            waterDrop(parent, e); // Add waterdrop effect
+            waterDropInterval = setInterval(function () {
+                waterDrop(parent, e);
+            }, 1000); // Set interval for waterdrop effect
 
-                showNavText($(this)); // Show descriptive text
-                var color = $(this).parent().css("background-color");
-                var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
-                for (var i = 0; i < colors.length; i++)
-                    colors[i] = Math.round(colors[i] * 0.85); // Get background-color (bg *0.85)
+            showNavText($(this)); // Show descriptive text
+            var color = $(this).parent().css("background-color");
+            var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
+            for (var i = 0; i < colors.length; i++)
+                colors[i] = Math.round(colors[i] * 0.85); // Get background-color (bg *0.85)
 
-                color = "rgb(" + colors.join() + ")";
+            color = "rgb(" + colors.join() + ")";
 
-                $(this).parent().css({ backgroundColor: color }); // Change background-color
+            $(this).parent().css({ backgroundColor: color }); // Change background-color
+        }
+    }).on("mouseleave", "#navBig > a > div", function (e) {
+        if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
+            clearInterval(waterDropInterval); // Remove waterdrop
+            hideNavText($(this)); // Remove text
+
+            $(this).parent().css({ backgroundColor: "#f16651" });
+        }
+    });
+
+    // Active page
+    $("#navBig > a > div").click(function () {
+        setClickedTab($(this), true);
+    });
+    function setCurrentTab() {
+        var url = window.location.pathname;
+        $("#navBig > a").each(function () {
+            if ($(this).attr("href") == url) {
+                setClickedTab($(this).find("div"), false);
+                return;
             }
-        }).on("mouseleave", "#navBig > a > div", function (e) {
-            if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
-                clearInterval(waterDropInterval); // Remove waterdrop
-                hideNavText($(this)); // Remove text
-
-                $(this).parent().css({ backgroundColor: "#f16651" });
-            }
         });
+    }
+    function setClickedTab(e, animate) {
+        if (e != null) {
+            clearInterval(waterDropInterval); // Remove waterdrop
+            $("#navBig").stop(); // Stop animations of nav
+            $("#navBig").find(".active").removeClass("active");
+            $("#navBig").find(".active_anim").removeClass("active_anim");
+            e.parent().parent().find("a").css({ backgroundColor: "#f16651" });
+            e.parent().css({ backgroundColor: "#e3604c" });
+            e.parent().addClass(animate ? "active_anim" : "active");
+            hideNavText(e); // Hide text
+        }
+    }
 
-        // Active page
-        $("#navBig > a > div").click(function () {
-            setClickedTab($(this), true);
-        });
-        function setCurrentTab() {
-            var url = window.location.pathname;
-            $("#navBig > a").each(function () {
-                if ($(this).attr("href") == url) {
-                    setClickedTab($(this).find("div"), false);
-                    return;
-                }
+    function showNavText(elem) {
+        if ($(window).width() > mobileWidth) {
+            var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
+            elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
+
+            var scrollTop = $(window).scrollTop(), elementOffset = elem.offset().top, topPos = (elementOffset - scrollTop);
+            topPos += (elem.height() / 2 - $("#text").height() / 2);
+            var leftPos = -($("#text").width() + 40);
+            $("#text").css({
+                top: topPos,
+                left: leftPos
             });
         }
-        function setClickedTab(e, animate) {
-            if (e != null) {
-                clearInterval(waterDropInterval); // Remove waterdrop
-                $("#navBig").stop(); // Stop animations of nav
-                $("#navBig").find(".active").removeClass("active");
-                $("#navBig").find(".active_anim").removeClass("active_anim");
-                e.parent().parent().find("a").css({ backgroundColor: "#f16651" });
-                e.parent().css({ backgroundColor: "#e3604c" });
-                e.parent().addClass(animate ? "active_anim" : "active");
-                hideNavText(e); // Hide text
-            }
+    }
+    function hideNavText(elem) {
+        if ($(window).width() > mobileWidth)
+            $("#navBig > #text").remove();
+    }
+
+    function waterDrop(parent, e) {
+        if (parent.find(".ink").length == 0)
+            parent.prepend("<span class='ink'></span>");
+
+        var ink = parent.find(".ink");
+        ink.removeClass("animate");
+
+        var d;
+        if (!ink.height() && !ink.width()) {
+            d = Math.max(parent.outerWidth(), parent.outerHeight());
+            ink.css({ height: d, width: d });
         }
 
-        function showNavText(elem) {
-            if ($(window).width() > mobileWidth) {
-                var id = elem.parent().attr("id").substring(0, 1).toUpperCase() + elem.parent().attr("id").substring(1).toLowerCase();
-                elem.parent().parent().append("<div id=\"text\"><span>" + id + "</span><div></div></div>");
+        var x = cursor.x - parent.offset().left - ink.width() / 2;
+        var y = cursor.y - parent.offset().top - ink.height() / 2;
 
-                var scrollTop = $(window).scrollTop(), elementOffset = elem.offset().top, topPos = (elementOffset - scrollTop);
-                topPos += (elem.height() / 2 - $("#text").height() / 2);
-                var leftPos = -($("#text").width() + 40);
-                $("#text").css({
-                    top: topPos,
-                    left: leftPos
-                });
-            }
-        }
-        function hideNavText(elem) {
-            if ($(window).width() > mobileWidth)
-                $("#navBig > #text").remove();
-        }
+        ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
+    }
+</script>
 
-        function waterDrop(parent, e) {
-            if (parent.find(".ink").length == 0)
-                parent.prepend("<span class='ink'></span>");
-
-            var ink = parent.find(".ink");
-            ink.removeClass("animate");
-
-            var d;
-            if (!ink.height() && !ink.width()) {
-                d = Math.max(parent.outerWidth(), parent.outerHeight());
-                ink.css({ height: d, width: d });
-            }
-
-            var x = cursor.x - parent.offset().left - ink.width() / 2;
-            var y = cursor.y - parent.offset().top - ink.height() / 2;
-
-            ink.css({ top: y + 'px', left: x + 'px' }).addClass("animate");
-        }
-    </script>
-
-    @RenderSection("scripts", required: false);
-    @Scripts.Render("~/Scripts/global.js");
+@RenderSection("scripts", required: false)
+@Scripts.Render("~/Scripts/global.js")
 </body>
 </html>

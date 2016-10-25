@@ -238,6 +238,12 @@
     <Content Include="Content\Register.min.css">
       <DependentUpon>Register.css</DependentUpon>
     </Content>
+    <Content Include="Content\Teams.css">
+      <DependentUpon>Teams.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Teams.min.css">
+      <DependentUpon>Teams.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -304,6 +310,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\Register.scss" />
     <Content Include="Content\Bet.scss" />
+    <Content Include="Content\Teams.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\global.js" />
@@ -342,10 +349,10 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Watch\Index.cshtml" />
     <Content Include="Views\Bet\Index.cshtml" />
+    <Content Include="Views\Stats\Teams.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Stats\" />
     <Folder Include="Views\Support\" />
   </ItemGroup>
   <ItemGroup>

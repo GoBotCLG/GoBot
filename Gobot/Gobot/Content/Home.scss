@@ -60,6 +60,7 @@ body { overflow: hidden; }
         padding: 16px 0;
         text-align: center;
         text-transform: uppercase;
+        z-index: 999;
     }
     > a:hover {
         border-color: $aColor;
@@ -87,6 +88,7 @@ body { overflow: hidden; }
             > div {
                 position: relative;
                 margin: 0 106px 0 16%;
+                z-index: 999;
 
                 $fontSize: 24px;
                 > label {

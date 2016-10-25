@@ -59,6 +59,16 @@ img {
 .offw, offw {
   color: #eeeeee; }
 
+#header {
+  background-color: #323232; }
+  #header h6 {
+    font: italic 900 60px Lato, Arial, sans-serif;
+    color: #eeeeee;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    margin: 90px 0 70px 0; }
+
 #error_overlay, #js_error {
   position: fixed;
   top: 0;
@@ -121,6 +131,36 @@ img {
       height: 120px !important;
       margin-left: calc(50% - 120px /2) !important; } }
 
+.info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5, .h button, .h a, .h h1, .h h2, .h h3, .h h4, .h h5 {
+  position: relative;
+  display: block;
+  text-align: center; }
+
+.info h1, .info h2, .info h3, .info h4, .info h5, .h h1, .h h2, .h h3, .h h4, .h h5 {
+  font: italic 900 40px Lato, Arial, sans-serif;
+  color: #eeeeee;
+  padding: 0;
+  margin: 0; }
+
+.info h1, .h h1 {
+  font-size: 36px;
+  line-height: 30px; }
+
+.info h2, .h h2 {
+  font-size: 24px; }
+
+.info h3, .h h3 {
+  font-size: 18px; }
+
+.info h4, .h h4 {
+  font: 400 16px Lato, Arial, sans-serif;
+  padding: 0;
+  margin: 0; }
+
+.info h5, .h h5 {
+  font: 400 14px Lato, sans-serif;
+  color: white; }
+
 .info {
   position: relative;
   float: left;
@@ -130,29 +170,6 @@ img {
   height: auto;
   background-color: #232323;
   margin: 2px auto; }
-  .info button, .info a, .info h1, .info h2, .info h3, .info h4, .info h5 {
-    position: relative;
-    display: block;
-    text-align: center; }
-  .info h1, .info h2, .info h3, .info h4, .info h5 {
-    font: italic 900 40px Lato, Arial, sans-serif;
-    color: #eeeeee;
-    padding: 0;
-    margin: 0; }
-  .info h1 {
-    font-size: 36px;
-    line-height: 30px; }
-  .info h2 {
-    font-size: 24px; }
-  .info h3 {
-    font-size: 18px; }
-  .info h4 {
-    font: 400 16px Lato, Arial, sans-serif;
-    padding: 0;
-    margin: 0; }
-  .info h5 {
-    font: 400 14px Lato, sans-serif;
-    color: white; }
 
 @media screen and (max-width: 1325px) {
   .info #rep > h2 {
@@ -251,14 +268,17 @@ img {
     opacity: 0.75;
     padding: 0;
     margin: 0; }
-    .manageBet > div > div {
+    .manageBet > div > a {
+      height: 100%;
+      width: 100%; }
+    .manageBet > div div {
       display: none;
       position: absolute;
       top: 0 !important;
       width: auto;
       height: 100px;
       background-color: inherit; }
-      .manageBet > div > div > h2 {
+      .manageBet > div div > h2 {
         text-transform: uppercase;
         font-weight: 400;
         width: auto;
@@ -429,28 +449,21 @@ input[type=number]::-webkit-outer-spin-button {
     height: 70px;
     cursor: pointer;
     background-position: center !important;
-    background-size: 25px 25px !important;
+    background-size: 25px 14px !important;
     background-repeat: no-repeat !important;
     opacity: 0.8; }
   .betSelector > .sub {
-    background: #963434 url(/Images/removeBet.png); }
+    background: #963434 url(/Images/sortDown.png); }
   .betSelector > .add {
-    background: #51c24b url(/Images/addBet.png); }
+    background: #51c24b url(/Images/sortUp.png); }
   .betSelector > .sub:hover, .betSelector > .add:hover {
     opacity: 1;
     transition: 0.3s;
-    background-size: 29px !important; }
-
-h6 {
-  font: italic 900 60px Lato, Arial, sans-serif;
-  color: #eeeeee;
-  text-transform: uppercase;
-  width: 100%;
-  text-align: center;
-  margin: 90px 0 70px 0; }
-
-#header {
-  background-color: #323232; }
+    background-size: 29px 16px !important; }
+  .betSelector > .add:active {
+    background-position: top !important; }
+  .betSelector > .sub:active {
+    background-position: bottom !important; }
 
 #getCredits {
   margin-bottom: 25px;
@@ -477,5 +490,6 @@ h6 {
   #getCredits > .separator {
     background-color: #232323; }
     #getCredits > .separator > div {
+      top: calc(50% - 25px) !important;
       background-color: #232323; }
 
