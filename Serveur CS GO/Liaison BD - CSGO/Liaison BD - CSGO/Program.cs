@@ -2,26 +2,28 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Odbc;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace Liaison_BD___CSGO
 {
+    public enum MatchEvent { MATCH_ENDED, ROUND_ENDED, START_NEXT_MATCH }
+
     class Program
     {
         [DllImport("user32.dll")]
         private static extern int SetForegroundWindow(IntPtr window);
-
-        public static int CurrentMatchId;
-        public static int CurrentRoundNumber;
-        public static int NextMatchId;
         
+        public static int CurrentRoundNumber;
+        public static int CurrentMatchId;
+
+        private static bool Team1CTNextMatch;
+        private static bool Team1CTCurrentMatch;
         private static Process Serveur;
         private static MySQLWrapper BD;
 
@@ -37,10 +39,9 @@ namespace Liaison_BD___CSGO
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon -maxplayers_override 11 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
-            
-            CurrentMatchId = (int)BD.Procedure("IsCurrentMatch").Rows[0]["IdMatch"];
-            NextMatchId = (int)BD.Procedure("NextMatch").Rows[0]["IdMatch"];
-            
+
+            PrepareNextMatch();
+            StartMatch();
 
             string ligne = "";
             do
@@ -74,13 +75,15 @@ namespace Liaison_BD___CSGO
 
             if (TeamCT == 0)
             {
-                BotsCT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-                BotsT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+                Team1CTNextMatch = true;
+                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
+                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
             }
             else
             {
-                BotsT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-                BotsCT = BD.Procedure("BotFromTeam", new System.Data.Odbc.OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+                Team1CTNextMatch = false;
+                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
+                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
             }
 
 
@@ -102,32 +105,75 @@ namespace Liaison_BD___CSGO
             SendKeys.SendWait("{ENTER}");
             SendKeys.SendWait("bot_kick");
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(500);
+            SetForegroundWindow(Process.GetProcessesByName("csgo.exe")[0].MainWindowHandle);
+
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round03.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round04.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round05.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round06.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round07.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round08.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round09.txt");
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round10.txt");
 
             StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
+            Dictionary<string, int> KillsBots = new Dictionary<string, int>();
+            Dictionary<string, int> AssistsBots = new Dictionary<string, int>();
+            Dictionary<string, int> DeathsBots = new Dictionary<string, int>();
+            Dictionary<string, int> IdBots = new Dictionary<string, int>();
+
+            DataTable Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatchId));
+
+            foreach(DataRow row in Teams.Rows)
+            {
+                DataTable Bots = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
+                foreach(DataRow bot in Bots.Rows)
+                {
+                    IdBots.Add(bot["NomBot"].ToString(), (int)bot["IdBot"]);
+                    KillsBots.Add(bot["NomBot"].ToString(), Convert.ToInt32(bot["KDA"].ToString().Split('/')[0]));
+                    AssistsBots.Add(bot["NomBot"].ToString(), Convert.ToInt32(bot["KDA"].ToString().Split('/')[1]));
+                    DeathsBots.Add(bot["NomBot"].ToString(), Convert.ToInt32(bot["KDA"].ToString().Split('/')[2]));
+                }
+            }
+
             while (!InLog.EndOfStream)
             {
                 string ligne = InLog.ReadLine();
+                if(ligne.Contains("killed"))
+                {
+                    KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
+                    DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] = DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] + 1;
+                }
+                if(ligne.Contains("assisted"))
+                {
+                    AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
+                }
+            }
 
+            foreach(KeyValuePair<string, int> bot in IdBots)
+            {
+                BD.Procedure("SetKDA", new OdbcParameter(":KDA", KillsBots[bot.Key].ToString() + "/" + DeathsBots[bot.Key].ToString() + "/" + AssistsBots[bot.Key].ToString()), new OdbcParameter(":IdBot", bot.Value));
             }
         }
 
         private static void NewEvent(object sender, ProgressChangedEventArgs e)
         {
-            if(e.ProgressPercentage == 0)
-            {
-                PrepareNextMatch();
-            }
-            else if(e.ProgressPercentage == 1)
-            {
-                StartMatch();
-            }
-            else if(e.ProgressPercentage == 2)
-            {
-                UploadScores();
-            }
-            else if(e.ProgressPercentage == 3)
+            if(e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
                 StopMatch();
+            }
+            else if(e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
+            {
+                CurrentRoundNumber++;
+                UploadScores();
+            }
+            else if(e.ProgressPercentage == (int)MatchEvent.START_NEXT_MATCH)
+            {
+                StartMatch();
+                PrepareNextMatch();
             }
         }
 
@@ -162,30 +208,45 @@ namespace Liaison_BD___CSGO
                 }
                 else
                 {
-                    InRound.ReadLine();                             //{
-                    ligne = InRound.ReadLine();                     //  "team1"     "2"
-                    TotalCT = int.Parse(ligne.Split('"')[3]);
-                    ligne = InRound.ReadLine();                     //  "team2"     "3"
-                    TotalT = int.Parse(ligne.Split('"')[3]);
-                    break;
+                    if (ligne.Contains("FirstHalfScore"))
+                    {
+                        InRound.ReadLine();                             //{
+                        ligne = InRound.ReadLine();                     //  "team1"     "2"
+                        TotalCT = int.Parse(ligne.Split('"')[3]);
+                        ligne = InRound.ReadLine();                     //  "team2"     "3"
+                        TotalT = int.Parse(ligne.Split('"')[3]);
+                        break;
+                    }
                 }
             }
 
-            //Call procedure SetScoresMatchCourrant
+            if(Team1CTCurrentMatch)
+            {
+                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+            }
+            else
+            {
+                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+            }
         }
 
         private static void StartMatch()
         {
-            Interlocked.Exchange(ref CurrentRoundNumber, 1);
+            Team1CTCurrentMatch = Team1CTNextMatch;
+            CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
+            CurrentRoundNumber = 1;
             IntPtr window = Serveur.MainWindowHandle;
             SetForegroundWindow(window);
             SendKeys.SendWait("exec gamestart");
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(500);
+            SetForegroundWindow(Process.GetProcessesByName("csgo.exe")[0].MainWindowHandle);
         }
 
         private static void LookForEvents(object sender, DoWorkEventArgs e)
         {
-            DataTable Match;
             int Round = 1;
             while(true)
             {
@@ -193,16 +254,23 @@ namespace Liaison_BD___CSGO
                 {
                     break;
                 }
-                if(Round == 1)
+                if(Round == 0 && CurrentMatchId != (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"])
                 {
-                    ((BackgroundWorker)sender).ReportProgress(1);
+                    ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_NEXT_MATCH);
                 }
-                Match = BD.Procedure("NextMatch");
+                if(File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + Round.ToString("00") + ".txt"))
+                {
+                    Round++;
+                    ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
+                }
 
+                Thread.Sleep(500);
 
-
-
-                Thread.Sleep(300);
+                if(Round == 10 && File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + Round.ToString("00") + ".txt"))
+                {
+                    Round = 0;
+                    ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.MATCH_ENDED);
+                }
             }
         }
     }
