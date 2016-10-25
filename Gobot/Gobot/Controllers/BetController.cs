@@ -22,7 +22,7 @@ namespace Gobot.Controllers
             List<Match> Matches = new List<Match>();
             List<Bet> Bets = new List<Bet>();
 
-            DataTable MatchResult = Bd.Select("matchs", "Date>=now() order by Date", new List<OdbcParameter>(), "*");
+            DataTable MatchResult = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
             
             foreach(DataRow row in MatchResult.Rows)
             {
@@ -30,28 +30,40 @@ namespace Gobot.Controllers
                 Team t = new Team();
                 Bot b = new Bot();
 
+                m.Id = (int)row["IdMatch"];
+                m.Date = Convert.ToDateTime(row["Date"].ToString());
+                m.CurrentUserBet = false;
+                m.TeamVictoire = 0;
+                m.TeamNumberBet = -1;
+                m.Team1TotalBet = 0;
+                m.Team2TotalBet = 0;
+
                 for(int i = 0; i < 2; i++)
                 {
                     DataTable teams = Bd.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", (int)row["Team_IdTeam" + (i + 1).ToString()]));
-                    //t.Id = (int)teams.Rows[i]["IdTeam"];
-                    //t.Name = teams.Rows[i]["Name"].ToString();
-                    //t.Wins = (int)teams.Rows[i]["Win"];
-                    //t.Games = (int)teams.Rows[i]["Game"];
+                    t.Id = (int)teams.Rows[i]["IdTeam"];
+                    t.Name = teams.Rows[i]["Name"].ToString();
+                    t.Wins = (int)teams.Rows[i]["Win"];
+                    t.Games = (int)teams.Rows[i]["Game"];
 
-                    //for(int j = 0; j < 5; j++)
-                    //{
-                    //    DataTable bots = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)teams.Rows[i]["IdTeam"]));
-                    //    b.Id = bots.Rows;
-                    //}
+                    for (int j = 0; j < 5; j++)
+                    {
+                        DataTable bots = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)teams.Rows[i]["IdTeam"]));
+                        b.Id = (int)bots.Rows[j]["IdBot"];
+                        b.Name = bots.Rows[j]["NomBot"].ToString();
+                        b.Kills = Convert.ToInt32(bots.Rows[j]["KDA"].ToString().Split('/')[0]);
+                        b.Kills = Convert.ToInt32(bots.Rows[j]["KDA"].ToString().Split('/')[0]);
+                        b.Kills = Convert.ToInt32(bots.Rows[j]["KDA"].ToString().Split('/')[0]);
+
+                        t.TeamComp[j] = b;
+                    }
+
+                    m.Teams[i] = t;
+                    Matches.Add(m);
                 }
             }
 
-            List<OdbcParameter> param = new List<OdbcParameter>();
-
-            OdbcParameter Username = new OdbcParameter(":Username", ((User)Session["User"]).Username);
-            param.Add(Username);
-
-            DataTable BetResult = Bd.Select("bet inner join matchs on bet.Match_IdMatch = matchs.IdMatch", "User_Username = ? order by Date", param, "*");
+            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
 
             foreach(DataRow row in BetResult.Rows)
             {
@@ -65,10 +77,49 @@ namespace Gobot.Controllers
                 Bets.Add(b);
             }
 
-            ViewBag.Matches = Matches;
-            ViewBag.Bets = Bets;
+            foreach(Bet bet in Bets)
+            {
+                foreach(Match match in Matches)
+                {
+                    if(bet.MatchId == match.Id)
+                    {
+                        match.CurrentUserBet = true;
+                        match.CurrentUserAmount = bet.Amount;
+                        if(bet.TeamId == match.Teams[0].Id)
+                        {
+                            match.TeamNumberBet = 1;
+                        }
+                        else
+                        {
+                            match.TeamNumberBet = 2;
+                        }
+                    }
+                }
+            }
 
-            return View();
+            Bets.Clear();
+
+            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+
+            foreach(DataRow row in BetResult.Rows)
+            {
+                foreach(Match match in Matches)
+                {
+                    if((int)row["Match_IdMatch"] == match.Id)
+                    {
+                        if((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        {
+                            match.Team1TotalBet += (int)row["Mise"];
+                        }
+                        else
+                        {
+                            match.Team2TotalBet += (int)row["Mise"];
+                        }
+                    }
+                }
+            }
+
+            return View(Matches);
         }
 
         [HttpPost]
