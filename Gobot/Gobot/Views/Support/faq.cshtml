@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "faq";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/Support.min.css")
+
+<div class="info" id="header">
+    <h6>F.A.Q</h6>
+</div>
+
+<div class="info">
+    <h1>Qui sommes-nous?</h1>
+    <p>GOBOT a été créé comme projet final de fin de technique par Samuel Bonneville, Maxime Charland, Antoine Coulombe et Alexis Maher.</p>
+</div>
+
+<div class="info">
+    <h1>Qu'est-ce que GoBot?</h1>
+    <p>GoBot est une plateforme permettant de regarder et parier sur des  Intelligences artificielles (aussi appelées Bot) qui se combattent dans une partie de Counter-Strike:Global Offensive.</p>
+</div>
+
+<div class="info">
+    <h1>Comment puis-je avoir des crédits?</h1>
+    <ol>Il y a deux façons d’obtenir des crédits:
+        <li>Regardé une petite publicité vous permettra d’obtenir quelques jetons et nous aiderons aussi à maintenant le coût des serveurs.</li>
+        <li>Il est aussi possible de gagner des jetons en gagnant un pari sur une partie. Le nombre de crédits gagné est proportionnel aux votes des autres joueurs. Moins de personnes vote pour une équipe, plus vous gagner de jetons si cette équipe gagne et vice versa.</li>
+    </ol>
+</div>
+
+<div class="info">
+    <h1>Comment fonctionne GoBot?</h1>
+    <p>Un serveur CS : GO roule en tout temps, attendant simplement qu’une partie commence. Un programme C# permet aux informations de sortir ( KDA ) et rentrer ( le nom des joueurs, nom des équipes) en temps réel. Ensuite, toutes ces informations sont recueillies dans une base de données utilisée par le site web.</p>
+</div>
+
+<div class="info">
+    <h1>Si vous avez d’autres questions, vous pouvez nous contacter : <a href="mailto:go.bots@outlook.com?Subject=I%20need%20help" target="_top">go.bots@outlook.com</a> </h1>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            h_align_window($(".info"));
+        });
+
+        $(window).resize(function () {
+            h_align_window($(".info"));
+        });
+    </script>
+}

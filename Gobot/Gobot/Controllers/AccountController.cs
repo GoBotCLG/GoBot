@@ -21,7 +21,7 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
             User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
             Session["User"] = user;
-            Session["User_img"] = user.ProfilPic;
+            Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
 
             return View((User)Session["User"]);
         }
@@ -105,7 +105,7 @@ namespace Gobot.Controllers
             else
             {
                 string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
-                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":Image", new byte[0]), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
+                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
 
                 Session["User"] = Bd.GetUserFromDB(user.Username);
 

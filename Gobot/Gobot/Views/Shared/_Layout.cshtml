@@ -19,7 +19,7 @@
         <a id="matchs" href="@Url.Action("Index", "Watch")">
             <div style="background-image: url(@Url.Content("~/Images/matches.png"))"></div>
         </a>
-        <a id="gagueure" href="@Url.Action("Index", "Bet")">
+        <a id="parier" href="@Url.Action("Index", "Bet")">
             <div style="background-image: url(@Url.Content("~/Images/bet.png"))"></div>
         </a>
         <a id="équipes" href="@Url.Action("Teams", "Stats")">
@@ -32,7 +32,7 @@
             <div style="background-image: url(@Url.Content("~/Images/shop.png"))"></div>
         </a>*@
 
-        <a id="FAQ" class="small" href="#">
+        <a id="FAQ" class="small" href="@(Url.Action("faq", "Support"))">
             <div style="background-image: url(@Url.Content("~/Images/faq.png"))"></div>
         </a>
         <a id="contact" class="small" href="#">

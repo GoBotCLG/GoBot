@@ -1,0 +1,24 @@
+﻿@import 'global';
+
+h1 { 
+    text-transform: uppercase; 
+    margin-top: 40px !important; 
+    > a {
+        font-size: 40px;
+        color: $grey;
+        padding: 10px 0;
+        margin: 30px 0;
+    }
+    > a:hover { color: $orange; }
+}
+p, ol {
+    padding: 10px 100px;
+}
+li { padding: 5px 0; }
+p, ol, li {
+    font: 400 16px $font;
+    color: $grey;
+    text-align: justify;
+}
+
+.info:last-of-type {margin-bottom: 45px; }
