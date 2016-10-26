@@ -34,5 +34,9 @@
   {
     "outputFile": "Content/Teams.css",
     "inputFile": "Content/Teams.scss"
+  },
+  {
+    "outputFile": "Content/Support.css",
+    "inputFile": "Content/Support.scss"
   }
 ]

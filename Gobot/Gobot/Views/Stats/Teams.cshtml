@@ -10,7 +10,7 @@
     <h6>Équipes</h6>
 </div>
 
-<div class="teams">
+@*<div class="teams">
     @{
         foreach (Gobot.Models.Team team in (List<Gobot.Models.Team>)Model)
         {
@@ -19,22 +19,22 @@
             </div>
         }
     }
-</div>
+</div>*@
 
 <div class="teams">
-    <div class="team">
+    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
         <div class="overlay"><h1>CLOUD6</h1></div>
     </div>
-    <div class="team">
+    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
         <div class="overlay"><h1>CLOUD6</h1></div>
     </div>
-    <div class="team">
+    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
         <div class="overlay"><h1>CLOUD6</h1></div>
     </div>
-    <div class="team">
+    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
         <div class="overlay"><h1>CLOUD6</h1></div>
     </div>
-    <div class="team">
+    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
         <div class="overlay"><h1>CLOUD6</h1></div>
     </div>
 </div>
@@ -70,7 +70,7 @@
             $(".team_info").remove();
             $(".triangle").remove();
             $(".allow_overflow").each(function () { $(this).removeClass("allow_overflow"); });
-            createTeamInfo(e.find("h1").text(), $(".teams > :nth-child(" + insertAfter + ")"));
+            createTeamInfo(e.attr("id"), $(".teams > :nth-child(" + insertAfter + ")"));
 
             $(".team_info").css({
                 "width": $(".teams").width() - (eRow + 1),
@@ -81,28 +81,33 @@
             e.addClass("allow_overflow");
             $('html,body').animate({ scrollTop: $(".team_info").offset().top - 10 }, 'normal');
         }
-        function createTeamInfo(teamName, prev) {
-            var team = getTeamInfo(teamName);
+        function createTeamInfo(teamId, prev) {
+            var data = new XMLHttpRequest();
+            data.open("GET", '@Url.Action("Team", "Stats")/' + teamId, false);
 
-            $('<div class="team_info h"></div>').insertAfter(prev);
-            $(".team_info").append("<div><h6>" + team.name + "</h6></div>");
-            $(".team_info > div").append('<div class="team_matches"></div>');
-            $(".team_matches").append('<h2 class="grey">' + team.wins + ' PARTIES GAGNÉES</h2>');
-            $(".team_matches").append('<h2 class="grey">' + (parseInt(team.games) - parseInt(team.wins)) + ' PERDUES</h2>');
-            $(".team_matches").append('<h2 class="grey">' + team.games + ' PARTIES JOUÉES</h2>');
+            data.onreadystatechange = function () {
+                if (data.readyState == 4) {
+                    var team = JSON.parse(data.response);
 
-            $(".team_info").append('<div class="players"></div>');
-            for (let i = 0; i < team.players.length; i++) {
-                $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
-                $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + team.players[i].gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
-                $(".player:last-child").append('<div><div class="acc"></div><h2 class="grey">' + team.players[i].acc + '</h2></div>');
-                $(".player:last-child").append('<div><div class="r-time"></div><h2 class="grey">' + team.players[i].rTime + '</h2></div>');
-                $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
+                    $('<div class="team_info h"></div>').insertAfter(prev);
+                    $(".team_info").append("<div><h6>" + team.name + "</h6></div>");
+                    $(".team_info > div").append('<div class="team_matches"></div>');
+                    $(".team_matches").append('<h2 class="grey">' + team.wins + ' PARTIES GAGNÉES</h2>');
+                    $(".team_matches").append('<h2 class="grey">' + (parseInt(team.games) - parseInt(team.wins)) + ' PERDUES</h2>');
+                    $(".team_matches").append('<h2 class="grey">' + team.games + ' PARTIES JOUÉES</h2>');
+
+                    $(".team_info").append('<div class="players"></div>');
+                    for (let i = 0; i < team.players.length; i++) {
+                        $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
+                        $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + team.players[i].gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="acc"></div><h2 class="grey">' + team.players[i].acc + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="r-time"></div><h2 class="grey">' + team.players[i].rTime + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
+                    }
+
+                }
             }
-        }
-        function getTeamInfo(teamName) {
-            // JSON returned by server ------ TO DO
-            return JSON.parse('{"name":"Cloud6", "wins":"10", "games":"15", "players":[{"name":"Adam", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Rekt", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Dild", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"Salt", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}, {"name":"John", "gun":"ak-47", "acc":"1.25", "rTime":"1", "kd":"2"}]}');
+            data.send();
         }
 
         function getElemPerRows(p) {

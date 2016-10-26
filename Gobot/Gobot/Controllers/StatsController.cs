@@ -26,11 +26,12 @@ namespace Gobot.Controllers
             //Get team info
             return View(new List<Team>());
         }
-
-        public JsonResult Team(string TeamId, string json)
+        
+        public JsonResult Team(string id)
         {
-            //Get team info
-            return Json("");
+            //return Json("");
+            //Get team info            
+            return Json(new {name="Cloud6", wins=10, games=15, players=new[] { new { name = "Adam", gun = "ak-47", acc = 1.25, rTime = 1, kd = 2 }, new { name = "Adam", gun = "ak-47", acc = 1.25, rTime = 1, kd = 2 }, new { name = "Adam", gun = "ak-47", acc = 1.25, rTime = 1, kd = 2 }, new { name = "Adam", gun = "ak-47", acc = 1.25, rTime = 1, kd = 2 }, new { name = "Adam", gun = "ak-47", acc = 1.25, rTime = 1, kd = 2 } } }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Bot(string BotId)

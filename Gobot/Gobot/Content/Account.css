@@ -327,7 +327,6 @@ html, body {
     color: #ffbf5c; }
 
 #options {
-  display: none;
   height: 500px; }
   #options > div {
     width: 33.3%;

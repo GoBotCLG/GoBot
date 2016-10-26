@@ -5,4 +5,95 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@Styles.Render("~/Content/Home.min.css")
 @*@Styles.Render("~/Content/Watch.min.css")*@
+
+<style>
+    #main {
+    }
+    #video {
+    }
+</style>
+
+<div id="main" class="h">
+    <div id="video">
+        <iframe src="https://player.twitch.tv/?channel=gobotts" frameborder="0" scrolling="no" height="378" width="620"></iframe>
+    </div>
+    <div class="side ct">
+        <img src="~/Images/ct_side.png" />
+        <h1>CLOUD6@{/*((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["TeamName"].ToObject<string>()*/}</h1>
+        <h2><b class="green">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Wins"].ToObject<string>()*/}</b> <img src="~/Images/games_won.png" /> <b class="white">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Games"].ToObject<string>()*/}</b> <img src="~/Images/games_played.png" /></h2>
+
+        <div class="team">
+            <div class="names">
+                <span>Albert@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot1"]["BotName"].ToObject<string>()*/}</span>
+                <span>Cecil@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot2"]["BotName"].ToObject<string>()*/}</span>
+                <span>Elliot@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot3"]["BotName"].ToObject<string>()*/}</span>
+                <span>Marvin@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot4"]["BotName"].ToObject<string>()*/}</span>
+                <span>Fergus@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot5"]["BotName"].ToObject<string>()*/}</span>
+            </div>
+            <div class="roles">
+                <span>Rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot1"]["BotName"].ToObject<string>()*/}</span>
+                <span>Sniper@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot2"]["BotName"].ToObject<string>()*/}</span>
+                <span>Rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot3"]["BotName"].ToObject<string>()*/}</span>
+                <span>Shotgun@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot4"]["BotName"].ToObject<string>()*/}</span>
+                <span>rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot5"]["BotName"].ToObject<string>()*/}</span>
+            </div>
+        </div>
+    </div>
+    <div class="side t">
+        <img src="~/Images/t_side.png" />
+        <h1>CLOUD6</h1>
+        <h2><b class="green">49</b> <img src="~/Images/games_won.png" /> <b class="white">90</b> <img src="~/Images/games_played.png" /></h2>
+
+        <div class="team">
+            <div class="names">
+                <span>Albert</span>
+                <span>Cecil</span>
+                <span>Elliot</span>
+                <span>Marvin</span>
+                <span>Fergus</span>
+            </div>
+            <div class="roles">
+                <span>Rifle</span>
+                <span>Sniper</span>
+                <span>Rifle</span>
+                <span>Shotgun</span>
+                <span>rifle</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            onResize();
+        })();
+
+        $(window).resize(function () {
+            onResize();
+        });
+
+        function onResize() {
+            setVideoPos();
+        }
+
+        function setVideoPos() {
+            //if ($(window).width() <= 1520) {
+            //    $(".side").css("top", 0);
+            //}
+            //else {
+            //    $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
+            //}
+
+            var windowWidth = $(window).width() - ($("#navBig").width().length == 0 ? 0 : $("#navBig").width());
+            $("#main").css({
+                width: windowWidth,
+                height: "auto"
+            });
+            $("#video").css("height", windowWidth * (9/16));
+            $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
+        }
+    </script>
+}
