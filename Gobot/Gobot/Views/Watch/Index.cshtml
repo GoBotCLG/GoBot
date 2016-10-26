@@ -6,13 +6,9 @@
 }
 
 @Styles.Render("~/Content/Home.min.css")
-@*@Styles.Render("~/Content/Watch.min.css")*@
+@Styles.Render("~/Content/Watch.min.css")
 
-<style>
-    #main {
-    }
-    #video {
-    }
+<style type="text/css">
 </style>
 
 <div id="main" class="h">
@@ -22,7 +18,10 @@
     <div class="side ct">
         <img src="~/Images/ct_side.png" />
         <h1>CLOUD6@{/*((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["TeamName"].ToObject<string>()*/}</h1>
-        <h2><b class="green">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Wins"].ToObject<string>()*/}</b> <img src="~/Images/games_won.png" /> <b class="white">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Games"].ToObject<string>()*/}</b> <img src="~/Images/games_played.png" /></h2>
+        <h2>
+            <green>@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Wins"].ToObject<string>()*/}</green><img src="~/Images/games_won.png" />
+            <white>@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Games"].ToObject<string>()*/}</white> <img src="~/Images/games_played.png" />
+        </h2>
 
         <div class="team">
             <div class="names">
@@ -67,32 +66,20 @@
 
 @section Scripts {
     <script>
-        (function () {
-            onResize();
-        })();
-
-        $(window).resize(function () {
-            onResize();
+        $(window).ready(function () {
+            setVideoPos();
         });
 
-        function onResize() {
+        $(window).resize(function () {
             setVideoPos();
-        }
+        });
 
         function setVideoPos() {
-            //if ($(window).width() <= 1520) {
-            //    $(".side").css("top", 0);
-            //}
-            //else {
-            //    $(".side").css("top", $("#main").height() / 2 - $(".side").height() / 2);
-            //}
-
             var windowWidth = $(window).width() - ($("#navBig").width().length == 0 ? 0 : $("#navBig").width());
-            $("#main").css({
-                width: windowWidth,
-                height: "auto"
-            });
-            $("#video").css("height", windowWidth * (9/16));
+            var windowHeight = $(window).height();
+            var videoHeight = windowWidth * (9 / 16);
+            $("#main").css({ width: windowWidth });
+            $("#video").css("height", videoHeight > windowHeight ? windowHeight : videoHeight);
             $(".side > img").css("left", $(".side").width() / 2 - $(".side > img").width() / 2);
         }
     </script>

@@ -1,0 +1,16 @@
+﻿@import 'global';
+
+#main { height: auto !important; }
+#video { width: 100% !important; }
+
+@media screen and (min-width: 1520px) {
+    .side { 
+        float: right !important; 
+        width: 50% !important; 
+        padding: 5% 0 !important; 
+    }
+}
+.side > h1 { margin-top: 30px; font-size: 3em; }
+.side > h2 { margin-top: 20px; }
+
+.names, .roles { padding-top: 30px !important; }

@@ -250,6 +250,12 @@
     <Content Include="Content\Teams.min.css">
       <DependentUpon>Teams.css</DependentUpon>
     </Content>
+    <Content Include="Content\Watch.css">
+      <DependentUpon>Watch.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Watch.min.css">
+      <DependentUpon>Watch.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -318,6 +324,7 @@
     <Content Include="Content\Bet.scss" />
     <Content Include="Content\Teams.scss" />
     <Content Include="Content\Support.scss" />
+    <Content Include="Content\Watch.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\global.js" />
