@@ -6,6 +6,9 @@ using System.Data;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Gobot.Controllers
 {
@@ -24,6 +27,106 @@ namespace Gobot.Controllers
             Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
 
             return View((User)Session["User"]);
+        }
+
+        [HttpPost]
+        public JsonResult UpdatePassword(FormCollection data)
+        {
+            string newPassword = ""; string confirmPassword = "";
+            if (newPassword != confirmPassword)
+            {
+                ViewBag.Error = "Les deux mots de passe ne sont pas identiques.";
+            }
+            else if (confirmPassword.Length > 45 || confirmPassword.Length < 6)
+            {
+                ViewBag.Error = "Le mot de passes saisi est invalide. Le mot de passe doit comporter un minimum de 6 caractères et un maximum de 45 caractères.";
+            }
+            else
+            {
+                bool passwordMatch = false; // Compare oldPassword with User password in DB
+
+                if (passwordMatch)
+                {
+                    // TODO : Update password in DB
+                    ViewBag.Success = "Votre mot de passe a été modifié avec succès.";
+                }
+                else
+                {
+                    ViewBag.Error = "Le mot de passe courant saisi est invalide.";
+                }
+            }
+
+            return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateImage(FormCollection data)
+        {
+            if (Request.Files["file"] != null)
+            {
+                using (var binaryReader = new BinaryReader(Request.Files["file"].InputStream))
+                {
+                    try
+                    {
+                        Image img;
+                        byte[] Imagefile = binaryReader.ReadBytes(Request.Files["file"].ContentLength);
+                        using (var ms = new MemoryStream(Imagefile))
+                        {
+                            img = Image.FromStream(ms);
+
+                            ImageFormat format = img.RawFormat;
+                            Bitmap bmp = new Bitmap(img);
+                            if (format.Equals(ImageFormat.Jpeg) || format.Equals(ImageFormat.Png))
+                            {
+                                if (format.Equals(ImageFormat.Jpeg))
+                                    bmp.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + getFileName(".jpeg"), ImageFormat.Jpeg);
+                                else
+                                    bmp.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + getFileName(".png"), ImageFormat.Png);
+                                
+                                // TODO : Update new image path in DB
+
+                                ViewBag.Success = "Votre image de profil a été modifiée avec succès.";
+                            }
+                            else
+                            {
+                                ViewBag.Error = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
+                            }
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        ViewBag.Error = "Échec du téléversement de l'image.";
+                    }
+                }
+            }
+            return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
+        }
+
+        private string getFileName(string ext)
+        {
+            // TODO : Generate new image path that doesn't exist.
+            return "";
+        }
+
+        [HttpPost]
+        public JsonResult UpdateEmail(FormCollection data)
+        {
+            string newEmail = ""; string confirmEmail = "";
+            if (newEmail != confirmEmail)
+            {
+                ViewBag.Error = "Les deux adresse courriels saisies ne sont pas identiques.";
+            }
+            else if (!new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$").IsMatch(confirmEmail.ToUpper()))
+            {
+                ViewBag.Error = "L'adresse courriel saisie est invalide.";
+            }
+            else
+            {
+                // TODO : Update email in BD 
+                ViewBag.Success = "Votre adresse courriel a été modifiée avec succès.";
+            }
+
+            return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult UpdateAccountInfo()
@@ -54,6 +157,7 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
 
             DataTable isUser = Bd.Procedure("IsUser", new OdbcParameter(":username", user.Username));
+            
             if (Convert.ToInt32(isUser.Rows[0][0]) != 0)
             {
                 ViewBag.Error = "Le nom d'utilisateur est déja utilisé.";
