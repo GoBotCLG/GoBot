@@ -16,8 +16,6 @@
                 <button id="close_errorOverlay">Fermer</button>
             </div>
         </div>
-
-        ViewBag.Error = null;
     }
     else if (ViewBag.Success != null && ViewBag.Success != "")
     {
@@ -287,14 +285,14 @@
                 submitFn = "submitImg()";
             }
             else if (id == "changePwd") {
-                $("#optionForm").append('<div><h2>Ancien <grey>mot de passe</grey></h2><input name="oldPwd" type="password"/></div>');
-                $("#optionForm").append('<div><h2>Nouveau <grey>mot de passe</grey></h2><input name="newPwd" type="password"/></div>');
-                $("#optionForm").append('<div><h2>Confirmer <grey>mot de passe</grey></h2><input name="confirmPwd" type="password"/></div>');
+                $("#optionForm").append('<div><h2>Ancien <grey>mot de passe</grey></h2><input id="oldPwd" name="oldPwd" type="password"/></div>');
+                $("#optionForm").append('<div><h2>Nouveau <grey>mot de passe</grey></h2><input id="newPwd" name="newPwd" type="password"/></div>');
+                $("#optionForm").append('<div><h2>Confirmer <grey>mot de passe</grey></h2><input id="confirmPwd" name="confirmPwd" type="password"/></div>');
                 submitFn = "submitPwd()";
             }
             else {
-                $("#optionForm").append('<div><h2>Nouvelle<grey> adresse courriel</grey></h2><input name="newEmail" type="text"/></div>');
-                $("#optionForm").append('<div><h2>Confirmer<grey> adresse courriel</grey></h2><input name="confirmEmail" type="text"/></div>');
+                $("#optionForm").append('<div><h2>Nouvelle<grey> adresse courriel</grey></h2><input id="newEmail" name="newEmail" type="text"/></div>');
+                $("#optionForm").append('<div><h2>Confirmer<grey> adresse courriel</grey></h2><input id="confirmEmail" name="confirmEmail" type="text"/></div>');
                 submitFn = "submitEmail()";
             }
 
@@ -317,32 +315,32 @@
             xhr.send(fd); 
         }
 
-        function submitPwd() {
-            submitForm("UpdatePassword");
-        }
-
         function submitEmail() {
-            submitForm("UpdateEmail");
+            var data = {
+                newEmail: $("#newEmail").val(),
+                confirmEmail: $("#confirmEmail").val()
+            };
+            submitForm(data, "UpdateEmail");
         }
 
-        function submitForm(link) {
+        function submitPwd() {
+            var data = {
+                oldPassword: $("#oldPwd").val(),
+                newPassword: $("#newPwd").val(),
+                confirmPassword: $("#confirmPwd").val()
+            };
+            submitForm(data, "UpdatePassword");
+        }
+
+        function submitForm(data, link) {
             $.ajax({
                 type: "POST",
                 url: "/Account/" + link,
-                data: JSON.stringify($("#uploadForm").serializeArray()),
+                data: JSON.stringify(data),
                 success: function(){},
                 dataType: "json",
                 contentType : "application/json"
             });
-        }
-
-        function submitForm(data, link) {
-            var postdata = $('#uploadForm').serialize();          
-            var fd = new FormData();
-            fd.append("file", $("#ImageUploader").files[0]);
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/Account/" + link, false);
-            xhr.send(fd); 
         }
 
         function readURL(input) {

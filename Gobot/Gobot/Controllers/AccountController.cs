@@ -30,9 +30,8 @@ namespace Gobot.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdatePassword(FormCollection data)
+        public JsonResult UpdatePassword(string oldPassword, string newPassword, string confirmPassword)
         {
-            string newPassword = ""; string confirmPassword = "";
             if (newPassword != confirmPassword)
             {
                 ViewBag.Error = "Les deux mots de passe ne sont pas identiques.";
@@ -74,23 +73,7 @@ namespace Gobot.Controllers
                         {
                             img = Image.FromStream(ms);
 
-                            ImageFormat format = img.RawFormat;
-                            Bitmap bmp = new Bitmap(img);
-                            if (format.Equals(ImageFormat.Jpeg) || format.Equals(ImageFormat.Png))
-                            {
-                                if (format.Equals(ImageFormat.Jpeg))
-                                    bmp.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + getFileName(".jpeg"), ImageFormat.Jpeg);
-                                else
-                                    bmp.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + getFileName(".png"), ImageFormat.Png);
-                                
-                                // TODO : Update new image path in DB
-
-                                ViewBag.Success = "Votre image de profil a été modifiée avec succès.";
-                            }
-                            else
-                            {
-                                ViewBag.Error = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
-                            }
+                            downloadImage(ref img);
                         }
                     }
                     catch (ArgumentException)
@@ -102,16 +85,84 @@ namespace Gobot.Controllers
             return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
         }
 
+        private void downloadImage(ref Image img)
+        {
+            ImageFormat format = img.RawFormat;
+            Bitmap bmp = new Bitmap(img);
+            if (format.Equals(ImageFormat.Jpeg) || format.Equals(ImageFormat.Png))
+            {
+                try
+                {
+                    string fileName;
+                    if (format.Equals(ImageFormat.Jpeg))
+                    {
+                        fileName = getFileName("jpg");
+                        bmp.Save(fileName, ImageFormat.Jpeg);
+                    }
+                    else
+                    {
+                        fileName = getFileName("png");
+                        bmp.Save(fileName, ImageFormat.Png);
+                    }
+
+                    
+                    string toDelete = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\{0}");
+                    try {
+                        System.IO.File.Delete(String.Format(toDelete, getImagePathFromDb(((User)Session["User"]).Username)));
+                    }
+                    catch (Exception) { }
+
+                    setImagePathToDb(((User)Session["User"]).Username, fileName);
+                    
+
+                    ViewBag.Success = "Votre image de profil a été modifiée avec succès.";
+                }
+                catch (Exception)
+                {
+                    ViewBag.Error = "Erreur lors du téléversement de l'image.";
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
+            }
+        }
+
+        private string getImagePathFromDb(string user)
+        {
+            return ""; // TODO : Get old image path from DB
+        }
+
+        private void setImagePathToDb(string user, string path)
+        {
+            // TODO : Update new image path in DB to 'fileName'
+        }
+
         private string getFileName(string ext)
         {
-            // TODO : Generate new image path that doesn't exist.
-            return "";
+            // AppDomain.CurrentDomain.BaseDirectory ???
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\{0}." + ext);
+            string file;
+
+            do
+                file = String.Format(path, getRandomString());
+            while (System.IO.File.Exists(file));
+
+            return file;
+        }
+
+        private string getRandomString()
+        {
+            Guid g = Guid.NewGuid();
+            string GuidString = Convert.ToBase64String(g.ToByteArray());
+            GuidString = GuidString.Replace("=", "");
+            GuidString = GuidString.Replace("+", "");
+            return GuidString;
         }
 
         [HttpPost]
-        public JsonResult UpdateEmail(FormCollection data)
+        public JsonResult UpdateEmail(string newEmail, string confirmEmail)
         {
-            string newEmail = ""; string confirmEmail = "";
             if (newEmail != confirmEmail)
             {
                 ViewBag.Error = "Les deux adresse courriels saisies ne sont pas identiques.";
