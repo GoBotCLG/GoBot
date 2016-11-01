@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Gobot.Controllers
 {
+    //Dank AF
     public class StatsController : Controller
     {
         // GET: Stats
