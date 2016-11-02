@@ -254,7 +254,7 @@ html, body { min-height: 100%; }
             width: 33.3%;
             background-color: #181818;
 
-            > input {
+            > button {
                 position: relative;
                 background: url("/Images/send.png") no-repeat left;
                 width: 305px;
@@ -291,7 +291,7 @@ html, body { min-height: 100%; }
                     color: $grey;
                 }
             }
-                > input:hover, > div:hover > h3 { color: $off-white; }
+                > button:hover, > div:hover > h3 { color: $off-white; }
 
             > img {
                 position: absolute;

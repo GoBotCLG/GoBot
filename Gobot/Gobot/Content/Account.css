@@ -82,14 +82,17 @@ img {
     position: relative;
     width: 50%;
     margin: 40px 25%; }
-    #error_overlay > div > #error_overlay_image, #js_error > div > #error_overlay_image {
+    #error_overlay > div .overlay_image, #error_overlay > div > #error_overlay_image, #error_overlay > div > #success_overlay_image, #js_error > div .overlay_image, #js_error > div > #error_overlay_image, #js_error > div > #success_overlay_image {
       display: block;
       position: relative;
       width: 220px;
       height: 220px;
       margin-left: calc(50% - 220px / 2);
-      background: #963434 no-repeat center/55% url("/Images/close.png");
       border-radius: 50%; }
+    #error_overlay > div > #error_overlay_image, #js_error > div > #error_overlay_image {
+      background: #963434 no-repeat center/55% url("/Images/close.png"); }
+    #error_overlay > div > #success_overlay_image, #js_error > div > #success_overlay_image {
+      background: #51c24b no-repeat center/55% url("/Images/check.png"); }
     #error_overlay > div > h1, #error_overlay > div > a, #error_overlay > div > button, #js_error > div > h1, #js_error > div > a, #js_error > div > button {
       display: block !important;
       text-align: center;
@@ -430,7 +433,7 @@ html, body {
   float: right;
   width: 33.3%;
   background-color: #181818; }
-  #optionSubmit > input {
+  #optionSubmit > button {
     position: relative;
     background: url("/Images/send.png") no-repeat left;
     width: 305px;
@@ -461,7 +464,7 @@ html, body {
       line-height: 60px;
       text-transform: uppercase;
       color: #626262; }
-  #optionSubmit > input:hover, #optionSubmit > div:hover > h3 {
+  #optionSubmit > button:hover, #optionSubmit > div:hover > h3 {
     color: #eeeeee; }
   #optionSubmit > img {
     position: absolute;
