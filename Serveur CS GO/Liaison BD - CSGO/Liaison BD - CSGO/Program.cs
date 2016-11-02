@@ -33,6 +33,7 @@ namespace Liaison_BD___CSGO
             work.DoWork += new DoWorkEventHandler(LookForEvents);
             work.ProgressChanged += new ProgressChangedEventHandler(NewEvent);
             work.WorkerSupportsCancellation = true;
+            work.WorkerReportsProgress = true;
             BD = new MySQLWrapper();
             Serveur = new Process();
             Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
@@ -42,6 +43,7 @@ namespace Liaison_BD___CSGO
 
             PrepareNextMatch();
             StartMatch();
+            work.RunWorkerAsync();
 
             string ligne = "";
             do
@@ -89,8 +91,8 @@ namespace Liaison_BD___CSGO
 
             for (int i = 0; i < 5; i++)
             {
-                OutFile.Write("bot_add ct \"" + BotsCT.Rows[i]["BotName"].ToString() + "\"; ");
-                OutFile.Write("bot_add t \"" + BotsT.Rows[i]["BotName"].ToString() + "\"; ");
+                OutFile.Write("bot_add ct \"" + BotsCT.Rows[i]["NomBot"].ToString() + "\"; ");
+                OutFile.Write("bot_add t \"" + BotsT.Rows[i]["NomBot"].ToString() + "\"; ");
             }
             OutFile.Write("mp_warmup_end; log on;");
             OutFile.Flush();
@@ -106,7 +108,7 @@ namespace Liaison_BD___CSGO
             SendKeys.SendWait("bot_kick");
             SendKeys.SendWait("{ENTER}");
             Thread.Sleep(500);
-            SetForegroundWindow(Process.GetProcessesByName("csgo.exe")[0].MainWindowHandle);
+            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
@@ -242,7 +244,7 @@ namespace Liaison_BD___CSGO
             SendKeys.SendWait("exec gamestart");
             SendKeys.SendWait("{ENTER}");
             Thread.Sleep(500);
-            SetForegroundWindow(Process.GetProcessesByName("csgo.exe")[0].MainWindowHandle);
+            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
         }
 
         private static void LookForEvents(object sender, DoWorkEventArgs e)
