@@ -19,15 +19,17 @@ namespace Gobot.Controllers
         public ActionResult Match(string MatchId)
         {
             //Get Match info
-            return View();
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Match> Matchs = Bd.GetMatches(false);
+            return View(Matchs);
         }
 
         public ActionResult Teams()
         {
             //Get team info
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetFutureMatches();
-            return View(new List<Team>());
+            List<Team> Teams = Bd.GetAllTeam();
+            return View(Teams);
         }
         
         public JsonResult Team(string id)
