@@ -12,6 +12,17 @@ namespace Gobot.Models
             Teams = new Team[2];
         }
 
+        public Match(int id, DateTime date, Team t1, Team t2, int teamvictoire, int t1totalbet, int t2totalbet)
+        {
+            Id = id;
+            Teams = new Team[2];
+            Teams[0] = t1;
+            Teams[1] = t2;
+            TeamVictoire = teamvictoire;
+            Team1TotalBet = t1totalbet;
+            Team2TotalBet = t2totalbet;
+        }
+
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public Team[] Teams { get; set; }

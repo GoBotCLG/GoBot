@@ -25,6 +25,8 @@ namespace Gobot.Controllers
         public ActionResult Teams()
         {
             //Get team info
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Match> Matches = Bd.GetFutureMatches();
             return View(new List<Team>());
         }
         

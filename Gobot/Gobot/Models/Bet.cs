@@ -7,6 +7,16 @@ namespace Gobot.Models
 {
     public class Bet
     {
+        public Bet(int id, int amount, int profit, string username, int teamid, int matchid)
+        {
+            Id = id;
+            Amount = amount;
+            Profit = profit;
+            Username = username;
+            TeamId = teamid;
+            MatchId = matchid;
+        }
+
         public int Id { get; set; }
         public int Amount { get; set; }
         public int Profit { get; set; }
