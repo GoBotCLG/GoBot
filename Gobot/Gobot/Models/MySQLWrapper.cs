@@ -363,64 +363,108 @@ namespace Gobot.Models
             }
         }
 
-        public List<Match> GetFutureMatches()
+        public List<Match> GetFutureMatches(bool future)
         {
             MySQLWrapper Bd = new MySQLWrapper();
             List<Match> matches = new List<Match>();
             List<Team> teams = new List<Team>();
 
-            DataTable FutureMatches = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
-            DataTable AllTeams = Bd.Procedure("GetAllTeam");
-            foreach(DataRow row in AllTeams.Rows)
+            if (future)
             {
-                Team t = new Team();
-                t.Id = (int)row["IdTeam"];
-                t.Name = row["Name"].ToString();
-                t.Wins = (int)row["Win"];
-                t.Games = (int)row["Game"];
-                t.ImagePath = row["ImageTeam"].ToString();
-
-                DataTable BotsFromTeam = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
-                for(int i = 0; i < 5; i++)
+                DataTable FutureMatches = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
+                DataTable AllTeams = GetAllTeam();
+                foreach (DataRow row in FutureMatches.Rows)
                 {
-                    t.TeamComp[i] = new Bot(
-                        (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
-                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
-                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
-                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]));
+                    Match m = new Match();
+                    m.Id = (int)row["IdMatch"];
+                    m.Date = (DateTime)row["Date"];
+                    m.Teams[0] = null;
+                    m.Teams[1] = null;
+
+                    foreach (Team t in teams)
+                    {
+                        if ((int)row["Team_IdTeam1"] == t.Id)
+                        {
+                            m.Teams[0] = t;
+                        }
+                        if ((int)row["Team_IdTeam2"] == t.Id)
+                        {
+                            m.Teams[1] = t;
+                        }
+                        if (m.Teams[0] != null && m.Teams[1] != null)
+                        {
+                            break;
+                        }
+                    }
+
+                    matches.Add(m);
                 }
 
-                teams.Add(t);
+                return matches;
             }
-
-            foreach(DataRow row in FutureMatches.Rows)
+            else
             {
-                Match m = new Match();
-                m.Id = (int)row["IdMatch"];
-                m.Date = (DateTime)row["Date"];
-                m.Teams[0] = null;
-                m.Teams[1] = null;
-
-                foreach(Team t in teams)
+                DataTable PassMatches = Bd.Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
+                DataTable AllTeams = GetAllTeam();
+                foreach (DataRow row in PassMatches.Rows)
                 {
-                    if((int)row["Team_IdTeam1"] == t.Id)
+                    Match m = new Match();
+                    m.Id = (int)row["IdMatch"];
+                    m.Date = (DateTime)row["Date"];
+                    m.Teams[0] = null;
+                    m.Teams[1] = null;
+
+                    foreach (Team t in teams)
                     {
-                        m.Teams[0] = t;
+                        if ((int)row["Team_IdTeam1"] == t.Id)
+                        {
+                            m.Teams[0] = t;
+                        }
+                        if ((int)row["Team_IdTeam2"] == t.Id)
+                        {
+                            m.Teams[1] = t;
+                        }
+                        if (m.Teams[0] != null && m.Teams[1] != null)
+                        {
+                            break;
+                        }
                     }
-                    if((int)row["Team_IdTeam2"] == t.Id)
-                    {
-                        m.Teams[1] = t;
-                    }
-                    if(m.Teams[0] != null && m.Teams[1] != null)
-                    {
-                        break;
-                    }
+
+                    matches.Add(m);
                 }
 
-                matches.Add(m);
+                return matches;
             }
-
-            return matches;
         }
+    }
+        
+    public List<Team> GetAllTeam()
+    {
+        MySQLWrapper Bd = new MySQLWrapper();
+        List<Team> teams = new List<Team>();
+
+        DataTable AllTeams = Bd.Procedure("GetAllTeam");
+        foreach (DataRow row in AllTeams.Rows)
+        {
+            Team t = new Team();
+            t.Id = (int)row["IdTeam"];
+            t.Name = row["Name"].ToString();
+            t.Wins = (int)row["Win"];
+            t.Games = (int)row["Game"];
+            t.ImagePath = row["ImageTeam"].ToString();
+
+            DataTable BotsFromTeam = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
+            for (int i = 0; i < 5; i++)
+            {
+                t.TeamComp[i] = new Bot(
+                    (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
+                    Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
+                    Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
+                    Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]));
+            }
+
+            teams.Add(t);
+        }
+        return teams;
     }
 }
