@@ -26,7 +26,7 @@ namespace Gobot.Controllers
         {
             //Get team info
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetFutureMatches();
+            List<Match> Matches = Bd.GetFutureMatches(true);
             return View(new List<Team>());
         }
         
