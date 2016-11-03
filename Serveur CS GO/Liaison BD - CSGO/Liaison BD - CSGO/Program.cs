@@ -24,7 +24,7 @@ namespace Liaison_BD___CSGO
         public static int CurrentTeam1Score;
         public static int CurrentTeam2Score;
 
-
+        private static string NextMap;
         private static bool Team1CTNextMatch;
         private static bool Team1CTCurrentMatch;
         private static Process Serveur;
@@ -67,6 +67,9 @@ namespace Liaison_BD___CSGO
         private static void PrepareNextMatch()
         {
             DataTable NextMatch = BD.Procedure("NextMatch");
+
+            NextMap = NextMatch.Rows[0]["Map"].ToString();
+
             RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
             byte[] temp = new byte[1];
             random.GetBytes(temp);
@@ -259,12 +262,26 @@ namespace Liaison_BD___CSGO
 
         private static void StartMatch()
         {
+
+            IntPtr window = Serveur.MainWindowHandle;
+            SetForegroundWindow(window);
+            SendKeys.SendWait("changelevel " + NextMap);
+            SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(60000);
+            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
+            SendKeys.SendWait("{ENTER}");
+            SendKeys.SendWait("{ENTER}");
+            SendKeys.SendWait("{ENTER}");
+            SendKeys.SendWait("#");
+            SendKeys.SendWait("spectate");
+            SendKeys.SendWait("{ENTER}");
+            SendKeys.SendWait("{ESC}");
+
             Team1CTCurrentMatch = Team1CTNextMatch;
             CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
-            IntPtr window = Serveur.MainWindowHandle;
             SetForegroundWindow(window);
             SendKeys.SendWait("exec gamestart");
             SendKeys.SendWait("{ENTER}");
