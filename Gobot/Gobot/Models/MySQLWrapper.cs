@@ -122,7 +122,7 @@ namespace Gobot.Models
         /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Firstname = ?</param>
         /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
         /// <returns>Number of rows updated</returns>
-        public int Update(string tablename, List<string> columnNames, List<OdbcParameter> values, string where, List<OdbcParameter> conditions = null)
+        public int Update(string tablename, List<string> columnNames, List<OdbcParameter> values, string where, List<OdbcParameter> conditions)
         {
             if (connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
@@ -146,7 +146,7 @@ namespace Gobot.Models
                     command.Parameters.Add(val);
                 }
 
-                if(conditions != null && conditions.Count > 0 && where != "")
+                if(conditions.Count > 0 && where != "")
                 {
                     foreach (OdbcParameter param in conditions)
                     {
