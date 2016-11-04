@@ -212,7 +212,7 @@ namespace Gobot.Controllers
         }
 
         [HttpPost]
-        public JsonResult Remove(int BetId)
+        public JsonResult Remove(int tId, int mId)
         {
             try
             {
@@ -223,16 +223,20 @@ namespace Gobot.Controllers
                     MySQLWrapper Bd = new MySQLWrapper();
                     Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
 
-                    List<OdbcParameter> Bet = new List<OdbcParameter>() { new OdbcParameter(":IdBet", BetId)  };
+                    List<OdbcParameter> Bet = new List<OdbcParameter>() {
+                        new OdbcParameter(":TeamId", tId),
+                        new OdbcParameter(":MatchId", mId),
+                        new OdbcParameter(":Username", ((User)Session["User"]).Username)
+                    };
 
-                    DataTable resultBet = Bd.Select("bet", "IdBet = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
+                    DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
                     if (resultBet.Rows.Count > 0)
                     {
                         int Amount = (int)resultBet.Rows[0]["Mise"];
-                        if (((User)Session["User"]).Username != resultBet.Rows[0]["User_Username"].ToString() || (int)resultBet.Rows[0]["Profit"] != 0)
+                        if ((int)resultBet.Rows[0]["Profit"] != 0)
                             throw new Exception("Une erreur est survenue lors de la supression du pari.");
 
-                        int result = Bd.Delete("bet", "IdBet = ?", Bet);
+                        int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
                         if (result > 0)
                         {
 
