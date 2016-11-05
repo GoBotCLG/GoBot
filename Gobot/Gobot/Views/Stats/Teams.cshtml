@@ -10,39 +10,26 @@
     <h6>Équipes</h6>
 </div>
 
-@*<div class="teams">
+<div class="teams">
     @{
         foreach (Gobot.Models.Team team in (List<Gobot.Models.Team>)Model)
         {
-            <div class="team" style="background-image: url('@(team.Name.ToLower()).png');">
+            <div class="team" id="@team.Id" style="background-image: url(/Images/@(team.ImagePath));">
                 <div class="overlay"><h1>@team.Name</h1></div>
             </div>
         }
     }
-</div>*@
-
-<div class="teams">
-    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
-        <div class="overlay"><h1>CLOUD6</h1></div>
-    </div>
-    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
-        <div class="overlay"><h1>CLOUD6</h1></div>
-    </div>
-    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
-        <div class="overlay"><h1>CLOUD6</h1></div>
-    </div>
-    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
-        <div class="overlay"><h1>CLOUD6</h1></div>
-    </div>
-    <div class="team" id="1" style="background-image: url('/Images/cloud6.png');">
-        <div class="overlay"><h1>CLOUD6</h1></div>
-    </div>
 </div>
 
 @section Scripts {
     <script>
         $(function () {
             onResize();
+
+            $(".overlay > h1").each(function () {
+                var pos = $(".team:first-of-type").height() / 2 - $(this).height() / 2;
+                $(this).css("top", pos);
+            });
         });
 
         $(window).resize(function () {
@@ -104,7 +91,7 @@
                         $(".player:last-child").append('<div><div class="r-time"></div><h2 class="grey">' + team.players[i].rTime + '</h2></div>');
                         $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
                     }
-
+                    onResize();
                 }
             }
             data.send();

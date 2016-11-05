@@ -375,7 +375,7 @@ namespace Gobot.Models
         {
             MySQLWrapper Bd = new MySQLWrapper();
             List<Match> matches = new List<Match>();
-            List<Team> teams = GetAllTeam();
+            List<Team> teams = GetTeam(true);
             
             DataTable MatchResult = null;
             if (future)
@@ -413,12 +413,17 @@ namespace Gobot.Models
             return matches;
         }
 
-        public List<Team> GetAllTeam()
+        public List<Team> GetTeam(bool all, int id=0)
         {
             MySQLWrapper Bd = new MySQLWrapper();
             List<Team> teams = new List<Team>();
 
-            DataTable AllTeams = Bd.Procedure("GetAllTeam");
+            DataTable AllTeams = new DataTable();
+            if (all)
+                AllTeams = Bd.Procedure("GetAllTeam");
+            else
+                AllTeams = Bd.Select("team", "IdTeam = ?", new List<OdbcParameter>() { new OdbcParameter(":IdTeam", id) }, "*");
+
             foreach (DataRow row in AllTeams.Rows)
             {
                 Team t = new Team();
