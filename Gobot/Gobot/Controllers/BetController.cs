@@ -19,7 +19,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetFutureMatches();
+            List<Match> Matches = Bd.GetFutureMatches(true);
             List<Bet> Bets = new List<Bet>();
 
             DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
@@ -102,15 +102,19 @@ namespace Gobot.Controllers
         private int betExists(int MatchId, int TeamId)
         {
             MySQLWrapper Bd = new MySQLWrapper();
-            DataTable Bets = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
-            foreach(DataRow row in Bets.Rows)
+            List<OdbcParameter> conditions = new List<OdbcParameter>() {
+                new OdbcParameter(":Username", ((User)Session["User"]).Username),
+                new OdbcParameter(":TeamId", TeamId),
+                new OdbcParameter(":MatchId", MatchId)
+            };
+            DataTable result = Bd.Select("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions, "Mise");
+
+            if (result.Rows.Count == 0)
+                return 0;
+            else
             {
-                if((int)row["Team_IdTeam"] == TeamId && (int)row["Match_IdMatch"] == MatchId)
-                {
-                    return 1;
-                }
+                return (int)result.Rows[0]["Mise"];
             }
-            return 0;
         }
 
         private ActionResult editBetDb(int MatchId, int TeamId, int oldAmount, int newAmount)
@@ -120,18 +124,19 @@ namespace Gobot.Controllers
                 MySQLWrapper Bd = new MySQLWrapper();
                 List<string> col = new List<string>() { "Mise" };
                 List<OdbcParameter> parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", newAmount)  };
-                string where = "";
-                int result = Bd.Update("bet", col, parameters, where);
+                List<OdbcParameter> conditions = new List<OdbcParameter>() {
+                    new OdbcParameter(":Username", ((User)Session["User"]).Username),
+                    new OdbcParameter(":TeamId", TeamId),
+                    new OdbcParameter(":MatchId", MatchId)
+                };
+                int result = Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
 
                 if (result > 0)
                 {
-                    List<string> columns = new List<string>();
-                    columns.Add("Credit");
-                    List<OdbcParameter> values = new List<OdbcParameter>();
-                    values.Add(new OdbcParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount));
-                    List<OdbcParameter> conditions = new List<OdbcParameter>();
-                    conditions.Add(new OdbcParameter(":Username", ((User)Session["User"]).Username));
-                    int updateresult = Bd.Update("user", columns, values, "Username = ?", conditions);
+                    List<string> columns = new List<string>() { "Credit" };
+                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount) };
+                    List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                    int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
@@ -139,7 +144,9 @@ namespace Gobot.Controllers
                     }
                     else
                     {
-                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte.");
+                        parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", oldAmount) };
+                        Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
+                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La nouvelle mise n'a pas été enregistrée.");
                     }
                 }
                 else
@@ -172,13 +179,10 @@ namespace Gobot.Controllers
 
                 if (result > 0)
                 {
-                    List<string> columns = new List<string>();
-                    columns.Add("Credit");
-                    List<OdbcParameter> values = new List<OdbcParameter>();
-                    values.Add(new OdbcParameter(":Credit", ((User)Session["User"]).Credits - Amount));
-                    List<OdbcParameter> conditions = new List<OdbcParameter>();
-                    conditions.Add(new OdbcParameter(":Username", ((User)Session["User"]).Username));
-                    int updateresult = Bd.Update("user", columns, values, "Username = ?", conditions);
+                    List<string> columns = new List<string>() { "Credit" };
+                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - Amount) };
+                    List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                    int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
@@ -186,7 +190,13 @@ namespace Gobot.Controllers
                     }
                     else
                     {
-                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte.");
+                        List<OdbcParameter> conditions = new List<OdbcParameter>() {
+                            new OdbcParameter(":Username", ((User)Session["User"]).Username),
+                            new OdbcParameter(":TeamId", TeamId),
+                            new OdbcParameter(":MatchId", MatchId)
+                        };
+                        Bd.Delete("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
+                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La mise n'a pas été enregistrée.");
                     }
                 }
                 else
@@ -200,67 +210,77 @@ namespace Gobot.Controllers
                 return Json(0);
             }
         }
-            
-
-        private void removeBetDb(int BetId)
-        {
-
-        }
 
         [HttpPost]
-        public JsonResult Remove(int BetId)
+        public JsonResult Remove(int tId, int mId)
         {
-            if((User)Session["User"] == null)
-                return Json(0);
-            else
+            try
             {
-                MySQLWrapper Bd = new MySQLWrapper();
-                Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-
-                List<OdbcParameter> list = new List<OdbcParameter>();
-                list.Add(new OdbcParameter(":IdBet", BetId));
-
-                DataTable resultBet = Bd.Select("bet", "IdBet = ?", list, "Mise", "User_Username");
-                int amount = (int)resultBet.Rows[0]["Mise"];
-                if(((User)Session["User"]).Username != resultBet.Rows[0]["User_Username"].ToString())
-                {
+                if ((User)Session["User"] == null)
                     return Json(0);
-                }
-                
-                List<OdbcParameter> param = new List<OdbcParameter>();
-                OdbcParameter Id = new OdbcParameter(":Id", OdbcType.Int, 11);
-                Id.Value = BetId;
-
-                param.Add(Id);
-
-                int result = Bd.Delete("bet", "IdBet = ?", param);
-
-                if(result > 0)
+                else
                 {
+                    MySQLWrapper Bd = new MySQLWrapper();
+                    Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
 
-                    List<string> columnNames = new List<string>();
-                    columnNames.Add("Credit");
-                    List<OdbcParameter> values = new List<OdbcParameter>();
-                    values.Add(new OdbcParameter(":Credit", ((User)Session["User"]).Credits + amount));
-                    List<OdbcParameter> conditions = new List<OdbcParameter>();
-                    conditions.Add(new OdbcParameter(":Username", ((User)Session["User"]).Username));
-                    int res = Bd.Update("user", columnNames, values, "Username = ?", conditions);
+                    List<OdbcParameter> Bet = new List<OdbcParameter>() {
+                        new OdbcParameter(":TeamId", tId),
+                        new OdbcParameter(":MatchId", mId),
+                        new OdbcParameter(":Username", ((User)Session["User"]).Username)
+                    };
 
-                    if(res > 0)
+                    DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
+                    if (resultBet.Rows.Count > 0)
                     {
-                        Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                        return Json(1);
+                        int Amount = (int)resultBet.Rows[0]["Mise"];
+                        if ((int)resultBet.Rows[0]["Profit"] != 0)
+                            throw new Exception("Une erreur est survenue lors de la supression du pari.");
+
+                        int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
+                        if (result > 0)
+                        {
+
+                            List<string> columns = new List<string>() { "Credit" };
+                            List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits + Amount) };
+                            List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                            int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
+                            if (updateresult == 1)
+                            {
+                                Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                                return Json(1);
+                            }
+                            else
+                            {
+                                List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
+
+                                List<OdbcParameter> parameters = new List<OdbcParameter>() {
+                                    new OdbcParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
+                                    new OdbcParameter(":Profit", 0),
+                                    new OdbcParameter(":Username", ((User)Session["User"]).Username),
+                                    new OdbcParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
+                                    new OdbcParameter(":Match", (int)resultBet.Rows[0]["Match_IdMatch"])
+                                };
+                                Bd.Insert("bet", col, parameters);
+                                throw new Exception("Une erreur est survenue lors de la supression du pari.");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("Une erreur est survenue lors de la supression du pari.");
+                        }
                     }
                     else
                     {
-                        return Json(0);
+                        throw new Exception("Une erreur est survenue lors de la supression du pari.");
                     }
                 }
-                else
-                {
-                    return Json(0);
-                }
             }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return Json(0);
+            }
+            
         }
     }
 }

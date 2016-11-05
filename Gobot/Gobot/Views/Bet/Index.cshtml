@@ -20,7 +20,7 @@
 }
 
 @{
-    if (((List<Gobot.Models.Match>)Model).Count > 0)
+    if (Model.Count() > 0)
     {
         <div class="info" id="header">
             <h6>Misez sur les parties à venir!</h6>
@@ -41,59 +41,58 @@
 </div>
 
 @{
-    if (((List<Gobot.Models.Match>)Model).Count > 0)
+    if (Model.Count() > 0)
     {
-        foreach (Gobot.Models.Match m in (List<Gobot.Models.Match>)Model)
+        foreach (Gobot.Models.Match m in Model)
         {
             <div class="info">
-                <div class="time sqr"><h3>@m.Date.TimeOfDay</h3></div>
+                <div class="time sqr"><h3>@(m.Date.TimeOfDay.ToString())</h3></div>
 
                 <div class="team team1">
                     <div class="img" style="background-image: url(/Images/@(m.Teams[0].Name.ToLower()).png);"></div>
                     <div class="text">
                         @{
-                            // if user placed bet on team1
-                            if (false)
+                            if (m.CurrentUserBet && m.TeamNumberBet == 1)
                             {
-                                <h1><green>@(m.Teams[0].Name)</green></h1>
-                                <h4 class="grey">Mise Totale<green> 5000</green>GC</h4>
-                                <h4 class="grey">Votre mise<green> 500</green>GC</h4>
+                                <h1><green>@(m.Teams[0].Name.ToUpper())</green></h1>
+                                <h4 class="grey">Mise Totale<green> @(m.Team1TotalBet)</green>GC</h4>
+                                <h4 class="grey">Votre mise<green> @(m.CurrentUserAmount)</green>GC</h4>
                             }
                             else
                             {
-                                <h1>@(m.Teams[0].Name)</h1>
-                                <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
+                                <h1>@(m.Teams[0].Name.ToUpper())</h1>
+                                <h4 class="grey">Mise Totale<offw> @(m.Team1TotalBet)</offw>GC</h4>
                             }
                         }
                     </div>
+                    <input type="hidden" name="teamId" value="@(m.Teams[0].Id)" />
                 </div>
                 <div class="vs"><h1>VS</h1></div>
                 <div class="team team2">
                     <div class="text">
                         @{
-                            // if user placed bet on team2
-                            if (false)
+                            if (m.CurrentUserBet && m.TeamNumberBet == 2)
                             {
-                                <h1><green>@(m.Teams[1].Name)</green></h1>
-                                <h4 class="grey">Mise Totale<green> 5000</green>GC</h4>
-                                <h4 class="grey">Votre mise<green> 500</green>GC</h4>
+                                <h1><green>@(m.Teams[1].Name.ToUpper())</green></h1>
+                                <h4 class="grey">Mise Totale<green> @(m.Team2TotalBet)</green>GC</h4>
+                                <h4 class="grey">Votre mise<green> @(m.CurrentUserAmount)</green>GC</h4>
                             }
                             else
                             {
-                                <h1>@(m.Teams[1].Name)</h1>
-                                <h4 class="grey">Mise Totale<offw> 5000</offw>GC</h4>
+                                <h1>@(m.Teams[1].Name.ToUpper())</h1>
+                                <h4 class="grey">Mise Totale<offw> @(m.Team2TotalBet)</offw>GC</h4>
                             }
                         }
                     </div>
                     <div class="img" style="background-image: url(/Images/@(m.Teams[1].Name.ToLower()).png);"></div>
+                    <input type="hidden" name="teamId" value="@(m.Teams[1].Id)" />
                 </div>
 
                 <div class="manageBet">
                     @{
-                        // if user placed bet
-                        if (false)
+                        if (m.CurrentUserBet)
                         {
-                            <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { id = m.Id })"></a><div><h2>Retirer</h2></div></div>
+                            <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { tId = m.Teams[m.TeamNumberBet - 1].Id, mId = m.Id })"></a><div><h2>Retirer</h2></div></div>
                             <div class="edit sqr"><div><h2>Modifier</h2></div></div>
                         }
                         else
@@ -102,12 +101,13 @@
                         }
                     }
                 </div>
+                <input name="matchId" type="hidden" value="@(m.Id)" />
             </div>
         }
     }
 }
 
-<div class="info">
+@*<div class="info">
     <div class="time sqr"><h3>12:00</h3></div>
 
     <div class="team team1">
@@ -205,7 +205,7 @@
         }
     </div>
     <input name="matchId" type="hidden" value="2" />
-</div>
+</div>*@
 
 @section Scripts {
     <script>
