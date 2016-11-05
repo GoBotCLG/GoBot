@@ -92,8 +92,8 @@ namespace Liaison_BD___CSGO
             else
             {
                 Team1CTNextMatch = false;
-                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam1"]));
+                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam2"]));
             }
 
 
@@ -103,6 +103,22 @@ namespace Liaison_BD___CSGO
                 OutFile.Write("bot_add t \"" + BotsT.Rows[i]["NomBot"].ToString() + "\"; ");
             }
 
+            DataTable Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", NextMatch.Rows[0]["IdMatch"]));
+            string Team1Name;
+            string Team2Name;
+
+            if ((int)Teams.Rows[0]["IdTeam"] == (int)NextMatch.Rows[0]["Team_IdTeam1"])
+            {
+                Team1Name = Teams.Rows[0]["Name"].ToString();
+                Team2Name = Teams.Rows[1]["Name"].ToString();
+            }
+            else
+            {
+                Team1Name = Teams.Rows[1]["Name"].ToString();
+                Team2Name = Teams.Rows[0]["Name"].ToString();
+            }
+
+            OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
             OutFile.Write("mp_warmup_end; log on;");
             OutFile.Flush();
@@ -270,11 +286,17 @@ namespace Liaison_BD___CSGO
             Thread.Sleep(60000);
             SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(100);
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(100);
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(100);
             SendKeys.SendWait("#");
+            Thread.Sleep(100);
             SendKeys.SendWait("spectate");
+            Thread.Sleep(100);
             SendKeys.SendWait("{ENTER}");
+            Thread.Sleep(100);
             SendKeys.SendWait("{ESC}");
 
             Team1CTCurrentMatch = Team1CTNextMatch;
