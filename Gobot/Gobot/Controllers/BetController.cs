@@ -72,7 +72,6 @@ namespace Gobot.Controllers
             }
 
             return View(Matches);
-            //return View(new List<Match>());
         }
 
         [HttpPost]
