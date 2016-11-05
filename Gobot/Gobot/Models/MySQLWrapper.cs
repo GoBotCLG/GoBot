@@ -15,7 +15,15 @@ namespace Gobot.Models
 
         public MySQLWrapper()
         {
+            Connect();
+        }
+
+        ~MySQLWrapper() { try { connection.Close(); } catch (Exception) { } }
+
+        public void Connect()
+        {
             connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=67.68.203.251;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
+            connection.Open();
         }
 
         /// <summary>
@@ -173,7 +181,7 @@ namespace Gobot.Models
         {
             if (connection != null && tablename != "")
             {
-                StringBuilder sql = new StringBuilder("delete " + tablename);
+                StringBuilder sql = new StringBuilder("delete from " + tablename);
 
                 if (where != "")
                 {

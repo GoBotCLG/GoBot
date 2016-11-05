@@ -241,6 +241,16 @@ img {
 .team h4:first-of-type {
   margin-top: 5px; }
 
+@media screen and (max-width: 1200px) {
+  .team > .img {
+    display: none; }
+  .team > .text {
+    width: 100% !important; }
+  .team1 > .text {
+    padding-left: 15px; }
+  .team2 > .text {
+    padding-right: 15px; } }
+
 .team1 h1, .team1 h4 {
   text-indent: 10px;
   text-align: left; }
@@ -260,6 +270,9 @@ img {
   right: 0;
   -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
   clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%); }
+
+.team2 > .text {
+  float: right; }
 
 .manageBet {
   height: 100px; }

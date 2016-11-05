@@ -73,8 +73,7 @@ namespace Gobot.Controllers
 
             return View(Matches);
         }
-
-        [HttpPost]
+        
         public ActionResult Add(int MatchId, int TeamId, int Amount)
         {
             if(Session["User"] == null)
@@ -92,9 +91,11 @@ namespace Gobot.Controllers
                     return Json(0);
                 }
                 else if (oldAmount > 0)
-                    return editBetDb(MatchId, TeamId, oldAmount, Amount);
+                    editBetDb(MatchId, TeamId, oldAmount, Amount);
                 else
-                    return addBetDb(MatchId, TeamId, Amount);
+                    addBetDb(MatchId, TeamId, Amount);
+
+                return RedirectToAction("Index", "Bet");
             }
         }
         
@@ -116,7 +117,7 @@ namespace Gobot.Controllers
             }
         }
 
-        private ActionResult editBetDb(int MatchId, int TeamId, int oldAmount, int newAmount)
+        private void editBetDb(int MatchId, int TeamId, int oldAmount, int newAmount)
         {
             try
             {
@@ -139,7 +140,6 @@ namespace Gobot.Controllers
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                        return Json(1);
                     }
                     else
                     {
@@ -156,11 +156,10 @@ namespace Gobot.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                return Json(0);
             }
         }
 
-        private ActionResult addBetDb(int MatchId, int TeamId, int Amount)
+        private void addBetDb(int MatchId, int TeamId, int Amount)
         {
             try
             {
@@ -169,7 +168,7 @@ namespace Gobot.Controllers
                 
                 List<OdbcParameter> parameters = new List<OdbcParameter>() {
                     new OdbcParameter(":Mise", Amount),
-                    new OdbcParameter(":Profit", 0),
+                    new OdbcParameter(":Profit", 0.ToString()),
                     new OdbcParameter(":Username", ((User)Session["User"]).Username),
                     new OdbcParameter(":Team", TeamId),
                     new OdbcParameter(":Match", MatchId)
@@ -185,7 +184,6 @@ namespace Gobot.Controllers
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                        return Json(1);
                     }
                     else
                     {
@@ -206,17 +204,15 @@ namespace Gobot.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                return Json(0);
             }
         }
 
-        [HttpPost]
-        public JsonResult Remove(int tId, int mId)
+        public ActionResult Remove(int tId, int mId)
         {
             try
             {
                 if ((User)Session["User"] == null)
-                    return Json(0);
+                    return RedirectToAction("Index", "Home");
                 else
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
@@ -235,6 +231,12 @@ namespace Gobot.Controllers
                         if ((int)resultBet.Rows[0]["Profit"] != 0)
                             throw new Exception("Une erreur est survenue lors de la supression du pari.");
 
+                        Bet = new List<OdbcParameter>() {
+                            new OdbcParameter(":TeamId", tId),
+                            new OdbcParameter(":MatchId", mId),
+                            new OdbcParameter(":Username", ((User)Session["User"]).Username)
+                        };
+
                         int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
                         if (result > 0)
                         {
@@ -246,7 +248,6 @@ namespace Gobot.Controllers
                             if (updateresult == 1)
                             {
                                 Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                                return Json(1);
                             }
                             else
                             {
@@ -277,9 +278,8 @@ namespace Gobot.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                return Json(0);
             }
-            
+            return RedirectToAction("Index", "Bet");
         }
     }
 }
