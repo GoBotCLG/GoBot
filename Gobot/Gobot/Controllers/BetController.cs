@@ -119,43 +119,46 @@ namespace Gobot.Controllers
 
         private void editBetDb(int MatchId, int TeamId, int oldAmount, int newAmount)
         {
-            try
+            if (oldAmount != newAmount)
             {
-                MySQLWrapper Bd = new MySQLWrapper();
-                List<string> col = new List<string>() { "Mise" };
-                List<OdbcParameter> parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", newAmount)  };
-                List<OdbcParameter> conditions = new List<OdbcParameter>() {
-                    new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                    new OdbcParameter(":TeamId", TeamId),
-                    new OdbcParameter(":MatchId", MatchId)
-                };
-                int result = Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
-
-                if (result > 0)
+                try
                 {
-                    List<string> columns = new List<string>() { "Credit" };
-                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount) };
-                    List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
-                    int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
-                    if (updateresult == 1)
+                    MySQLWrapper Bd = new MySQLWrapper();
+                    List<string> col = new List<string>() { "Mise" };
+                    List<OdbcParameter> parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", newAmount) };
+                    List<OdbcParameter> conditions = new List<OdbcParameter>() {
+                        new OdbcParameter(":Username", ((User)Session["User"]).Username),
+                        new OdbcParameter(":TeamId", TeamId),
+                        new OdbcParameter(":MatchId", MatchId)
+                    };
+                    int result = Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
+
+                    if (result > 0)
                     {
-                        Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                        List<string> columns = new List<string>() { "Credit" };
+                        List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount) };
+                        List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                        int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
+                        if (updateresult == 1)
+                        {
+                            Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                        }
+                        else
+                        {
+                            parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", oldAmount) };
+                            Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
+                            throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La nouvelle mise n'a pas été enregistrée.");
+                        }
                     }
                     else
                     {
-                        parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", oldAmount) };
-                        Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
-                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La nouvelle mise n'a pas été enregistrée.");
+                        throw new Exception("Une erreur est survenue lors du placement du pari. Veuillez réessayer.");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new Exception("Une erreur est survenue lors du placement du pari. Veuillez réessayer.");
+                    ViewBag.Error = ex.Message;
                 }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
             }
         }
 

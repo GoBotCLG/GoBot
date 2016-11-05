@@ -152,7 +152,6 @@
             var teamId;
             var teamNum = 1;
             var matchId = $(this).closest(".info").find("> input").val();
-            var teamName;
             var imagePath;
 
             var i = 1;
@@ -160,9 +159,8 @@
                 let count = $(this).find("h4").length;
                 if (count == 2) {
                     teamNum = i;
-                    //teamName = $(this).find("> .text > h1 > green").text();
                     imagePath = getBackgroundImage($(this).find("> .img"));
-                    teamId = $(this).attr("id");
+                    teamId = $(this).find("input").val();
                 }
                 i++;
             });
