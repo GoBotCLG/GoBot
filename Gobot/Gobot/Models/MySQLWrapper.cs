@@ -367,74 +367,42 @@ namespace Gobot.Models
         {
             MySQLWrapper Bd = new MySQLWrapper();
             List<Match> matches = new List<Match>();
-            List<Team> teams = new List<Team>();
-
+            List<Team> teams = GetAllTeam();
+            
+            DataTable MatchResult = null;
             if (future)
-            {
-                DataTable FutureMatches = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
-                DataTable AllTeams = GetAllTeam();
-                foreach (DataRow row in FutureMatches.Rows)
-                {
-                    Match m = new Match();
-                    m.Id = (int)row["IdMatch"];
-                    m.Date = (DateTime)row["Date"];
-                    m.Teams[0] = null;
-                    m.Teams[1] = null;
-
-                    foreach (Team t in teams)
-                    {
-                        if ((int)row["Team_IdTeam1"] == t.Id)
-                        {
-                            m.Teams[0] = t;
-                        }
-                        if ((int)row["Team_IdTeam2"] == t.Id)
-                        {
-                            m.Teams[1] = t;
-                        }
-                        if (m.Teams[0] != null && m.Teams[1] != null)
-                        {
-                            break;
-                        }
-                    }
-
-                    matches.Add(m);
-                }
-
-                return matches;
-            }
+                MatchResult = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
             else
+                MatchResult = Bd.Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
+
+            foreach (DataRow row in MatchResult.Rows)
             {
-                DataTable PassMatches = Bd.Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
-                DataTable AllTeams = GetAllTeam();
-                foreach (DataRow row in PassMatches.Rows)
+                Match m = new Match();
+                m.Id = (int)row["IdMatch"];
+                m.Date = (DateTime)row["Date"];
+                m.Teams[0] = null;
+                m.Teams[1] = null;
+
+                foreach (Team t in teams)
                 {
-                    Match m = new Match();
-                    m.Id = (int)row["IdMatch"];
-                    m.Date = (DateTime)row["Date"];
-                    m.Teams[0] = null;
-                    m.Teams[1] = null;
-
-                    foreach (Team t in teams)
+                    if ((int)row["Team_IdTeam1"] == t.Id)
                     {
-                        if ((int)row["Team_IdTeam1"] == t.Id)
-                        {
-                            m.Teams[0] = t;
-                        }
-                        if ((int)row["Team_IdTeam2"] == t.Id)
-                        {
-                            m.Teams[1] = t;
-                        }
-                        if (m.Teams[0] != null && m.Teams[1] != null)
-                        {
-                            break;
-                        }
+                        m.Teams[0] = t;
                     }
-
-                    matches.Add(m);
+                    if ((int)row["Team_IdTeam2"] == t.Id)
+                    {
+                        m.Teams[1] = t;
+                    }
+                    if (m.Teams[0] != null && m.Teams[1] != null)
+                    {
+                        break;
+                    }
                 }
 
-                return matches;
+                matches.Add(m);
             }
+
+            return matches;
         }
 
         public List<Team> GetAllTeam()

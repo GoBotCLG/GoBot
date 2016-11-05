@@ -19,7 +19,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetFutureMatches(true);
+            List<Match> Matches = Bd.GetMatches(true);
             List<Bet> Bets = new List<Bet>();
 
             DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
