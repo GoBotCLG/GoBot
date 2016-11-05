@@ -39,8 +39,8 @@ namespace Gobot.Models
                 sql.Remove(sql.Length - 1, 1);
 
                 sql.Append(" from " + tablename);
-                
-                if(where != "")
+
+                if (where != "")
                 {
                     sql.Append(" where " + where);
 
@@ -48,7 +48,7 @@ namespace Gobot.Models
 
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                if(conditions.Count > 0)
+                if (conditions.Count > 0)
                 {
                     foreach (OdbcParameter param in conditions)
                     {
@@ -128,31 +128,31 @@ namespace Gobot.Models
             {
                 StringBuilder sql = new StringBuilder("update " + tablename + " set ");
 
-                foreach(string col in columnNames)
+                foreach (string col in columnNames)
                 {
                     sql.Append(col + " = ?,");
                 }
                 sql.Remove(sql.Length - 1, 1);
 
-                if(where != "" && conditions.Count > 0)
+                if (where != "" && conditions.Count > 0)
                 {
                     sql.Append(" where " + where);
                 }
-                
+
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                foreach(OdbcParameter val in values)
+                foreach (OdbcParameter val in values)
                 {
                     command.Parameters.Add(val);
                 }
 
-                if(conditions.Count > 0 && where != "")
+                if (conditions.Count > 0 && where != "")
                 {
                     foreach (OdbcParameter param in conditions)
                     {
                         command.Parameters.Add(param);
                     }
-                }                
+                }
 
                 return command.ExecuteNonQuery();
             }
@@ -171,20 +171,20 @@ namespace Gobot.Models
         /// <returns></returns>
         public int Delete(string tablename, string where, List<OdbcParameter> conditions)
         {
-            if(connection != null && tablename != "")
+            if (connection != null && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("delete " + tablename);
 
-                if(where != "")
+                if (where != "")
                 {
                     sql.Append(" where " + where);
                 }
 
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                if(conditions.Count > 0)
+                if (conditions.Count > 0)
                 {
-                    foreach(OdbcParameter param in conditions)
+                    foreach (OdbcParameter param in conditions)
                     {
                         command.Parameters.Add(param);
                     }
@@ -275,7 +275,7 @@ namespace Gobot.Models
                 adapt.Fill(result);
                 StringBuilder sb = new StringBuilder();
                 sb.Append(functionname + "(");
-                foreach(OdbcParameter param in args)
+                foreach (OdbcParameter param in args)
                 {
                     sb.Append(param.Value + ",");
                 }
@@ -363,7 +363,7 @@ namespace Gobot.Models
             }
         }
 
-        public List<Match> GetFutureMatches(bool future)
+        public List<Match> GetMatches(bool future)
         {
             MySQLWrapper Bd = new MySQLWrapper();
             List<Match> matches = new List<Match>();
@@ -372,7 +372,7 @@ namespace Gobot.Models
             if (future)
             {
                 DataTable FutureMatches = Bd.Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
-                //DataTable AllTeams = GetAllTeam();
+                DataTable AllTeams = GetAllTeam();
                 foreach (DataRow row in FutureMatches.Rows)
                 {
                     Match m = new Match();
@@ -405,7 +405,7 @@ namespace Gobot.Models
             else
             {
                 DataTable PassMatches = Bd.Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
-                //DataTable AllTeams = GetAllTeam();
+                DataTable AllTeams = GetAllTeam();
                 foreach (DataRow row in PassMatches.Rows)
                 {
                     Match m = new Match();
@@ -436,35 +436,36 @@ namespace Gobot.Models
                 return matches;
             }
         }
+
+        public List<Team> GetAllTeam()
+        {
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Team> teams = new List<Team>();
+
+            DataTable AllTeams = Bd.Procedure("GetAllTeam");
+            foreach (DataRow row in AllTeams.Rows)
+            {
+                Team t = new Team();
+                t.Id = (int)row["IdTeam"];
+                t.Name = row["Name"].ToString();
+                t.Wins = (int)row["Win"];
+                t.Games = (int)row["Game"];
+                t.ImagePath = row["ImageTeam"].ToString();
+
+                DataTable BotsFromTeam = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
+                for (int i = 0; i < 5; i++)
+                {
+                    t.TeamComp[i] = new Bot(
+                        (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
+                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
+                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
+                        Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]));
+                }
+
+                teams.Add(t);
+            }
+            return teams;
+        }
     }
-        
-    //public List<Team> GetAllTeam()
-    //{
-    //    MySQLWrapper Bd = new MySQLWrapper();
-    //    List<Team> teams = new List<Team>();
 
-    //    DataTable AllTeams = Bd.Procedure("GetAllTeam");
-    //    foreach (DataRow row in AllTeams.Rows)
-    //    {
-    //        Team t = new Team();
-    //        t.Id = (int)row["IdTeam"];
-    //        t.Name = row["Name"].ToString();
-    //        t.Wins = (int)row["Win"];
-    //        t.Games = (int)row["Game"];
-    //        t.ImagePath = row["ImageTeam"].ToString();
-
-    //        DataTable BotsFromTeam = Bd.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
-    //        for (int i = 0; i < 5; i++)
-    //        {
-    //            t.TeamComp[i] = new Bot(
-    //                (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
-    //                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
-    //                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
-    //                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]));
-    //        }
-
-    //        teams.Add(t);
-    //    }
-    //    return teams;
-    //}
 }
