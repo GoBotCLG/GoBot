@@ -19,93 +19,95 @@
     }
 }
 
-@{
-    if (Model.Count() > 0)
-    {
-        <div class="info" id="header">
-            <h6>Misez sur les parties à venir!</h6>
-        </div>
-    }
-    else
-    {
-        <div class="info" id="header">
-            <h6>Aucune partie à venir. Réessayez plus tard.</h6>
-        </div>
-    }
-}
-
-<div class="info" id="getCredits">
-    <a href="#"><h1>Acheter plus de crédits</h1></a>
-    <div class="separator"><div></div></div>
-    <a href="#"><h1>Visionner une publicité</h1></a>
-</div>
-
-@{
-    if (Model.Count() > 0)
-    {
-        for (int i = 0; i < Model.Count; i++)
+<div class="info_container">
+    @{
+        if (Model.Count() > 0)
         {
-            <div class="info">
-                <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute</h3></div>
-
-                <div class="team team1">
-                    <div class="img" style="background-image: url(/Images/@(Model[i].Teams[0].ImagePath));"></div>
-                    <div class="text">
-                        @{
-                            if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
-                            {
-                                <h1><green>@(Model[i].Teams[0].Name.ToUpper())</green></h1>
-                                <h4 class="grey">Mise Totale<green> @(Model[i].Team1TotalBet)</green>GC</h4>
-                                <h4 class="grey">Votre mise<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
-                            }
-                            else
-                            {
-                                <h1>@(Model[i].Teams[0].Name.ToUpper())</h1>
-                                <h4 class="grey">Mise Totale<offw> @(Model[i].Team1TotalBet)</offw>GC</h4>
-                            }
-                        }
-                    </div>
-                    <input type="hidden" name="teamId" value="@(Model[i].Teams[0].Id)" />
-                </div>
-                <div class="vs"><h1>VS</h1></div>
-                <div class="team team2">
-                    <div class="img" style="background-image: url(/Images/@(Model[i].Teams[1].ImagePath));"></div>
-                    <div class="text">
-                        @{
-                            if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
-                            {
-                                <h1><green>@(Model[i].Teams[1].Name.ToUpper())</green></h1>
-                                <h4 class="grey">Mise Totale<green> @(Model[i].Team2TotalBet)</green>GC</h4>
-                                <h4 class="grey">Votre mise<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
-                            }
-                            else
-                            {
-                                <h1>@(Model[i].Teams[1].Name.ToUpper())</h1>
-                                <h4 class="grey">Mise Totale<offw> @(Model[i].Team2TotalBet)</offw>GC</h4>
-                            }
-                        }
-                    </div>
-                    <input type="hidden" name="teamId" value="@(Model[i].Teams[1].Id)" />
-                </div>
-
-                <div class="manageBet">
-                    @{
-                        if (Model[i].CurrentUserBet)
-                        {
-                            <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { tId = Model[i].Teams[Model[i].TeamNumberBet - 1].Id, mId = Model[i].Id })"></a><div><h2>Retirer</h2></div></div>
-                            <div class="edit sqr"><div><h2>Modifier</h2></div></div>
-                        }
-                        else
-                        {
-                            <div class="create sqr"><div><h2>Miser</h2></div></div>
-                        }
-                    }
-                </div>
-                <input name="matchId" type="hidden" value="@(Model[i].Id)" />
+            <div class="info" id="header">
+                <h6>Misez sur les parties à venir!</h6>
+            </div>
+        }
+        else
+        {
+            <div class="info" id="header">
+                <h6>Aucune partie à venir. Réessayez plus tard.</h6>
             </div>
         }
     }
-}
+
+    <div class="info" id="getCredits">
+        <a href="#"><h1>Acheter plus de crédits</h1></a>
+        <div class="separator"><div></div></div>
+        <a href="#"><h1>Visionner une publicité</h1></a>
+    </div>
+
+    @{
+        if (Model.Count() > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="info">
+                    <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute</h3></div>
+
+                    <div class="team team1">
+                        <div class="img" style="background-image: url(/Images/@(Model[i].Teams[0].ImagePath));"></div>
+                        <div class="text">
+                            @{
+                                if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
+                                {
+                                    <h1><green>@(Model[i].Teams[0].Name.ToUpper())</green></h1>
+                                    <h4 class="grey">Mise Totale<green> @(Model[i].Team1TotalBet)</green>GC</h4>
+                                    <h4 class="grey">Votre mise<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
+                                }
+                                else
+                                {
+                                    <h1>@(Model[i].Teams[0].Name.ToUpper())</h1>
+                                    <h4 class="grey">Mise Totale<offw> @(Model[i].Team1TotalBet)</offw>GC</h4>
+                                }
+                            }
+                        </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[0].Id)" />
+                    </div>
+                    <div class="vs"><h1>VS</h1></div>
+                    <div class="team team2">
+                        <div class="img" style="background-image: url(/Images/@(Model[i].Teams[1].ImagePath));"></div>
+                        <div class="text">
+                            @{
+                                if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
+                                {
+                                    <h1><green>@(Model[i].Teams[1].Name.ToUpper())</green></h1>
+                                    <h4 class="grey">Mise Totale<green> @(Model[i].Team2TotalBet)</green>GC</h4>
+                                    <h4 class="grey">Votre mise<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
+                                }
+                                else
+                                {
+                                    <h1>@(Model[i].Teams[1].Name.ToUpper())</h1>
+                                    <h4 class="grey">Mise Totale<offw> @(Model[i].Team2TotalBet)</offw>GC</h4>
+                                }
+                            }
+                        </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[1].Id)" />
+                    </div>
+
+                    <div class="manageBet">
+                        @{
+                            if (Model[i].CurrentUserBet)
+                            {
+                                <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { tId = Model[i].Teams[Model[i].TeamNumberBet - 1].Id, mId = Model[i].Id })"></a><div><h2>Retirer</h2></div></div>
+                                <div class="edit sqr"><div><h2>Modifier</h2></div></div>
+                            }
+                            else
+                            {
+                                <div class="create sqr"><div><h2>Miser</h2></div></div>
+                            }
+                        }
+                    </div>
+                    <input name="matchId" type="hidden" value="@(Model[i].Id)" />
+                </div>
+            }
+        }
+    }
+</div>
 
 @section Scripts {
     <script>
@@ -262,7 +264,7 @@
 
         function onResize() {
             resizeInfo();
-            h_align_window($(".info"));
+            h_align_window($(".info_container"));
             h_align_margin($(".betSelector"), $("#bet_placeBet > form"), getWidthOfChilds($(".betSelector")));
 
             $(".info > div").each(function () {

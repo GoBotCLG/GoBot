@@ -183,12 +183,19 @@ img                         { border: 0; }
     h5 { font: 400 14px Lato, sans-serif; color: white;}
 }
 
-.info {
+.info_container {
     position: relative;
     float: left;
     clear: both;
     width: 85%;
     max-width: $maxContainerWidth;
+    height: auto;
+}
+.info {
+    position: relative;
+    float: left;
+    clear: both;
+    width: 100%;
     height: auto;
     background-color: $infoBgColor;
     margin: 2px auto;

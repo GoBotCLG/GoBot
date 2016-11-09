@@ -164,12 +164,19 @@ img {
   font: 400 14px Lato, sans-serif;
   color: white; }
 
-.info {
+.info_container {
   position: relative;
   float: left;
   clear: both;
   width: 85%;
   max-width: 1350px;
+  height: auto; }
+
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 100%;
   height: auto;
   background-color: #232323;
   margin: 2px auto; }

@@ -6,8 +6,10 @@
 }
 @Styles.Render("~/Content/Teams.min.css")
 
-<div class="info" id="header">
-    <h6>Équipes</h6>
+<div class="info_container">
+    <div class="info" id="header">
+        <h6>Équipes</h6>
+    </div>
 </div>
 
 <div class="teams">
@@ -42,7 +44,7 @@
 
         function onResize() {
             setWidthFromChilds($(".team"), 5);
-            h_align_window($("#header"));
+            h_align_window($(".info_container"));
         }
 
         function insertTeamInfo(e) {

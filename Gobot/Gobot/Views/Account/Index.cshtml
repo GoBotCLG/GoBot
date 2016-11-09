@@ -31,117 +31,119 @@
     }
 }
 
-<div class="info" id="accountInfo">
-    <div>
-        <img id="img" src="@(Session["User_img"])" />
-    </div>
-    <div id="userInfo">
-        <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
-        <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
-    </div>
-    <div id="userOptions">
-        <img id="openOption" src="~/Images/settings.png" />
-        <h3>Options</h3>
-        <img id="closeOption" src="~/Images/close.png" />
-    </div>
-</div>
-
-<div class="info">
-    <div class="info_logo" id="rank">
-        <h2>RANK</h2>
-        <img src="~/Images/ranks/1.png" />
-        <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
-    </div>
-    <div id="rep">
-        <h2>REPUTATION</h2>
-        <div id="rep-bar">
-            <div></div>
-            <div id="xp">
-                <div id="xpDone"></div>
-            </div>
-            <div></div>
-        </div>
-        <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
-    </div>
-</div>
-
-<div class="info" id="credits">
-    <div class="info_logo"></div>
-    <div>
-        <h1>@Html.DisplayFor(model => model.Credits)<b> GOBOT CREDITS</b></h1>
-        @*<h4 class="grey">1 Gobot credit = 0.01$</h4>*@
-    </div>
-    <div>
-        <a href="@Url.Action("Index", "Bet")" id="trade">
-            <h2>REGARDER UNE</h2>
-            <h3 class="grey">ANNONCE</h3>
-        </a>
-    </div>
-    <div>
-        <a class="whiteLink" href="#" id="buy"><h2>ACHETER</h2></a>
-    </div>
-</div>
-
-<div class="info" id="bets">
-    <div class="info_logo"></div>
-    <div>
-        <h1 id="total">@Html.DisplayFor(model => model.Wins)<grey> VICTOIRES</grey></h1>
-    </div>
-    <div>
-        <h1 id="wins">@Html.DisplayFor(model => model.Games)<grey> PARTIES</grey></h1>
-    </div>
-    @if (Model.Games > 0)
-    {
+<div class="info_container">
+    <div class="info" id="accountInfo">
         <div>
-            <h1 id="ratio">
-                @(Math.Round((double)Model.Wins / Model.Games * 100))
-                %<grey> PARTIES GAGNÉES</grey>
-            </h1>
+            <img id="img" src="@(Session["User_img"])" />
         </div>
-    }
+        <div id="userInfo">
+            <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
+            <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
+        </div>
+        <div id="userOptions">
+            <img id="openOption" src="~/Images/settings.png" />
+            <h3>Options</h3>
+            <img id="closeOption" src="~/Images/close.png" />
+        </div>
+    </div>
 
-</div>
+    <div class="info">
+        <div class="info_logo" id="rank">
+            <h2>RANK</h2>
+            <img src="~/Images/ranks/1.png" />
+            <h2 class="grey">@Html.DisplayFor(model => model.Level)</h2>
+        </div>
+        <div id="rep">
+            <h2>REPUTATION</h2>
+            <div id="rep-bar">
+                <div></div>
+                <div id="xp">
+                    <div id="xpDone"></div>
+                </div>
+                <div></div>
+            </div>
+            <h3><green>@Html.DisplayFor(model => model.EXP)</green>/1500 <grey>REP</grey></h3>
+        </div>
+    </div>
 
-<div class="info" id="creditStats">
-    <div class="info_logo"></div>
-    <div>
-        <h1 id="wonLoss"><green>850</green>/<red>400</red> GAGNÉS/PERDUS</h1>
+    <div class="info" id="credits">
+        <div class="info_logo"></div>
+        <div>
+            <h1>@Html.DisplayFor(model => model.Credits)<b> GOBOT CREDITS</b></h1>
+            @*<h4 class="grey">1 Gobot credit = 0.01$</h4>*@
+        </div>
+        <div>
+            <a href="@Url.Action("Index", "Bet")" id="trade">
+                <h2>REGARDER UNE</h2>
+                <h3 class="grey">ANNONCE</h3>
+            </a>
+        </div>
+        <div>
+            <a class="whiteLink" href="#" id="buy"><h2>ACHETER</h2></a>
+        </div>
     </div>
-    <div>
-        <h1>0<grey> ACHETÉS</grey></h1>
-    </div>
-    <div>
-        <a href="#" class="darkBG">
-            <h2>ACHETER DES CRÉDITS</h2>
-            <h3 class="grey">DE GOBOTTER</h3>
-        </a>
-    </div>
-</div>
 
-<div class="info" id="transactions">
-    <div class="info_logo"></div>
-    <div>
-        <h1 id="fromGB">0<grey> OBJETS ACHETÉS</grey></h1>
-        <h2 class="grey">DE GOBOTTER</h2>
-    </div>
-    <div>
-        <h1>525<grey> CRÉDITS TOTAL</grey></h1>
-    </div>
-    <div>
-        <a><h3 class="grey">MES</h3> <h2>TRANSACTIONS</h2></a>
-    </div>
-</div>
+    <div class="info" id="bets">
+        <div class="info_logo"></div>
+        <div>
+            <h1 id="total">@Html.DisplayFor(model => model.Wins)<grey> VICTOIRES</grey></h1>
+        </div>
+        <div>
+            <h1 id="wins">@Html.DisplayFor(model => model.Games)<grey> PARTIES</grey></h1>
+        </div>
+        @if (Model.Games > 0)
+        {
+            <div>
+                <h1 id="ratio">
+                    @(Math.Round((double)Model.Wins / Model.Games * 100))
+                    %<grey> PARTIES GAGNÉES</grey>
+                </h1>
+            </div>
+        }
 
-<div class="info" id="matches">
-    <div class="info_logo"></div>
-    <div>
-        <h1>0<grey> PARTIES REGARDÉES</grey></h1>
     </div>
-    <div>
-        <h1>CLOUD6<grey> ÉQUIPE FAVORITE</grey></h1>
+
+    <div class="info" id="creditStats">
+        <div class="info_logo"></div>
+        <div>
+            <h1 id="wonLoss"><green>850</green>/<red>400</red> GAGNÉS/PERDUS</h1>
+        </div>
+        <div>
+            <h1>0<grey> ACHETÉS</grey></h1>
+        </div>
+        <div>
+            <a href="#" class="darkBG">
+                <h2>ACHETER DES CRÉDITS</h2>
+                <h3 class="grey">DE GOBOTTER</h3>
+            </a>
+        </div>
     </div>
-    <div>
-        <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
+
+    <div class="info" id="transactions">
+        <div class="info_logo"></div>
+        <div>
+            <h1 id="fromGB">0<grey> OBJETS ACHETÉS</grey></h1>
+            <h2 class="grey">DE GOBOTTER</h2>
+        </div>
+        <div>
+            <h1>525<grey> CRÉDITS TOTAL</grey></h1>
+        </div>
+        <div>
+            <a><h3 class="grey">MES</h3> <h2>TRANSACTIONS</h2></a>
+        </div>
+    </div>
+
+    <div class="info" id="matches">
+        <div class="info_logo"></div>
+        <div>
+            <h1>0<grey> PARTIES REGARDÉES</grey></h1>
+        </div>
+        <div>
+            <h1>CLOUD6<grey> ÉQUIPE FAVORITE</grey></h1>
+        </div>
+        <div>
+            <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
+        </div>
     </div>
 </div>
 
@@ -225,7 +227,7 @@
         });
 
         function onResize() {
-            h_align_window($(".info"));
+            h_align_window($(".info_container"));
 
             $(".info > div:not(:first-of-type)").each(function () {
                 if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
