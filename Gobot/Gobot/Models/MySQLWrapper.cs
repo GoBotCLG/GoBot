@@ -413,6 +413,15 @@ namespace Gobot.Models
             return matches;
         }
 
+        public Match GetLiveMatch()
+        {
+            Match match;
+
+
+
+            return new Match();
+        }
+
         public List<Team> GetTeam(bool all, int id=0)
         {
             MySQLWrapper Bd = new MySQLWrapper();
