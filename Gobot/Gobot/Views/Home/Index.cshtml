@@ -205,16 +205,26 @@
         }
 
         $("#signIn_rect, #signIn_circle > input").mouseenter(function () {
-            if ($(window).width() > 1600) {
-                if (lastOver.attr('id') != "signIn_rect" && lastOver.parent().attr('id') != "signIn_circle")
-                    animate();
+            try {
+                if ($(window).width() > 1600) {
+                    if (lastOver.attr('id') != "signIn_rect" && lastOver.parent().attr('id') != "signIn_circle")
+                        animate();
 
-                lastOver = $(this);
+                    lastOver = $(this);
+                }
+            }
+            catch (err) {
+                $("#signIn_circle").css("background-color", "rgba(246,119,99,0.6)");
             }
         }).mouseleave(function () {
-            if ($(window).width() > 1600) {
-                resetAnimation();
+            try {
+                if ($(window).width() > 1600) {
+                    resetAnimation();
+                }
             }
+            catch (err) {
+            }
+            $("#signIn_circle").css("background-color", "rgba(217,217,217,0.4)");
         });
         $("#header").not("#signIn_circle > input, #signIn_rect").mouseover(function () {
             lastOver = $(this);

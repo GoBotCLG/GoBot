@@ -69,6 +69,19 @@
                         <input type="hidden" name="teamId" value="@(Model[i].Teams[0].Id)" />
                     </div>
                     <div class="vs"><h1>VS</h1></div>
+                    <div class="manageBet">
+                        @{
+                            if (Model[i].CurrentUserBet)
+                            {
+                                <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { tId = Model[i].Teams[Model[i].TeamNumberBet - 1].Id, mId = Model[i].Id })"></a><div><h2>Retirer</h2></div></div>
+                                <div class="edit sqr"><div><h2>Modifier</h2></div></div>
+                            }
+                            else
+                            {
+                                <div class="create sqr"><div><h2>Miser</h2></div></div>
+                            }
+                        }
+                    </div>
                     <div class="team team2">
                         <div class="img" style="background-image: url(/Images/@(Model[i].Teams[1].ImagePath));"></div>
                         <div class="text">
@@ -87,20 +100,6 @@
                             }
                         </div>
                         <input type="hidden" name="teamId" value="@(Model[i].Teams[1].Id)" />
-                    </div>
-
-                    <div class="manageBet">
-                        @{
-                            if (Model[i].CurrentUserBet)
-                            {
-                                <div class="remove sqr"><a href="@Url.Action("Remove", "Bet", new { tId = Model[i].Teams[Model[i].TeamNumberBet - 1].Id, mId = Model[i].Id })"></a><div><h2>Retirer</h2></div></div>
-                                <div class="edit sqr"><div><h2>Modifier</h2></div></div>
-                            }
-                            else
-                            {
-                                <div class="create sqr"><div><h2>Miser</h2></div></div>
-                            }
-                        }
                     </div>
                     <input name="matchId" type="hidden" value="@(Model[i].Id)" />
                 </div>

@@ -4,6 +4,21 @@
     ViewBag.Title = "Schedule";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Styles.Render("~/Content/Bet.min.css")
+
+<div class="info smaller" id="getCredits">
+    <a href="@Url.Action("History", "Stats")"><h2>Parties passées</h2></a>
+    <div class="separator"><div></div></div>
+    <a href="@Url.Action("Schedule", "Stats")" class="active"><h2>Parties futures</h2></a>
+</div>
+@*<div id="topNav">
+    <div class="tabs">
+        <div class="tab tab_active"><a href="@Url.Action("History", "Stats")">Parties passées</a></div>
+        <div class="tab"><a href="@Url.Action("Schedule", "Stats")">Parties futures</a></div>
+    </div>
+    <div class="topLine"></div>
+</div>*@
+
 
 <div class="info_container">
     @{
@@ -84,6 +99,7 @@
 
         function onResize() {
             h_align_window($(".info_container"));
+            h_align_window($("#getCredits"));
 
             $(".info > div").each(function () {
                 if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
