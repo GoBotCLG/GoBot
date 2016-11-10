@@ -20,7 +20,7 @@
     <noscript id="js_error">
         <div>
             <div id="error_overlay_image"></div>
-            <h1>Gobot nécéssite Javascript pour fonctionner corretement. Veuillez l'activer pour pouvoir profiter du contenu de Gobot.com.</h1>
+            <h1>Gobot nécéssite Javascript pour fonctionner correctement. Veuillez l'activer pour pouvoir profiter du contenu de Gobot.com.</h1>
             <a href="http://enable-javascript.com/fr/" target="_blank">Comment activer mon Javascript?</a>
         </div>
     </noscript>
@@ -129,6 +129,7 @@
         </div>
     </div>
 
+    @Scripts.Render("~/Scripts/global.js")
     <script>
         //#region Animation variables
         var canvas = document.getElementById('canvas');
@@ -165,18 +166,18 @@
                 if ($('#popOut_login > form > span.field-validation-error').length == 0)
                     $("#popOut_login").remove();
             }
-
-            $(document).on('click', '#popOut_login > form > img', function () {
-                $("#popOut_login").remove();
-            });
-
-            $(document).on('click', '#login > button', function () {
-                addPopOutLogin();
-            });
         })();
 
         $(window).resize(function () {
             onResize();
+        });
+
+        $(document).on('click', '#popOut_login .close', function () {
+            $("#popOut_login").remove();
+        });
+
+        $(document).on('click', '#login > button', function () {
+            addPopOutLogin();
         });
 
         //#region animation
@@ -233,7 +234,7 @@
         //#endregion animation
 
         function onResize() {
-            $("#main").height($(window).height() - $("#header").height());
+            $("#main").css("height", $(window).height() - $("#sub").height());
             $("#signIn_cont").css("top", $("#header").height() / 2 - $("#signIn_cont").height() / 2);
 
             var mobileLoginHTML = "<button>Connexion</button>";
@@ -250,8 +251,9 @@
         }
 
         function setPopOutLogin() {
-            let pos = $(window).height() / 2 - $("#popOut_login > form").outerHeight() / 2;
-            $("#popOut_login").css("padding-top", pos <= 0 ? 0 : pos);
+            v_align_window($("#popOut_login"));
+            //let pos = $(window).height() / 2 - $("#popOut_login > form").outerHeight() / 2;
+            //$("#popOut_login").css("padding-top", pos <= 0 ? 0 : pos);
 
             $("#popOut_login > form > span").each(function () {
                 if ($(this).hasClass("field-validation-error")) {
@@ -302,7 +304,7 @@
                 var formHTML = $('<div/>').html(originalForm).contents();
                 var user = formHTML.find("#username").html();
                 var pwd = formHTML.find("#password").html();
-                var popOutLogin = '<div id="popOut_login"><form action="/" method="post">' + user + pwd + '<input type="submit" value="Connexion"/><img src="/Images/close.png" alt="Fermer"/></form></div>';
+                var popOutLogin = '<div id="popOut_login"><form action="/" method="post">' + user + pwd + '<input type="submit" value="Connexion"/><div class="close"></div></form></div>';
                 $("body").prepend(popOutLogin);
 
                 setPopOutLogin();
@@ -313,7 +315,7 @@
             return s.substring(0, s.indexOf('px'));
         }
 
-        $("#popOut_login > form > input").focus(function () {
+        $("#popOut_login input:not([type=submit])").focus(function () {
             $(this).prev().css("color", "#f16651");
         }).blur(function () {
             $(this).prev().css("color", "#626262");
