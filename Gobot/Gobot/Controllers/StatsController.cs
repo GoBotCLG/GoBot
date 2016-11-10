@@ -1,6 +1,8 @@
 ﻿using Gobot.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,18 +20,131 @@ namespace Gobot.Controllers
 
         public ActionResult History()
         {
-            List<Match> Matchs = new MySQLWrapper().GetMatches(false);
-            return View(Matchs);
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Match> Matches = Bd.GetMatches(false);
+            List<Bet> Bets = new List<Bet>();
+
+            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+
+            foreach (DataRow row in BetResult.Rows)
+            {
+                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+            }
+
+            foreach (Bet bet in Bets)
+            {
+                foreach (Match match in Matches)
+                {
+                    if (bet.MatchId == match.Id)
+                    {
+                        match.CurrentUserBet = true;
+                        match.CurrentUserAmount = bet.Amount;
+                        if (bet.TeamId == match.Teams[0].Id)
+                        {
+                            match.TeamNumberBet = 1;
+                        }
+                        else
+                        {
+                            match.TeamNumberBet = 2;
+                        }
+                    }
+                }
+            }
+
+            Bets.Clear();
+
+            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+
+            foreach (DataRow row in BetResult.Rows)
+            {
+                foreach (Match match in Matches)
+                {
+                    if ((int)row["Match_IdMatch"] == match.Id)
+                    {
+                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        {
+                            match.Team1TotalBet += (int)row["Mise"];
+                        }
+                        else
+                        {
+                            match.Team2TotalBet += (int)row["Mise"];
+                        }
+                    }
+                }
+            }
+
+            return View(Matches);
         }
 
         public ActionResult Schedule()
         {
-            List<Match> Matchs = new MySQLWrapper().GetMatches(true);
-            return View(Matchs);
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Match> Matches = Bd.GetMatches(true);
+            List<Bet> Bets = new List<Bet>();
+
+            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+
+            foreach (DataRow row in BetResult.Rows)
+            {
+                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+            }
+
+            foreach (Bet bet in Bets)
+            {
+                foreach (Match match in Matches)
+                {
+                    if (bet.MatchId == match.Id)
+                    {
+                        match.CurrentUserBet = true;
+                        match.CurrentUserAmount = bet.Amount;
+                        if (bet.TeamId == match.Teams[0].Id)
+                        {
+                            match.TeamNumberBet = 1;
+                        }
+                        else
+                        {
+                            match.TeamNumberBet = 2;
+                        }
+                    }
+                }
+            }
+
+            Bets.Clear();
+
+            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+
+            foreach (DataRow row in BetResult.Rows)
+            {
+                foreach (Match match in Matches)
+                {
+                    if ((int)row["Match_IdMatch"] == match.Id)
+                    {
+                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        {
+                            match.Team1TotalBet += (int)row["Mise"];
+                        }
+                        else
+                        {
+                            match.Team2TotalBet += (int)row["Mise"];
+                        }
+                    }
+                }
+            }
+
+            return View(Matches);
         }
 
         public ActionResult Teams()
         {
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+
             List<Team> Teams = new MySQLWrapper().GetTeam(true);
             return View(Teams);
         }

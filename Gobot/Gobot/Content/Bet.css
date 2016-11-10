@@ -164,12 +164,19 @@ img {
   font: 400 14px Lato, sans-serif;
   color: white; }
 
-.info {
+.info_container {
   position: relative;
   float: left;
   clear: both;
   width: 85%;
   max-width: 1350px;
+  height: auto; }
+
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 100%;
   height: auto;
   background-color: #232323;
   margin: 2px auto; }
@@ -217,10 +224,14 @@ img {
     color: #626262; }
 
 .vs {
-  position: absolute; }
+  position: absolute !important;
+  width: 50px;
+  left: calc(50% + 80px - 25px) !important; }
   .vs > h1 {
-    font-size: 50px;
-    font-style: normal; }
+    font-size: 40px;
+    font-style: normal;
+    color: #626262;
+    display: none; }
 
 .team > .text {
   width: calc(100% - 200px); }
@@ -260,21 +271,23 @@ img {
   -webkit-clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 0, 75% 100%, 0% 100%); }
 
-.team2 h1, .team2 h4 {
-  left: -10px;
-  text-align: right; }
-
-.team2 > .img {
-  position: relative;
-  float: right;
-  right: 0;
-  -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
-  clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%); }
-
-.team2 > .text {
-  float: right; }
+.team2 {
+  float: right !important; }
+  .team2 h1, .team2 h4 {
+    left: -10px;
+    text-align: right; }
+  .team2 > .img {
+    position: relative;
+    float: right;
+    right: 0;
+    -webkit-clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%);
+    clip-path: polygon(25% 0, 100% 0, 100% 100%, 0 100%); }
+  .team2 > .text {
+    float: right; }
 
 .manageBet {
+  z-index: 995;
+  float: right !important;
   height: 100px; }
   .manageBet > div {
     position: relative;
@@ -508,4 +521,27 @@ input[type=number]::-webkit-outer-spin-button {
     #getCredits > .separator > div {
       top: calc(50% - 25px) !important;
       background-color: #232323; }
+
+.info.smaller {
+  width: 50% !important;
+  background-color: transparent !important;
+  margin: 0 !important; }
+  .info.smaller > a {
+    background-color: transparent !important; }
+    .info.smaller > a > h2 {
+      padding: 0;
+      text-transform: uppercase;
+      color: #686868 !important;
+      margin: 15px !important; }
+  .info.smaller > a:hover > h2 {
+    color: white !important; }
+  .info.smaller > a.active {
+    background-color: #f16651 !important;
+    cursor: default !important; }
+    .info.smaller > a.active > h2 {
+      color: white !important; }
+  .info.smaller > .separator {
+    background-color: transparent !important; }
+    .info.smaller > .separator > div {
+      background-color: #323232 !important; }
 

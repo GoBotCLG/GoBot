@@ -164,12 +164,19 @@ img {
   font: 400 14px Lato, sans-serif;
   color: white; }
 
-.info {
+.info_container {
   position: relative;
   float: left;
   clear: both;
   width: 85%;
   max-width: 1350px;
+  height: auto; }
+
+.info {
+  position: relative;
+  float: left;
+  clear: both;
+  width: 100%;
   height: auto;
   background-color: #232323;
   margin: 2px auto; }
@@ -330,21 +337,18 @@ html, body {
     color: #ffbf5c; }
 
 #options {
-  height: 500px; }
+  height: auto; }
   #options > div {
+    height: 250px !important;
     width: 33.3%;
     padding: 50px 0 !important;
-    height: calc(100% - 100px);
-    cursor: pointer; }
-    #options > div > img {
+    cursor: pointer;
+    background-size: auto 140px; }
+    #options > div > h2 {
       display: block;
       position: relative;
-      width: 180px;
-      margin: 0 auto; }
-    #options > div > h2 {
-      margin-top: 50px;
       text-transform: uppercase;
-      top: 0 !important;
+      top: calc(100% - 100px);
       width: 60%;
       margin: 20px auto;
       color: #626262; }
@@ -353,8 +357,15 @@ html, body {
     #options > div:hover > h2 {
       color: #eeeeee; }
 
-#changeImg > h2 {
-  top: 0 !important; }
+#changeImg {
+  background: url("/Images/user.png") no-repeat center 50px; }
+
+#changeEmail {
+  background: url("/Images/mail.png") no-repeat center 75px;
+  background-size: 150px auto !important; }
+
+#changePwd {
+  background: url("/Images/lock.png") no-repeat center 50px; }
 
 #options > form {
   height: 500px;
