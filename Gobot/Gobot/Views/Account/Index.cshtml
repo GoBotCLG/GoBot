@@ -189,22 +189,22 @@
             }
         });
 
-        $(document).on("click", "#optionSubmit:last-child", function() {
+        $(document).on("click", "#optionSubmit > .close", function() {
             $("#options > form").remove();
             $("#options > div").show();
         });
         $(document).on("click", "#userOptions", function() {
             if ($("#options").length == 0) {
                 $('<div class="info" id="options"></div>').insertAfter("#accountInfo");
-                $("#options").append('<div id="changeEmail"><img src="/Images/mail.png"><h2>Modifier mon adresse courriel</h2></div>');
-                $("#options").append('<div id="changeImg"><img src="/Images/user.png"><h2 >Modifier ma photo de profil</h2></div>');
-                $("#options").append('<div id="changePwd"><img src="/Images/lock.png"><h2>Modifier mon mot de passe</h2></div>');
+                $("#options").append('<div id="changeEmail"><h2>Modifier mon adresse courriel</h2></div>');
+                $("#options").append('<div id="changeImg"><h2>Modifier ma photo de profil</h2></div>');
+                $("#options").append('<div id="changePwd"><h2>Modifier mon mot de passe</h2></div>');
 
                 $("#userOptions > h3, #openOption").hide();
                 $("#closeOption").show();
 
                 onResize();
-                posOptionTabs();
+                //posOptionTabs();
             }
             else {
                 $("#options").remove();
@@ -229,7 +229,7 @@
         function onResize() {
             h_align_window($(".info_container"));
 
-            $(".info > div:not(:first-of-type)").each(function () {
+            $(".info > div:not(:first-of-type)").not("#options > div").each(function () {
                 if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
                     v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
                 else
@@ -298,7 +298,7 @@
                 submitFn = "submitEmail()";
             }
 
-            $("#options > form").append('<div id="optionSubmit"><button type="submit" onClick="' + submitFn + '">Confirmer</button><div><img src="/Images/close_red.png" /><h3>Annuler</h3></div><img class="triangle" src="/Images/accountOption_triangle.png" /></div>');
+            $("#options > form").append('<div id="optionSubmit"><button type="submit" onClick="' + submitFn + '">Confirmer</button><div class="close"><img src="/Images/close_red.png" /><h3>Annuler</h3></div><img class="triangle" src="/Images/accountOption_triangle.png" /></div>');
             $('#' + id).hide();
 
             v_align_margin($("#optionSubmit > button"), $("#optionSubmit"), $("#optionSubmit > button").height());

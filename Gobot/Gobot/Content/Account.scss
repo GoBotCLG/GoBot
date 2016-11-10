@@ -132,25 +132,20 @@ html, body { min-height: 100%; }
     }
 
 #options {
-    height: 500px;
+    height: auto;
 
     > div { 
+        height: 250px !important;
         width: 33.3%; 
         padding: 50px 0 !important;
-        height: calc(100% - 100px);
         cursor: pointer;
-
-        > img {
-            display: block;
-            position: relative;
-            width: 180px;
-            margin: 0 auto;
-        }
+        background-size: auto 140px;
 
         > h2 {
-            margin-top: 50px;
+            display: block;
+            position: relative;
             text-transform: uppercase;
-            top: 0 !important;
+            top: calc(100% - 100px);
             width: 60%;
             margin: 20px auto;
             color: $grey;
@@ -162,7 +157,9 @@ html, body { min-height: 100%; }
         > h2 { color: $off-white; }
     }
 }
-    #changeImg > h2 { top: 0 !important; }
+    #changeImg { background: url("/Images/user.png") no-repeat center 50px; }
+    #changeEmail { background: url("/Images/mail.png") no-repeat center 75px; background-size: 150px auto !important; }
+    #changePwd { background: url("/Images/lock.png") no-repeat center 50px; }
 
     #options > form {
         height: 500px;
