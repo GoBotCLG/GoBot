@@ -415,11 +415,23 @@ namespace Gobot.Models
 
         public Match GetLiveMatch()
         {
-            Match match;
+            MySQLWrapper Bd = new MySQLWrapper();
+            DataTable matchBd = Bd.Procedure("IsMatchCurrent");
 
-
-
-            return new Match();
+            if (matchBd.Rows.Count > 0)
+            {
+                DataRow row = matchBd.Rows[0];
+                Match m = new Match();
+                m.Id = (int)row["IdMatch"];
+                m.Date = (DateTime)row["Date"];
+                m.Teams[0] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
+                m.Teams[1] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
+                m.Team1Rounds = (int)row["RoundTeam1"];
+                m.Team2Rounds = (int)row["RoundTeam2"];
+                return m;
+            }
+            else
+                return null;
         }
 
         public List<Team> GetTeam(bool all, int id=0)

@@ -16,38 +16,12 @@ namespace Gobot.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            Match m = new MySQLWrapper().GetLiveMatch();
 
-            MySQLWrapper Bd = new MySQLWrapper();
-
-            DataTable InfoLiveMatch = Bd.Procedure("IsMatchCurrent");
-
-            if (InfoLiveMatch.Rows.Count > 0)
-            {
-                List<Team> teamList = new List<Team>() {
-                    new MySQLWrapper().GetTeam(false, int.Parse(InfoLiveMatch.Rows[0]["Team_IdTeam1"].ToString()))[0],
-                    new MySQLWrapper().GetTeam(false, int.Parse(InfoLiveMatch.Rows[0]["Team_IdTeam2"].ToString()))[0]
-                    };
-                JObject[] Teams = new JObject[2];
-                if (InfoLiveMatch.Rows[0]["Team1"].ToString() != "")
-                {
-                    Teams[0] = JObject.Parse("");
-                    Teams[1] = JObject.Parse("");
-                }
-                else
-                {
-                    Teams[0] = new JObject();
-                    Teams[1] = new JObject();
-                }
-
-                ViewBag.LiveStats = Teams;
-            }
-
-            return View();
-        }
-
-        public ActionResult Schedule()
-        {
-            return View();
+            if (m != null)
+                return View(m);
+            else
+                return View();
         }
     }
 }
