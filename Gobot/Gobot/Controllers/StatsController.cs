@@ -159,7 +159,7 @@ namespace Gobot.Controllers
                 {
                     List<object> bots = new List<object>();
                     foreach (Bot b in Teams[0].TeamComp)
-                        bots.Add(new { name = b.Name, gun = b.Id, acc = b.Id, rTime = b.Id, kd = (b.Deaths == 0 ? b.Kills :Math.Round((double)b.Kills / b.Deaths, 2)) });
+                        bots.Add(new { name = b.Name, gun = b.Gun, kd = (b.Deaths == 0 ? b.Kills :Math.Round((double)b.Kills / b.Deaths, 2)) });
                     
                     return Json(new
                     {

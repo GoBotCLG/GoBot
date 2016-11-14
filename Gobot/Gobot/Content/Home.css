@@ -438,7 +438,10 @@ body {
     color: #4c4c4c; }
     .side > h2 > img {
       position: relative;
-      height: 24px; }
+      margin-left: 5px;
+      margin-right: 10px;
+      height: 24px;
+      top: 2px; }
 
 .team {
   position: relative;
@@ -470,9 +473,10 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: #1f1f1f;
-  z-index: 9999; }
+  height: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  padding-top: 60px; }
   #popOut_login > form > label, #popOut_login > form > input {
     display: block;
     position: relative;
@@ -490,6 +494,7 @@ body {
     border-bottom: 1px solid #323232;
     font-weight: 400 !important;
     font-size: 26px !important;
+    height: 60px;
     width: 60%;
     margin-left: 20%;
     color: #eeeeee;
@@ -499,35 +504,30 @@ body {
   #popOut_login > form > input[type=submit] {
     position: relative;
     display: block;
-    width: 50%;
-    height: auto;
-    margin-left: calc(25% - 10px);
-    padding: 15px 10px;
+    float: left;
+    left: 0;
+    width: 80%;
+    height: 80px;
     background-color: transparent;
-    border: 1px solid #626262;
-    margin-top: 50px;
-    color: #eeeeee;
+    margin-top: 60px;
+    color: #51c24b;
     cursor: pointer;
     text-transform: uppercase; }
   #popOut_login > form > input[type=submit]:hover {
-    border-color: #f16651;
-    color: #f16651; }
-  #popOut_login > form > img {
+    background-color: #51c24b;
+    color: #1f1f1f; }
+  #popOut_login > form > .close {
     display: block;
     position: relative;
-    width: 30px;
-    margin-left: calc(50% - 30px);
-    margin-top: 30px;
-    display: block;
-    color: #626262;
+    float: left;
+    height: 80px;
+    width: 20%;
+    margin-top: 60px;
     cursor: pointer;
-    padding: 15px;
-    border: 1px solid #626262;
-    color: #626262; }
-  #popOut_login > form > img:hover {
-    color: #963434;
-    border-color: #963434;
-    background-color: #963434; }
+    background: url("/Images/close.png") no-repeat center;
+    background-size: 30px; }
+  #popOut_login > form > .close:hover {
+    background-color: #626262; }
   #popOut_login > form > span {
     width: 100%;
     text-align: center;
@@ -536,7 +536,7 @@ body {
     margin-top: 5px; }
 
 @media screen and (max-width: 555px) {
-  #popOut_login > form > label, #popOut_login > form > input {
+  #popOut_login > form > label, #popOut_login > form > input:not([type=submit]) {
     font-size: 28px;
     width: 90% !important;
     margin-left: 5% !important; } }

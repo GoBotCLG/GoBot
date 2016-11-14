@@ -32,5 +32,7 @@ namespace Gobot.Models
         public int CurrentUserAmount { get; set; }
         public int Team1TotalBet { get; set; }
         public int Team2TotalBet { get; set; }
+        public int Team1Rounds { get; set; }
+        public int Team2Rounds { get; set; }
     }
 }

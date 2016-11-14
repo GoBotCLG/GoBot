@@ -12,6 +12,10 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <iframe id="matchResult">
+        
+    </iframe>
+
     <div id="navBig">
         <a id="compte" href="@Url.Action("Index", "Account")">
             <div id="img"><img src="@(Session["User_img"])" /></div>
@@ -51,8 +55,30 @@
     var waterDropInterval;
     var mobileWidth = 959;
 
+    function getMatchResultUrl() {
+        var data = new XMLHttpRequest();
+        data.open("GET", '@Url.Action("GetMatchResultUrl", "Bet")');
+
+        data.onreadystatechange = function () {
+            if (data.readyState == 4) {
+                var result = JSON.parse(data.response);
+                if (result != "") {
+                    if ($("#matchResult").attr("src") != result.url)
+                        $("#matchResult").attr("src", result.url);
+                }
+                else
+                    $("#matchResult").attr("src", "");
+            }
+        }
+        data.send();
+    }
+
     $(document).ready(function () {
         setCurrentTab();
+        setInterval(function () {
+            getMatchResultUrl();
+        }, 20000);
+        getMatchResultUrl();
     });
 
     $(window).on('resize', function () {

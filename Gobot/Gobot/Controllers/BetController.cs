@@ -284,5 +284,18 @@ namespace Gobot.Controllers
             }
             return RedirectToAction("Index", "Bet");
         }
+
+        public JsonResult GetMatchResultUrl()
+        {
+            try
+            {
+                string url = Url.Action("MatchResult", "Home");
+                return Json(new { url = url }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json("");
+            }
+        }
     }
 }
