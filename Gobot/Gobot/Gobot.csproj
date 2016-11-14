@@ -367,6 +367,7 @@
     <Content Include="Views\Support\faq.cshtml" />
     <Content Include="Views\Stats\History.cshtml" />
     <Content Include="Views\Stats\Schedule.cshtml" />
+    <Content Include="Views\Home\MatchResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -87,10 +87,9 @@
 
                     $(".team_info").append('<div class="players"></div>');
                     for (let i = 0; i < team.players.length; i++) {
+                        var gun = team.players[i].gun.toString().toLowerCase().replace(" ", "");
                         $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
-                        $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + team.players[i].gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
-                        $(".player:last-child").append('<div><div class="acc"></div><h2 class="grey">' + team.players[i].acc + '</h2></div>');
-                        $(".player:last-child").append('<div><div class="r-time"></div><h2 class="grey">' + team.players[i].rTime + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
                         $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
                     }
                     onResize();

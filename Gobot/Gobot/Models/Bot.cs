@@ -7,7 +7,7 @@ namespace Gobot.Models
 {
     public class Bot
     {
-        public Bot(int id, string name, int kills, int deaths, int assists, string gun = "")
+        public Bot(int id, string name, int kills, int deaths, int assists, string gun = "aléatoire")
         {
             Id = id;
             Name = name;

@@ -169,5 +169,11 @@ namespace Gobot.Controllers
             
             return Json(Teams.ToString(), JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult MatchResult()
+        {
+            return View();
+        }
     }
 }

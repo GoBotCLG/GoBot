@@ -170,3 +170,14 @@
     #second { display: none; }
     #third { display: none; }
 }
+
+iframe#matchResult {
+    display: block;
+    position: absolute;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    height: 50%;
+    z-index: 999;
+}
