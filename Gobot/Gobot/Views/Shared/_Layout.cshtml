@@ -15,6 +15,9 @@
     <iframe id="matchResult">
         
     </iframe>
+    <div id="matchResult_popUp">
+
+    </div>
 
     <div id="navBig">
         <a id="compte" href="@Url.Action("Index", "Account")">
@@ -63,14 +66,30 @@
             if (data.readyState == 4) {
                 var result = JSON.parse(data.response);
                 if (result != "") {
-                    if ($("#matchResult").attr("src") != result.url)
+                    if ($("#matchResult").attr("src") != result.url) {
                         $("#matchResult").attr("src", result.url);
+
+                        if (extractResults() == "EOM")
+                            createMatchResult_PopUp();
+                    }
                 }
                 else
                     $("#matchResult").attr("src", "");
             }
         }
         data.send();
+    }
+
+    function extractResults() {
+        return "EOM";
+    }
+
+    function createMatchResult_PopUp() {
+
+    }
+
+    function getNextMatch() {
+
     }
 
     $(document).ready(function () {
