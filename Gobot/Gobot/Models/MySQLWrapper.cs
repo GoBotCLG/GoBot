@@ -22,7 +22,7 @@ namespace Gobot.Models
 
         public void Connect()
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=67.68.203.251;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
+            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=69.156.206.162;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
             try { connection.Open(); } catch (Exception) { }
         }
 
@@ -300,7 +300,7 @@ namespace Gobot.Models
 
         public User GetUserFromDB(string username, DataTable user = null)
         {
-            if (connection.State != ConnectionState.Open || connection == null || username == "")
+            if (connection.State != ConnectionState.Open || connection == null)
                 return null;
 
             DataTable UserResult = username != "" ? Procedure("GetUser", new OdbcParameter(":Username", username)) : user;

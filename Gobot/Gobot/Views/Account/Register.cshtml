@@ -134,6 +134,12 @@
         function samePwd() {
             return $("#Password").val().length >= 6 && $("#Password").val() == $("#ConfirmPassword").val();
         }
+
+        $(document).on("focus", "form > input", function () {
+            $(this).prev().css("color", "#f16651");
+        }).on("blur", "form > input", function () {
+            $(this).prev().css("color", "#626262");
+        });
     </script>
 
     @Scripts.Render("~/Scripts/global.js")

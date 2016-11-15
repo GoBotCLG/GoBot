@@ -69,7 +69,7 @@ namespace Gobot.Controllers
 
                     if (UserResult.Rows.Count > 0)
                     {
-                        Session["User"] = new MySQLWrapper().GetUserFromDB("", UserResult);
+                        Session["User"] = Bd.GetUserFromDB("", UserResult);
                         return RedirectToAction("Index", "Account");
                     }
                 }
