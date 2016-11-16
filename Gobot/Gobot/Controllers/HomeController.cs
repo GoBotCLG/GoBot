@@ -74,7 +74,7 @@ namespace Gobot.Controllers
                     }
                 }
 
-                ViewBag.Error = "Nom d'utilisateur ou mot de passe invalide.";
+                TempData["error"] = "Nom d'utilisateur ou mot de passe invalide.";
                 return View(user);
             }
 
@@ -113,12 +113,6 @@ namespace Gobot.Controllers
             Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
             
             return Json(Teams.ToString(), JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult MatchResult()
-        {
-            return View();
         }
     }
 }

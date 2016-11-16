@@ -9,6 +9,7 @@ $(window).resize(function () {
 
 function readyResize() {
     setErrorMessage();
+    setPopUp();
 }
 
 // Error message
@@ -18,6 +19,12 @@ function setErrorMessage() {
 
         $("#error_overlay > div").css("top", (y > 0 ? y : 0));
         $("#error_overlay").css("background-color", "rgba(0,0,0,0.85)");
+    }
+}
+
+function setPopUp() {
+    if ($(".popUp").length > 0) {
+        h_align_window($(".popUp > .prompt"));
     }
 }
 
@@ -100,3 +107,42 @@ function setWidthFromChilds(e, maxE) {
 
     h_align_window(e.parent());
 }
+
+function popUp(text, yesNo, custom) {
+    $(".popUp").remove();
+
+    $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt"><span>' + (typeof(custom) === 'undefined' ? text : custom) + '</span></div></div>');
+    
+    if (yesNo)
+        $(".popUp > .prompt").append('<div><button id="closePrompt">Non</button><button id="confirmPrompt">Oui</button></div>');
+    else
+        $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
+
+    h_align_window($(".prompt"));
+    
+    $(".popUp").animate({
+        height: '100%'
+    }, 100);
+    setTimeout(function () {
+        $(".prompt").animate({
+            padding: '25px 0',
+            opacity: '1'
+        }, 200);
+    }, 100);
+}
+
+$(document).on("click", ".popUp > .prompt > div > button", function () {
+    $(".prompt").animate({
+        padding: '0',
+        opacity: '0'
+    }, 100);
+    setTimeout(function () {
+        $(".popUp").animate({
+            height: '0'
+        }, 100);
+    }, 100);
+
+    setTimeout(function () {
+        $(".popUp").remove();
+    }, 200);
+});

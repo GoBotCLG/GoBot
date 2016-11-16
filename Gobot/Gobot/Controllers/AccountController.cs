@@ -17,9 +17,7 @@ namespace Gobot.Controllers
         public ActionResult Index()
         {
             if ((User)Session["User"] == null)
-            {
                 return RedirectToAction("Index", "Home");
-            }
 
             MySQLWrapper Bd = new MySQLWrapper();
             User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
@@ -28,50 +26,47 @@ namespace Gobot.Controllers
 
             return View((User)Session["User"]);
         }
-
-        [HttpPost]
+        
         public JsonResult UpdatePassword(string oldPassword, string newPassword, string confirmPassword)
         {
             if (newPassword != confirmPassword)
             {
-                ViewBag.Error = "Les deux mots de passe ne sont pas identiques.";
+                TempData["error"] = "Les deux mots de passe ne sont pas identiques.";
             }
             else if (confirmPassword.Length > 45 || confirmPassword.Length < 6)
             {
-                ViewBag.Error = "Le mot de passes saisi est invalide. Le mot de passe doit comporter un minimum de 6 caractères et un maximum de 45 caractères.";
+                TempData["error"] = "Le mot de passes saisi est invalide. Le mot de passe doit comporter un minimum de 6 caractères et un maximum de 45 caractères.";
             }
             else
             {
                 try
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
-                    DataTable user = Bd.Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) }, "Password");
+                    DataTable userDB = Bd.Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) }, "Password");
+                    string oldPasswordDB = userDB != null && userDB.Rows.Count > 0 ? userDB.Rows[0]["Password"].ToString() : "";
+                    DataTable user = Bd.Procedure("Connect", new OdbcParameter(":username", ((User)Session["User"]).Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(oldPassword, oldPasswordDB.Substring(0, 64))));
+
                     if (user != null && user.Rows.Count > 0)
                     {
-                        if (user.Rows[0]["Password"].ToString() == PasswordEncrypter.EncryptPassword(oldPassword))
-                        {
-                            int result = Bd.Update("user",
-                                new List<string>() { "Password" },
-                                new List<OdbcParameter>() { new OdbcParameter(":Password", PasswordEncrypter.EncryptPassword(newPassword)) },
-                                "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+                        int result = Bd.Update("user",
+                            new List<string>() { "Password" },
+                            new List<OdbcParameter>() { new OdbcParameter(":Password", PasswordEncrypter.EncryptPassword(newPassword)) },
+                            "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
 
-                            if (result == 1)
-                                ViewBag.Success = "Votre mot de passe a été modifié avec succès.";
-                            else
-                                ViewBag.Error = "Une erreur est survenue lors de la modification du mot de passe.";
-                        }
+                        if (result == 1)
+                            TempData["success"] = "Votre mot de passe a été modifié avec succès.";
                         else
-                        {
-                            ViewBag.Error = "Le mot de passe courant saisi est invalide.";
-                        }
+                            TempData["error"] = "Une erreur est survenue lors de la modification du mot de passe.";
                     }
+                    else
+                        TempData["error"] = "Le mot de passe courant saisi est invalide.";
                 }
                 catch (Exception)
                 {
-                    ViewBag.Error = "Une erreur est survenue lors de la modification du mot de passe.";
+                    TempData["error"] = "Une erreur est survenue lors de la modification du mot de passe.";
                 }
             }
-
+            
             return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
         }
 
@@ -95,7 +90,7 @@ namespace Gobot.Controllers
                     }
                     catch (ArgumentException)
                     {
-                        ViewBag.Error = "Échec du téléversement de l'image.";
+                        TempData["error"] = "Échec du téléversement de l'image.";
                     }
                 }
             }
@@ -110,55 +105,64 @@ namespace Gobot.Controllers
             {
                 try
                 {
+                    // AppDomain.CurrentDomain.BaseDirectory ???
+                    string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\");
+
+                    if (!Directory.Exists(basePath))
+                        Directory.CreateDirectory(basePath);
+
                     string fileName;
                     if (format.Equals(ImageFormat.Jpeg))
                     {
-                        fileName = getFileName("jpg");
+                        fileName = getFileName(basePath, "jpg");
                         bmp.Save(fileName, ImageFormat.Jpeg);
                     }
                     else
                     {
-                        fileName = getFileName("png");
+                        fileName = getFileName(basePath, "png");
                         bmp.Save(fileName, ImageFormat.Png);
                     }
-
                     
-                    string toDelete = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\{0}");
                     try {
-                        System.IO.File.Delete(String.Format(toDelete, getImagePathFromDb(((User)Session["User"]).Username)));
+                        string oldPath = getImagePathFromDb(((User)Session["User"]).Username);
+                        if (oldPath != null && oldPath.IndexOf("anonymous") == -1)
+                            System.IO.File.Delete(oldPath);
                     }
                     catch (Exception) { }
 
-                    setImagePathToDb(((User)Session["User"]).Username, fileName);
-                    
-
-                    ViewBag.Success = "Votre image de profil a été modifiée avec succès.";
+                    if (setImagePathToDb(((User)Session["User"]).Username, fileName) == 1)
+                        TempData["success"] = "Votre image de profil a été modifiée avec succès.";
+                    else
+                        TempData["error"] = "Erreur lors du téléversement de l'image.";
                 }
                 catch (Exception)
                 {
-                    ViewBag.Error = "Erreur lors du téléversement de l'image.";
+                    TempData["error"] = "Erreur lors du téléversement de l'image.";
                 }
             }
             else
             {
-                ViewBag.Error = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
+                TempData["error"] = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
             }
         }
 
         private string getImagePathFromDb(string user)
         {
-            return ""; // TODO : Get old image path from DB
+            DataTable userImg = new MySQLWrapper().Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter("", user) }, "Image");
+            return userImg == null || userImg.Rows.Count == 0 ? null : userImg.Rows[0]["Image"].ToString();
         }
 
-        private void setImagePathToDb(string user, string path)
+        private int setImagePathToDb(string user, string fileName)
         {
-            // TODO : Update new image path in DB to 'path'
+            return new MySQLWrapper().Update("user",
+                        new List<string>() { "Image" },
+                        new List<OdbcParameter>() { new OdbcParameter(":Image", PasswordEncrypter.EncryptPassword(fileName)) },
+                        "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", user) });
         }
 
-        private string getFileName(string ext)
+        private string getFileName(string basePath, string ext)
         {
-            // AppDomain.CurrentDomain.BaseDirectory ???
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\{0}." + ext);
+            string path = basePath += @"{0}." + ext;
             string file;
 
             do
@@ -182,11 +186,11 @@ namespace Gobot.Controllers
         {
             if (newEmail != confirmEmail)
             {
-                ViewBag.Error = "Les deux adresse courriels saisies ne sont pas identiques.";
+                TempData["error"] = "Les deux adresse courriels saisies ne sont pas identiques.";
             }
             else if (!new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$").IsMatch(confirmEmail.ToUpper()))
             {
-                ViewBag.Error = "L'adresse courriel saisie est invalide.";
+                TempData["error"] = "L'adresse courriel saisie est invalide.";
             }
             else
             {
@@ -198,13 +202,13 @@ namespace Gobot.Controllers
                         "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
 
                     if (result == 1)
-                        ViewBag.Success = "Votre adresse courriel a été modifiée avec succès.";
+                        TempData["success"] = "Votre adresse courriel a été modifiée avec succès.";
                     else
-                        ViewBag.Error = "Une erreur est survenue lors de la modification de votre adresse courriel.";
+                        TempData["error"] = "Une erreur est survenue lors de la modification de votre adresse courriel.";
                 }
                 catch (Exception)
                 {
-                    ViewBag.Error = "Une erreur est survenue lors de la modification de votre adresse courriel.";
+                    TempData["error"] = "Une erreur est survenue lors de la modification de votre adresse courriel.";
                 }
             }
 
@@ -242,7 +246,7 @@ namespace Gobot.Controllers
             
             if (Convert.ToInt32(isUser.Rows[0][0]) != 0)
             {
-                ViewBag.Error = "Le nom d'utilisateur est déja utilisé.";
+                TempData["error"] = "Le nom d'utilisateur est déja utilisé.";
                 Erreur = true;
             }
 
@@ -250,7 +254,7 @@ namespace Gobot.Controllers
             {
                 if (user.Username.Length < 6 || user.Username.Length > 45)
                 {
-                    ViewBag.Error = "Le nom d'utilisateur saisi est invalide. Il doit comporter entre 6 et 45 caractères.";
+                    TempData["error"] = "Le nom d'utilisateur saisi est invalide. Il doit comporter entre 6 et 45 caractères.";
                     Erreur = true;
                 }
             }
@@ -260,31 +264,28 @@ namespace Gobot.Controllers
                 Regex r = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
                 if (!r.IsMatch(user.Email.ToUpper()))
                 {
-                    ViewBag.Error = "L'adresse courriel saisie est invalide.";
+                    TempData["error"] = "L'adresse courriel saisie est invalide.";
                     Erreur = true;
                 }
             }
 
             if (!Erreur)
             {
-                if (user.Password.Length < 6)
+                if (user.Password.Length < 6 || user.Password.Length > 45)
                 {
-                    //Le plus gros mot de passe acceptable pour notre système d'encryption c'est ~= 2'091'752 terabytes, pas besoin de le spécifier?
-                    ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter entre 6 et 45 caractères.";
+                    TempData["error"] = "Le mot de passe saisi est invalide. Il doit comporter entre 6 et 45 caractères.";
                     Erreur = true;
                 }
             }
 
             if (!Erreur)
             {
-                if (user.Password != user.ConfirmPassword) // If both passwords aren't the same
+                if (user.Password != user.ConfirmPassword)
                 {
-                    ViewBag.Error = "Les mots de passe saisis ne sont pas identiques.";
+                    TempData["error"] = "Les mots de passe saisis ne sont pas identiques.";
                     Erreur = true;
                 }
             }
-
-
 
             if (Erreur)
                 return View(user);
@@ -294,74 +295,9 @@ namespace Gobot.Controllers
                 Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
 
                 Session["User"] = Bd.GetUserFromDB(user.Username);
+                TempData["success"] = "Votre compte a été créé. Vous vous trouvez actuellement sur votre page de gestion de compte où vous pouvez voir tout vos activités sur Gobot.";
 
                 return RedirectToAction("Index", "Account");
-            }
-        }
-
-        [HttpPost]
-        public JsonResult Modify(string member, object newValue, string password = "")
-        {
-            try
-            {
-                MySQLWrapper Bd = new MySQLWrapper();
-
-                List<string> col = new List<string>();
-                if (member == "Image")
-                {
-                    col.Add("Image");
-                }
-                else if (member == "SteamProfile")
-                {
-                    col.Add("SteamProfile");
-                }
-                else if (member == "Password")
-                {
-                    List<OdbcParameter> list = new List<OdbcParameter>();
-                    list.Add(new OdbcParameter(":Username", ((User)Session["User"]).Username));
-                    string salt = Bd.Select("user", "Username = ?", list, "Password").Rows[0][0].ToString().Substring(0, 64);
-
-                    DataTable ConnectResult = Bd.Procedure("Connect", new OdbcParameter(":Username", ((User)Session["User"]).Username), new OdbcParameter(":Password", PasswordEncrypter.EncryptPassword(password, salt)));
-
-                    if (ConnectResult.Rows.Count > 0)
-                    {
-                        col.Add("Password");
-                        newValue = PasswordEncrypter.EncryptPassword(newValue.ToString());
-                    }
-                    else
-                    {
-                        return Json(-1);
-                    }
-                }
-
-                if (col.Count > 0)
-                {
-                    List<OdbcParameter> param = new List<OdbcParameter>() { new OdbcParameter(":" + col, newValue) };
-                    List<OdbcParameter> usernameList = new List<OdbcParameter>();
-                    OdbcParameter user = new OdbcParameter(":Username", OdbcType.VarChar, 45);
-                    user.Value = ((User)Session["User"]).Username;
-                    usernameList.Add(user);
-                    int result = Bd.Update("user", col, param, "Username = ?", usernameList);
-                    if (result == 1)
-                    {
-                        Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                        return Json(1, JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        return Json(0, JsonRequestBehavior.DenyGet);
-                    }
-                }
-                else
-                {
-                    return Json(0, JsonRequestBehavior.DenyGet);
-                }
-
-            }
-            catch
-            {
-                //Error
-                return Json(0, JsonRequestBehavior.DenyGet);
             }
         }
 
@@ -369,20 +305,20 @@ namespace Gobot.Controllers
         public ActionResult Remove()
         {
             MySQLWrapper Bd = new MySQLWrapper();
-            List<OdbcParameter> list = new List<OdbcParameter>();
-            OdbcParameter username = new OdbcParameter(":Username", OdbcType.VarChar, 45);
-            username.Value = ((User)Session["User"]).Username;
-            list.Add(username);
-            int DeleteResult = Bd.Delete("user", "Username = ?", list);
-            if (DeleteResult == 1)
-            {
-                Session["User"] = null;
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                return RedirectToAction("Index", "Account");
-            }
+            List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+
+            //int DeleteResult = Bd.Delete("user", "Username = ?", user);
+            //if (DeleteResult == 1)
+            //{
+            //    Logout();
+            //    TempData["success"] = "Votre compte à été supprimé.";
+            //    return RedirectToAction("Index", "Home");
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Index", "Account");
+            //}
+            return RedirectToAction("Index", "Account");
         }
 
         public ActionResult AddCredit()

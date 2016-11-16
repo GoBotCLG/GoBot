@@ -90,7 +90,7 @@ img {
       margin-left: calc(50% - 220px / 2);
       border-radius: 50%; }
     #error_overlay > div > #error_overlay_image, #js_error > div > #error_overlay_image {
-      background: #963434 no-repeat center/55% url("/Images/close.png"); }
+      background: #963434 no-repeat center/55% url("/Images/close_white.png"); }
     #error_overlay > div > #success_overlay_image, #js_error > div > #success_overlay_image {
       background: #51c24b no-repeat center/55% url("/Images/check.png"); }
     #error_overlay > div > h1, #error_overlay > div > a, #error_overlay > div > button, #js_error > div > h1, #js_error > div > a, #js_error > div > button {
@@ -204,6 +204,75 @@ img {
     font-size: 16px; }
   .info h3 {
     font-size: 14px; } }
+
+.popUp {
+  position: fixed;
+  width: 100%;
+  height: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1500; }
+  .popUp > .prompt {
+    float: left;
+    position: relative;
+    display: block;
+    width: 80%;
+    height: auto;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    max-width: 1350px;
+    overflow: hidden;
+    opacity: 0; }
+    .popUp > .prompt > span {
+      display: block;
+      max-width: 80%;
+      margin-left: 10%;
+      color: #eeeeee;
+      font: 400 18px Lato, Arial, sans-serif; }
+    .popUp > .prompt > div {
+      position: relative;
+      float: left;
+      display: block;
+      height: auto;
+      width: 60%;
+      margin-left: 20%; }
+      .popUp > .prompt > div > button {
+        display: block;
+        position: relative;
+        float: right;
+        clear: none;
+        width: 40%;
+        min-width: 140px !important;
+        margin: 40px 5% 20px 5%;
+        font: 400 18px Lato, Arial, sans-serif;
+        text-align: right;
+        text-indent: 75px;
+        color: transparent;
+        direction: rtl;
+        background-size: 30px !important;
+        height: 65px; }
+      .popUp > .prompt > div > button:hover {
+        background-position-x: calc(100% - 30px) !important;
+        color: white;
+        transition: 0.4s, color 0.2s ease 0.4s; }
+
+.popUp:not(.yesNo) > .prompt > div > button {
+  background: #51c24b no-repeat center url("/Images/check.png");
+  right: -10% !important;
+  margin-right: 0 !important; }
+
+.popUp.yesNo > .prompt > div > #confirmPrompt {
+  background: #51c24b no-repeat center url("/Images/check.png"); }
+
+.popUp.yesNo > .prompt > div > #closePrompt {
+  background: #963434 no-repeat center url("/Images/close_white.png"); }
+
+@media screen and (max-width: 840px) {
+  .prompt {
+    width: 100% !important; }
+    .prompt > div {
+      width: 100%; }
+    .prompt > span {
+      font-size: 16px !important; } }
 
 html, body {
   min-height: 100%; }
@@ -565,4 +634,15 @@ html, body {
 
 #matches > div:first-of-type {
   background-image: url("/Images/stat_matches.png"); }
+
+#removeAccount {
+  background-color: transparent !important;
+  width: auto !important;
+  cursor: pointer; }
+  #removeAccount > h4 {
+    padding: 3px;
+    color: #626262; }
+  #removeAccount > h4:hover {
+    background-color: #963434;
+    color: white; }
 

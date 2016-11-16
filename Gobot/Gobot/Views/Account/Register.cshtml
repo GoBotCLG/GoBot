@@ -26,12 +26,12 @@
     </noscript>
 
     @{
-        if (ViewBag.Error != null && ViewBag.Error != "")
+        if (TempData["error"] != null)
         {
             <div id="error_overlay">
                 <div>
                     <div id="error_overlay_image"></div>
-                    <h1>@ViewBag.Error</h1>
+                    <h1>@TempData["error"]</h1>
                     <button id="close_errorOverlay">Fermer</button>
                 </div>
             </div>

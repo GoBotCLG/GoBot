@@ -58,46 +58,30 @@
     var waterDropInterval;
     var mobileWidth = 959;
 
-    function getMatchResultUrl() {
+    function getMatchResults() {
         var data = new XMLHttpRequest();
-        data.open("GET", '@Url.Action("GetMatchResultUrl", "Bet")');
+        data.open("GET", '@Url.Action("getMatchResults", "Bet")');
 
         data.onreadystatechange = function () {
             if (data.readyState == 4) {
-                var result = JSON.parse(data.response);
-                if (result != "") {
-                    if ($("#matchResult").attr("src") != result.url) {
-                        $("#matchResult").attr("src", result.url);
-
-                        if (extractResults() == "EOM")
-                            createMatchResult_PopUp();
-                    }
-                }
-                else
-                    $("#matchResult").attr("src", "");
+                createMatchResult_PopUp(data);
             }
         }
         data.send();
     }
 
-    function extractResults() {
-        return "EOM";
-    }
-
-    function createMatchResult_PopUp() {
-
-    }
-
-    function getNextMatch() {
-
+    function createMatchResult_PopUp(json) {
+        var text = "";
+        popUp("", false, text);
     }
 
     $(document).ready(function () {
         setCurrentTab();
         setInterval(function () {
-            getMatchResultUrl();
+            //if (cookie doesnt exist)
+                getMatchResults();
         }, 20000);
-        getMatchResultUrl();
+        getMatchResults();
     });
 
     $(window).on('resize', function () {

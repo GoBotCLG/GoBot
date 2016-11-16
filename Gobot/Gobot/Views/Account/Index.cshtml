@@ -7,27 +7,25 @@
 @Styles.Render("~/Content/Account.min.css")
 
 @{
-    if (ViewBag.Error != null && ViewBag.Error != "")
+    if (TempData["error"] != null)
     {
         <div id="error_overlay">
             <div>
                 <div id="error_overlay_image"></div>
-                <h1>@ViewBag.Error</h1>
+                <h1>@TempData["error"]</h1>
                 <button id="close_errorOverlay">Fermer</button>
             </div>
         </div>
     }
-    else if (ViewBag.Success != null && ViewBag.Success != "")
+    else if (TempData["success"] != null)
     {
         <div id="error_overlay">
             <div>
                 <div id="success_overlay_image"></div>
-                <h1>@ViewBag.Success</h1>
+                <h1>@TempData["success"]</h1>
                 <button id="close_errorOverlay">Fermer</button>
             </div>
         </div>
-
-        ViewBag.Success = null;
     }
 }
 
@@ -38,7 +36,12 @@
         </div>
         <div id="userInfo">
             <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
-            <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
+            @{
+                if (Model.SteamID.Length > 0)
+                {
+                    <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
+                }
+            }
         </div>
         <div id="userOptions">
             <img id="openOption" src="~/Images/settings.png" />
@@ -109,8 +112,8 @@
             <h1 id="wonLoss"><green>850</green>/<red>400</red> GAGNÉS/PERDUS</h1>
         </div>
         @*<div>
-            <h1>0<grey> ACHETÉS</grey></h1>
-        </div>*@
+                <h1>0<grey> ACHETÉS</grey></h1>
+            </div>*@
         <div>
             <a href="#" class="darkBG">
                 <h2>ACHETER DES CRÉDITS</h2>
@@ -120,18 +123,18 @@
     </div>
 
     @*<div class="info" id="transactions">
-        <div class="info_logo"></div>
-        <div>
-            <h1 id="fromGB">0<grey> OBJETS ACHETÉS</grey></h1>
-            <h2 class="grey">DE GOBOTTER</h2>
-        </div>
-        <div>
-            <h1>525<grey> CRÉDITS TOTAL</grey></h1>
-        </div>
-        <div>
-            <a><h3 class="grey">MES</h3> <h2>TRANSACTIONS</h2></a>
-        </div>
-    </div>*@
+            <div class="info_logo"></div>
+            <div>
+                <h1 id="fromGB">0<grey> OBJETS ACHETÉS</grey></h1>
+                <h2 class="grey">DE GOBOTTER</h2>
+            </div>
+            <div>
+                <h1>525<grey> CRÉDITS TOTAL</grey></h1>
+            </div>
+            <div>
+                <a><h3 class="grey">MES</h3> <h2>TRANSACTIONS</h2></a>
+            </div>
+        </div>*@
 
     <div class="info" id="matches">
         <div class="info_logo"></div>
@@ -145,6 +148,7 @@
             <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
         </div>
     </div>
+    <div class="info" id="removeAccount"><h4>Supprimer le compte</h4></div>
 </div>
 
 @section Scripts {
@@ -225,6 +229,25 @@
         $(document).on("change", "#ImageUploader", function(){
             readURL(this);
         });
+
+        $(document).on("click", "#removeAccount", function() {
+            popUp("Êtes-vous certains de vouloir supprimer votre compte? La suppression du compte est définitive. Toutes informations concernant votre compte seront supprimées, incluant vos crédits Gobot.", true);
+        
+            $(document).on("click", "#confirmPrompt", function() {
+                deleteAccount();
+            });
+        });
+
+        function deleteAccount() {
+            $.ajax({
+                type: "POST",
+                url: "/Account/Remove",
+                data: JSON.stringify(""),
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            });
+        }
 
         function onResize() {
             h_align_window($(".info_container"));
@@ -308,13 +331,13 @@
         }
 
         function submitImg() {
-            var postdata = $('#uploadForm').serialize();    
+            var postdata = $('#uploadForm').serialize();
             var file = document.getElementById('ImageUploader').files[0];
             var fd = new FormData();
             fd.append("file", file);
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/Account/UpdateImage", false);
-            xhr.send(fd); 
+            xhr.send(fd);
         }
 
         function submitEmail() {

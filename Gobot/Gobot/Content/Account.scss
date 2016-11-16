@@ -377,3 +377,15 @@ html, body { min-height: 100%; }
 #creditStats > div:first-of-type    { background-image: url("/Images/stat_winLoss.png"); }
 #transactions > div:first-of-type   { background-image: url("/Images/stat_transactions.png"); }
 #matches > div:first-of-type        { background-image: url("/Images/stat_matches.png"); }
+
+#removeAccount {
+    background-color: transparent !important;
+    width: auto !important;
+    cursor: pointer;
+
+    > h4 {
+        padding: 3px;
+        color: $grey;
+    }
+        > h4:hover { background-color: $red; color: white; }
+}
