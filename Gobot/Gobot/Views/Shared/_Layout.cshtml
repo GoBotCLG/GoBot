@@ -64,14 +64,30 @@
 
         data.onreadystatechange = function () {
             if (data.readyState == 4) {
-                createMatchResult_PopUp(data);
+                //if (data != null && data != "")
+                    createMatchResult_PopUp(data);
             }
         }
         data.send();
     }
 
     function createMatchResult_PopUp(json) {
-        var text = "";
+        var text = '\
+            <div class="lastMatch">\
+                <div class="imgTeam"><img src=""/></div>\
+                <div><h1><green>TEAM_VICTORY</green> A GAGNE CONTRE <red>TEAM_LOSS</red></h1></div>\
+                <div class="imgTeam"><img src=""/></div>\
+            </div>\
+            <div><h2>VOUS AVEZ (TEAM_BET == TEAM_VICTORY ? GAGNE <green>BET_AMOUNT</green> : PERDU <red>BET_AMOUNT</red>) GC.</h2></div>\
+            <div class="nextMatch">\
+                  <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
+                  <div>\
+                     <div class="imgTeam smallerImg"><img src=""/></div>\
+                     <div><h2>SOLID <grey>VS</grey> PIRATES IN PYJAMAS</h2></div>\
+                     <div class="imgTeam smallerImg"><img src=""/></div>\
+                     <div><h2><grey>DANS LA CARTE</grey> COBBLESTONE</h2><img src="MAP_IMG"/></div>\
+                  </div>\
+            </div>';
         popUp("", false, text);
     }
 
@@ -79,8 +95,8 @@
         setCurrentTab();
         setInterval(function () {
             //if (cookie doesnt exist)
-                getMatchResults();
-        }, 20000);
+                //getMatchResults();
+        }, 60 * 1000 * 2);
         getMatchResults();
     });
 
