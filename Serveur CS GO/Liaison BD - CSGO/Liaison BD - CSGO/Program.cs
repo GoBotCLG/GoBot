@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
+using SourceRcon;
+using System.Net;
 
 namespace Liaison_BD___CSGO
 {
@@ -29,6 +31,7 @@ namespace Liaison_BD___CSGO
         private static bool Team1CTCurrentMatch;
         private static Process Serveur;
         private static MySQLWrapper BD;
+        private static SourceRcon.SourceRcon ConnectionServeur;
 
         static void Main(string[] args)
         {
@@ -40,9 +43,13 @@ namespace Liaison_BD___CSGO
             BD = new MySQLWrapper();
             Serveur = new Process();
             Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
-            Serveur.StartInfo.Arguments = "-game csgo -console -usercon -maxplayers_override 11 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
+            Serveur.StartInfo.Arguments = "-game csgo -console -usercon -maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
+            Thread.Sleep(60000);
+            ConnectionServeur = new SourceRcon.SourceRcon();
+            while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
+            ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));
 
             PrepareNextMatch();
             Console.Write("Connectez-vous au serveur à l'aide du client, rejoignez les spectateurs, puis appuyez sur ENTER: ");
@@ -53,12 +60,8 @@ namespace Liaison_BD___CSGO
             string ligne = "";
             do
             {
-
                 ligne = Console.In.ReadLine();
-                IntPtr window = Serveur.MainWindowHandle;
-                SetForegroundWindow(window);
-                SendKeys.SendWait(ligne);
-                SendKeys.SendWait("{ENTER}");
+                ConnectionServeur.ServerCommand(ligne);
             } while (ligne.ToUpper() != "EXIT");
             work.CancelAsync();
             Serveur.WaitForExit();
@@ -129,12 +132,10 @@ namespace Liaison_BD___CSGO
         {
             IntPtr window = Serveur.MainWindowHandle;
             SetForegroundWindow(window);
-            SendKeys.SendWait("log off");
-            SendKeys.SendWait("{ENTER}");
-            SendKeys.SendWait("bot_kick");
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(500);
-            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
+            ConnectionServeur.ServerCommand("log off");
+            ConnectionServeur.ServerCommand("bot_kick");
+            //Thread.Sleep(500);
+            //SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
@@ -278,37 +279,17 @@ namespace Liaison_BD___CSGO
 
         private static void StartMatch()
         {
-
-            IntPtr window = Serveur.MainWindowHandle;
-            SetForegroundWindow(window);
-            SendKeys.SendWait("changelevel " + NextMap);
-            SendKeys.SendWait("{ENTER}");
+            ConnectionServeur.ServerCommand("changelevel " + NextMap);
             Thread.Sleep(60000);
-            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(100);
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(100);
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(100);
-            SendKeys.SendWait("#");
-            Thread.Sleep(100);
-            SendKeys.SendWait("spectate");
-            Thread.Sleep(100);
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(100);
-            SendKeys.SendWait("{ESC}");
+
 
             Team1CTCurrentMatch = Team1CTNextMatch;
             CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
-            SetForegroundWindow(window);
-            SendKeys.SendWait("exec gamestart");
-            SendKeys.SendWait("{ENTER}");
-            Thread.Sleep(500);
-            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
+            ConnectionServeur.ServerCommand("tv_delay 10");
+            ConnectionServeur.ServerCommand("exec gamestart");
         }
 
         private static void LookForEvents(object sender, DoWorkEventArgs e)

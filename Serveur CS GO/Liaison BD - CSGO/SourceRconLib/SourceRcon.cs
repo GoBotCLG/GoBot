@@ -7,10 +7,13 @@ using System.Collections;
 namespace SourceRcon
 {
 	/// <summary>
-	/// Summary description for SourceRcon.
-	/// </summary>
+    /// Classe représentant la connection RCON vers un serveur de jeu
+    /// </summary>
 	public class SourceRcon
 	{
+        /// <summary>
+        /// Create an RCON instance without connecting to any server
+        /// </summary>
 		public SourceRcon()
 		{
 			S = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
@@ -21,13 +24,19 @@ namespace SourceRcon
 #endif
 		}
 
+        /// <summary>
+        /// Connect to the given server with the given password (note: your server MUST have an RCON password to accept connections)
+        /// </summary>
+        /// <param name="Server">End point to the server containing the address and the RCON port of the server</param>
+        /// <param name="password">RCON password of the server</param>
+        /// <returns></returns>
 		public bool Connect(IPEndPoint Server, string password)
 		{
 			try
 			{
 				S.Connect(Server);
 			}
-			catch(SocketException)
+			catch(SocketException e)
 			{
 				OnError(ConnectionFailedString);
 				OnConnectionSuccess(false);
@@ -47,6 +56,10 @@ namespace SourceRcon
 			return true;
 		}
 
+        /// <summary>
+        /// Send command to server
+        /// </summary>
+        /// <param name="command">Command string to send to server</param>
 		public void ServerCommand(string command)
 		{
 			if(connected)
@@ -59,6 +72,10 @@ namespace SourceRcon
 			}
 		}
 	
+        /// <summary>
+        /// Send the command packet (Used internally)
+        /// </summary>
+        /// <param name="p">RCON packet representing the command</param>
 		void SendRCONPacket(RCONPacket p)
 		{
 			byte[] Packet = p.OutputAsBytes();
@@ -78,6 +95,9 @@ namespace SourceRcon
 
 		int PacketCount;
 
+        /// <summary>
+        /// Begin the listening process to catch answers to sent commands
+        /// </summary>
 		void StartGetNewPacket()
 		{
 			RecState state = new RecState();
