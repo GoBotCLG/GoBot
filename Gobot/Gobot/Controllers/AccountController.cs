@@ -42,16 +42,33 @@ namespace Gobot.Controllers
             }
             else
             {
-                bool passwordMatch = false; // Compare oldPassword with User password in DB
+                try
+                {
+                    MySQLWrapper Bd = new MySQLWrapper();
+                    DataTable user = Bd.Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) }, "Password");
+                    if (user != null && user.Rows.Count > 0)
+                    {
+                        if (user.Rows[0]["Password"].ToString() == PasswordEncrypter.EncryptPassword(oldPassword))
+                        {
+                            int result = Bd.Update("user",
+                                new List<string>() { "Password" },
+                                new List<OdbcParameter>() { new OdbcParameter(":Password", PasswordEncrypter.EncryptPassword(newPassword)) },
+                                "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
 
-                if (passwordMatch)
-                {
-                    // TODO : Update password in DB
-                    ViewBag.Success = "Votre mot de passe a été modifié avec succès.";
+                            if (result == 1)
+                                ViewBag.Success = "Votre mot de passe a été modifié avec succès.";
+                            else
+                                ViewBag.Error = "Une erreur est survenue lors de la modification du mot de passe.";
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Le mot de passe courant saisi est invalide.";
+                        }
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    ViewBag.Error = "Le mot de passe courant saisi est invalide.";
+                    ViewBag.Error = "Une erreur est survenue lors de la modification du mot de passe.";
                 }
             }
 
@@ -135,7 +152,7 @@ namespace Gobot.Controllers
 
         private void setImagePathToDb(string user, string path)
         {
-            // TODO : Update new image path in DB to 'fileName'
+            // TODO : Update new image path in DB to 'path'
         }
 
         private string getFileName(string ext)
@@ -173,8 +190,22 @@ namespace Gobot.Controllers
             }
             else
             {
-                // TODO : Update email in BD 
-                ViewBag.Success = "Votre adresse courriel a été modifiée avec succès.";
+                try
+                {
+                    int result = new MySQLWrapper().Update("user",
+                        new List<string>() { "Email" },
+                        new List<OdbcParameter>() { new OdbcParameter(":Email", confirmEmail) },
+                        "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+
+                    if (result == 1)
+                        ViewBag.Success = "Votre adresse courriel a été modifiée avec succès.";
+                    else
+                        ViewBag.Error = "Une erreur est survenue lors de la modification de votre adresse courriel.";
+                }
+                catch (Exception)
+                {
+                    ViewBag.Error = "Une erreur est survenue lors de la modification de votre adresse courriel.";
+                }
             }
 
             return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
@@ -239,7 +270,7 @@ namespace Gobot.Controllers
                 if (user.Password.Length < 6)
                 {
                     //Le plus gros mot de passe acceptable pour notre système d'encryption c'est ~= 2'091'752 terabytes, pas besoin de le spécifier?
-                    ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter au moins 6 caractères.";
+                    ViewBag.Error = "Le mot de passe saisi est invalide. Il doit comporter entre 6 et 45 caractères.";
                     Erreur = true;
                 }
             }
@@ -305,8 +336,7 @@ namespace Gobot.Controllers
 
                 if (col.Count > 0)
                 {
-                    List<OdbcParameter> param = new List<OdbcParameter>();
-                    param.Add(new OdbcParameter(":" + col, newValue));
+                    List<OdbcParameter> param = new List<OdbcParameter>() { new OdbcParameter(":" + col, newValue) };
                     List<OdbcParameter> usernameList = new List<OdbcParameter>();
                     OdbcParameter user = new OdbcParameter(":Username", OdbcType.VarChar, 45);
                     user.Value = ((User)Session["User"]).Username;
