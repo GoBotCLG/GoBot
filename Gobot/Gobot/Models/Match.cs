@@ -12,7 +12,7 @@ namespace Gobot.Models
             Teams = new Team[2];
         }
 
-        public Match(int id, DateTime date, Team t1, Team t2, int teamvictoire, int t1totalbet, int t2totalbet)
+        public Match(int id, DateTime date, Team t1, Team t2, int teamvictoire, int t1totalbet, int t2totalbet, string Map)
         {
             Id = id;
             Teams = new Team[2];
@@ -34,5 +34,6 @@ namespace Gobot.Models
         public int Team2TotalBet { get; set; }
         public int Team1Rounds { get; set; }
         public int Team2Rounds { get; set; }
+        public string Map { get; set; }
     }
 }

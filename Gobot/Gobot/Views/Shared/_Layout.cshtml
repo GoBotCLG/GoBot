@@ -60,15 +60,27 @@
 
     function getMatchResults() {
         var data = new XMLHttpRequest();
-        data.open("GET", '@Url.Action("getMatchResults", "Bet")');
+        data.open("GET", '@Url.Action("IsCurrentDone", "Watch")');
 
         data.onreadystatechange = function () {
             if (data.readyState == 4) {
-                //if (data != null && data != "")
-                    createMatchResult_PopUp(data);
+                var json = JSON.parse(data.response);
+                if (json != null && json != "") {
+                    if (json.bet != "noBet")
+                        createMatchResult_PopUp(json);
+
+                    if (json.next.time != 0)
+                        createCookie(json.next.time);
+                }
             }
         }
         data.send();
+    }
+
+    function createCookie(expire) {
+        var date = new Date();
+        date.setTime(date.getTime() + expire);
+        $.cookie("seenResults", "yes", { expires: date });
     }
 
     function createMatchResult_PopUp(json) {
@@ -94,10 +106,12 @@
     $(document).ready(function () {
         setCurrentTab();
         setInterval(function () {
-            //if (cookie doesnt exist)
-                //getMatchResults();
+            if (getCookie("seenResults") == "")
+                getMatchResults();
         }, 60 * 1000 * 2);
-        getMatchResults();
+
+        if (getCookie("seenResults") == "")
+            getMatchResults();
     });
 
     $(window).on('resize', function () {

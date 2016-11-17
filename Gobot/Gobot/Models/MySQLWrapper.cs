@@ -348,6 +348,8 @@ namespace Gobot.Models
                     m.Date = (DateTime)row["Date"];
                     m.Teams[0] = null;
                     m.Teams[1] = null;
+                    m.Map = row["Map"].ToString();
+                    //m.TeamVictoire = (int)row["TeamVictoire"];
 
                     foreach (Team t in teams)
                     {
@@ -390,6 +392,8 @@ namespace Gobot.Models
                     m.Teams[1] = GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
                     m.Team1Rounds = (int)row["RoundTeam1"];
                     m.Team2Rounds = (int)row["RoundTeam2"];
+                    m.Map = row["Map"].ToString();
+                    //m.TeamVictoire = (int)row["TeamVictoire"];
                     return m;
                 }
                 else
