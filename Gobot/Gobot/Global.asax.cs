@@ -30,18 +30,19 @@ namespace Gobot
         {
             try
             {
+                var timer = new System.Threading.Timer( e => SetLastMatchBets(), null, TimeSpan.Zero, TimeSpan.FromMinutes(0.5));
                 //int minutes = 2; // Interval in minutes
                 //System.Timers.Timer timer = new System.Timers.Timer(1000 * 60 * minutes);
                 //timer.Elapsed += new ElapsedEventHandler(SetLastMatchBets);
                 //timer.Start();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
         }
 
-        protected void SetLastMatchBets(object source, ElapsedEventArgs e)
+        protected void SetLastMatchBets()
         {
             try
             {
@@ -75,7 +76,7 @@ namespace Gobot
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
