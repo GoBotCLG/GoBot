@@ -55,7 +55,6 @@ namespace Gobot.Controllers
                             nextMatch.Team1Rounds = (int)row["RoundTeam1"];
                             nextMatch.Team2Rounds = (int)row["RoundTeam2"];
                             nextMatch.Map = row["Map"].ToString();
-                            //nextMatch.TeamVictoire = (int)row["TeamVictoire"];
                         }
 
                         Team winner, loser;

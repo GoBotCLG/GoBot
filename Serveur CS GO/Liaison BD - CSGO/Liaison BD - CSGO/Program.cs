@@ -322,5 +322,46 @@ namespace Liaison_BD___CSGO
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="CurrentMatchId">Match ID</param>
+        /// <param name="VictoryTeam">Winner's team ID</param>
+        private static void SetVictoryBets(int CurrentMatchId, int WinnerID)
+        {
+            try
+            {
+                MySQLWrapper Bd = new MySQLWrapper();
+                DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
+                DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit");
+
+                if (bets != null && bets.Rows.Count > 0)
+                {
+                    foreach (DataRow bet in bets.Rows)
+                    {
+                        try
+                        {
+                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)bet["Mise"] : 0;
+
+                            DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
+                            int userCredit = user.Length > 0 ? (int)user[0]["Credit"] : -1;
+                            
+                            if (userCredit != -1)
+                            {
+                                List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd) };
+                                List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
+                                Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
+                            }
+                        }
+                        catch (Exception) { }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
     }
 }
