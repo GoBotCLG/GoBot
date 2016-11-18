@@ -336,6 +336,10 @@ namespace Liaison_BD___CSGO
                 DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
                 DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit");
 
+                Bd.Update("matchs", 
+                    new List<string>() { "Team_Victoire" }, new List<OdbcParameter>() { new OdbcParameter(":Team_Victoire", WinnerID) }, 
+                    "IdMatch = ?", new List<OdbcParameter>() { new OdbcParameter(":IdMatch", CurrentMatchId) });
+
                 if (bets != null && bets.Rows.Count > 0)
                 {
                     foreach (DataRow bet in bets.Rows)
@@ -344,14 +348,17 @@ namespace Liaison_BD___CSGO
                         {
                             int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)bet["Mise"] : 0;
 
-                            DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
-                            int userCredit = user.Length > 0 ? (int)user[0]["Credit"] : -1;
-                            
-                            if (userCredit != -1)
+                            if (toAdd > 0)
                             {
-                                List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd) };
-                                List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
-                                Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
+                                DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
+                                int userCredit = user.Length > 0 ? (int)user[0]["Credit"] : -1;
+
+                                if (userCredit != -1)
+                                {
+                                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd) };
+                                    List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
+                                    Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
+                                }
                             }
                         }
                         catch (Exception) { }
