@@ -59,7 +59,7 @@ namespace Gobot.Controllers
 
                         Team winner, loser;
                         int winnerRounds, loserRounds;
-                        if (currentMatch.TeamVictoire == 1)
+                        if (currentMatch.TeamVictoire == currentMatch.Teams[0].Id)
                         {
                             winner = currentMatch.Teams[0];
                             loser = currentMatch.Teams[1];

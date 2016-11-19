@@ -40,7 +40,7 @@
                         <div class="img" style="background-image: url(/Images/@(Model[i].Teams[0].ImagePath));"></div>
                         <div class="text">
                             @{
-                                if (Model[i].TeamVictoire == 1)
+                                if (Model[i].TeamVictoire == Model[i].Teams[0].Id)
                                 {
                                     <h1><green>@(Model[i].Teams[0].Name.ToUpper())</green></h1>
                                     <h4 class="grey">Mise Totale @(Model[i].Team1TotalBet)GC</h4>
@@ -68,7 +68,7 @@
                         <div class="img" style="background-image: url(/Images/@(Model[i].Teams[1].ImagePath));"></div>
                         <div class="text">
                             @{
-                                if (Model[i].TeamVictoire == 2)
+                                if (Model[i].TeamVictoire == Model[i].Teams[1].Id)
                                 {
                                     <h1><green>@(Model[i].Teams[1].Name.ToUpper())</green></h1>
                                     <h4 class="grey">Mise Totale @(Model[i].Team1TotalBet)GC</h4>
