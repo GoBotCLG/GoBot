@@ -6,6 +6,7 @@ using System.Data.Odbc;
 using System.Text;
 using System.Data;
 using System.ComponentModel;
+using System.Threading;
 
 namespace Liaison_BD___CSGO
 {
@@ -59,10 +60,13 @@ namespace Liaison_BD___CSGO
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
 
                 DataTable result = new DataTable();
-
+                while (connection.State != ConnectionState.Open)
+                {
+                    Thread.Sleep(1);
+                }
                 adapt.Fill(result);
                 result.TableName = tablename;
-
+                adapt.Dispose();
                 return result;
             }
             else
@@ -104,7 +108,6 @@ namespace Liaison_BD___CSGO
                 {
                     command.Parameters.Add(param);
                 }
-
                 return command.ExecuteNonQuery();
             }
             else
@@ -152,8 +155,7 @@ namespace Liaison_BD___CSGO
                     {
                         command.Parameters.Add(param);
                     }
-                }                
-
+                }
                 return command.ExecuteNonQuery();
             }
             else
@@ -171,7 +173,7 @@ namespace Liaison_BD___CSGO
         /// <returns></returns>
         public int Delete(string tablename, string where, List<OdbcParameter> conditions)
         {
-            if(connection != null && tablename != "")
+            if (connection != null && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("delete " + tablename);
 
@@ -189,7 +191,6 @@ namespace Liaison_BD___CSGO
                         command.Parameters.Add(param);
                     }
                 }
-
                 return command.ExecuteNonQuery();
             }
             else
@@ -207,7 +208,7 @@ namespace Liaison_BD___CSGO
         {
             if (connection != null && procedurename != "")
             {
-                StringBuilder sql = new StringBuilder("call " + procedurename + "(");
+                StringBuilder sql = new StringBuilder("{call " + procedurename + "(");
 
                 if (args.Length > 0)
                 {
@@ -217,7 +218,7 @@ namespace Liaison_BD___CSGO
                     }
                     sql.Remove(sql.Length - 1, 1);
                 }
-                sql.Append(")");
+                sql.Append(")}");
 
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
@@ -227,7 +228,9 @@ namespace Liaison_BD___CSGO
                 }
                 DataTable result = new DataTable();
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                connection.Open();
                 adapt.Fill(result);
+                connection.Close();
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (OdbcParameter param in args)
@@ -237,7 +240,7 @@ namespace Liaison_BD___CSGO
                 sb.Remove(sb.Length - 1, 1);
                 sb.Append(")");
                 result.TableName = sb.ToString();
-
+                adapt.Dispose();
                 return result;
             }
             else
