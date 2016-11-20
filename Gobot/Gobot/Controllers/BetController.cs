@@ -297,5 +297,13 @@ namespace Gobot.Controllers
                 return Json("");
             }
         }
+
+        public ActionResult Ad()
+        {
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+
+            return View();
+        }
     }
 }

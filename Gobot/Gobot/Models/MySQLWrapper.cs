@@ -349,7 +349,7 @@ namespace Gobot.Models
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
-                    //m.TeamVictoire = (int)row["TeamVictoire"];
+                    m.TeamVictoire = (int)row["Team_Victoire"];
 
                     foreach (Team t in teams)
                     {
@@ -393,7 +393,7 @@ namespace Gobot.Models
                     m.Team1Rounds = (int)row["RoundTeam1"];
                     m.Team2Rounds = (int)row["RoundTeam2"];
                     m.Map = row["Map"].ToString();
-                    //m.TeamVictoire = (int)row["TeamVictoire"];
+                    m.TeamVictoire = (int)row["Team_Victoire"];
                     return m;
                 }
                 else
