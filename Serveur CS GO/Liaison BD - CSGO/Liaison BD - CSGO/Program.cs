@@ -457,6 +457,7 @@ namespace Liaison_BD___CSGO
                 MySQLWrapper Bd = new MySQLWrapper();
                 DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
                 DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit");
+                var totalBets = getTotalBets(ref bets, WinnerID);
 
                 Bd.Update("matchs", 
                     new List<string>() { "Team_Victoire" }, new List<OdbcParameter>() { new OdbcParameter(":Team_Victoire", WinnerID) }, 
@@ -468,7 +469,7 @@ namespace Liaison_BD___CSGO
                     {
                         try
                         {
-                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)bet["Mise"] : 0;
+                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]) : 0;
 
                             if (toAdd > 0)
                             {
@@ -485,12 +486,45 @@ namespace Liaison_BD___CSGO
                         }
                         catch (Exception) { }
                     }
+
+                    updateBetsAdmin(totalBets["admin"]);
                 }
             }
             catch (Exception)
             {
 
             }
+        }
+
+        private static Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
+        {
+            decimal reduction = 0.9m;
+            int loserTotal = 0, winnerTotal = 0, total = 0;
+
+            foreach (DataRow row in bets.Rows)
+            {
+                if ((int)row["Team_IdTeam"] == winner)
+                    winnerTotal += (int)row["Mise"];
+                else
+                    loserTotal += (int)row["Mise"];
+            }
+
+            total = loserTotal;
+            loserTotal = (int)Math.Floor(Decimal.Multiply(reduction, loserTotal));
+            winnerTotal = (int)Math.Floor(Decimal.Multiply(reduction, winnerTotal));
+            int admin = total - loserTotal;
+
+            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", total} };
+        }
+
+        private static int getGain(int bet, int total, int losers)
+        {
+            return 0; // TO DO
+        }
+
+        private static void updateBetsAdmin(int amount)
+        {
+            // TO DO
         }
     }
 }

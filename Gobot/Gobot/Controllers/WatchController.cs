@@ -46,7 +46,7 @@ namespace Gobot.Controllers
 
                     if (currentMatch != null && currentMatch.TeamVictoire != 0)
                     {
-                        DataTable bets = Bd.Select("bet", "Match_IdMatch = ?", new List<OdbcParameter>() { new OdbcParameter(":IdMatch", currentMatch.Id) }, "*");
+                        DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", currentMatch.Id));
                         DataRow[] userBet = bets.Select(string.Format("User_Username = '{0}'", ((User)Session["User"]).Username));
 
                         if (userBet != null && userBet.Length > 0)
