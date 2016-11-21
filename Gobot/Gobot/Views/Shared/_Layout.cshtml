@@ -77,6 +77,12 @@
         data.send();
     }
 
+    function getCookie(name) {
+        var re = new RegExp(name + "=([^;]+)");
+        var value = re.exec(document.cookie);
+        return (value != null) ? unescape(value[1]) : null;
+    }
+
     function createCookie(expire) {
         var date = new Date();
         date.setTime(date.getTime() + expire);
@@ -141,11 +147,11 @@
     $(document).ready(function () {
         setCurrentTab();
         setInterval(function () {
-            if (getCookie("seenResults") == "")
+            if (getCookie("seenResults") == null)
                 getMatchResults();
-        }, 60 * 1000 * 2);
+        }, 60 * 1000 * 0.1); // * 2 ####################################### CANCEROUS AS FUCK. TO CHANGE.
 
-        if (getCookie("seenResults") == "")
+        if (getCookie("seenResults") == null)
             getMatchResults();
     });
 

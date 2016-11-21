@@ -23,6 +23,7 @@ namespace Gobot.Controllers
             User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
             Session["User"] = user;
             Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
+            Session["limitBetRefreshDate"] = DateTime.Now;
 
             return View((User)Session["User"]);
         }
