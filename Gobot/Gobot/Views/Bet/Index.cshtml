@@ -38,9 +38,9 @@
     }
 
     <div class="info" id="getCredits">
-        <a href="#"><h1>Acheter plus de crédits</h1></a>
+        <a href="@Url.Action("Ad", "Bet")"><h1>Acheter plus de crédits</h1></a>
         <div class="separator"><div></div></div>
-        <a href="#"><h1>Visionner une publicité</h1></a>
+        <a href="@Url.Action("Ad", "Bet")"><h1>Visionner une publicité</h1></a>
     </div>
 
     @{
@@ -207,7 +207,7 @@
             var pos = $("#bet_placeBet > .teamImg").is(':first-child') ? 1 : 2;
             if (parseInt($(".remainGC").text()) < 0 && $("#bet_placeBet > form > a").length == 0) {
                 $("#bet_placeBet > form > input").remove();
-                $("#bet_placeBet > form").append('<a class="' + (pos == 1 ? 'right' : 'left') + '" href="#">Ajouter des crédits</a>');
+                $("#bet_placeBet > form").append('<a class="' + (pos == 1 ? 'right' : 'left') + '" href="@(Url.Action("Ad", "Bet"))">Ajouter des crédits</a>');
             }
             else if (parseInt($(".remainGC").text()) >= 0 && $("#bet_placeBet > form > input").length == 0) {
                 $("#bet_placeBet > form > a").remove();

@@ -1,6 +1,8 @@
 ﻿@import 'global';
 
 h1 { 
+    width: 80% !important;
+    padding: 0 10% !important;
     text-transform: uppercase; 
     margin-top: 40px !important; 
     > a {
@@ -22,3 +24,7 @@ p, ol, li {
 }
 
 .info:last-of-type {margin-bottom: 45px; }
+
+@media screen and (min-width: 1326px) {
+    h1 { line-height: 36px !important; }
+}
