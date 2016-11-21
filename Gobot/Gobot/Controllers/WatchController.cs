@@ -34,13 +34,12 @@ namespace Gobot.Controllers
 
                 if (currentMatch != null && currentMatch.TeamVictoire != 0)
                 {
-                    DataTable userBet = Bd.Select("bet", "User_Username = ? and Match_IdMatch = ?", 
-                        new List<OdbcParameter>() {
-                            new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                            new OdbcParameter(":MatchId", currentMatch.Id)
-                        }, "Mise", "Team_IdTeam");
+                    DataTable bets = Bd.Select("bet", "Match_IdMatch = ?", new List<OdbcParameter>() { new OdbcParameter(":IdMatch", currentMatch.Id) }, "*");
+                    DataRow[] userBet = bets.Select(string.Format("User_Username = '{0}'", ((User)Session["User"]).Username));
 
-                    if (userBet != null && userBet.Rows.Count > 0)
+                    Dictionary<string, int> totalBets = getTotalBets(ref bets, currentMatch.TeamVictoire);
+
+                    if (userBet != null && userBet.Length > 0)
                     {
                         DataTable nextMatchBD = Bd.Procedure("Nextmatch");
                         Match nextMatch = null;
@@ -74,15 +73,16 @@ namespace Gobot.Controllers
                             loserRounds = currentMatch.Team1Rounds;
                         }
 
+                        int bet = winner.Id == (int)userBet[0]["Team_IdTeam"] ? (int)userBet[0]["Mise"] : -(int)userBet[0]["Mise"];
+
                         object winner_obj = new { name = winner.Name, img = winner.ImagePath, rounds = winnerRounds };
                         object loser_obj = new { name = loser.Name, img = loser.ImagePath, rounds = loserRounds };
-                        int bet = winner.Id == (int)userBet.Rows[0]["Team_IdTeam"] ? (int)userBet.Rows[0]["Mise"] : -(int)userBet.Rows[0]["Mise"];
-                       
+                        object bets_obj = new { user = new { won = (winner.Id == (int)userBet[0]["Team_IdTeam"]), amount = bet, gain = (int)userBet[0]["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
 
                         if (nextMatch != null)
                         {
                             long time = msUntilDate(nextMatch.Date);
-                            object next = new
+                            object next_obj = new
                             {
                                 teams = new object[] {
                                     new { name = nextMatch.Teams[0].Name, img = nextMatch.Teams[0].ImagePath },
@@ -92,10 +92,10 @@ namespace Gobot.Controllers
                                 time = time
                             };
 
-                            return Json(new { winner = winner_obj, loser = loser_obj, next = next, bet = bet }, JsonRequestBehavior.AllowGet);
+                            return Json(new { winner = winner_obj, loser = loser_obj, next = next_obj, bet = bets_obj }, JsonRequestBehavior.AllowGet);
                         }
 
-                        return Json(new { winner = winner_obj, loser = loser_obj, next = new { time = 0 }, bet = bet }, JsonRequestBehavior.AllowGet);
+                        return Json(new { winner = winner_obj, loser = loser_obj, next = new { time = 0 }, bet = bets_obj }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
@@ -116,17 +116,30 @@ namespace Gobot.Controllers
             }
         }
 
+        private Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
+        {
+            decimal reduction = 0.9m;
+            int loserTotal = 0, winnerTotal = 0;
+
+            foreach (DataRow row in bets.Rows)
+            {
+                if ((int)row["Team_IdTeam"] == winner)
+                    winnerTotal += (int)row["Mise"];
+                else
+                    loserTotal += (int)row["Mise"];
+            }
+
+            loserTotal = (int)Math.Floor(Decimal.Multiply(reduction, loserTotal));
+            winnerTotal = (int)Math.Floor(Decimal.Multiply(reduction, winnerTotal));
+            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal } };
+        }
+
         private long msUntilDate(DateTime date)
         {
             long now = DateTime.Now.Ticks;
             long after = date.Ticks;
 
             return (after - now) / 10000;
-        }
-
-        private object GetTeam(bool v1, int v2)
-        {
-            throw new NotImplementedException();
         }
     }
 }
