@@ -29,7 +29,16 @@ function setPopUp() {
 }
 
 $(document).on("click", "#close_errorOverlay", function () {
-    $("#error_overlay").remove();
+    $("#error_overlay > div").animate({
+        left: '-100%'
+    }, 300, function () {
+        $("#error_overlay").animate({
+            padding: 0,
+            height: 0
+        }, 300, function () {
+            $("#error_overlay").remove();
+        });
+    });
 });
 
 function h_align_window(e) {
@@ -108,27 +117,30 @@ function setWidthFromChilds(e, maxE) {
     h_align_window(e.parent());
 }
 
-function popUp(text, yesNo, custom) {
-    $(".popUp").remove();
+function popUp(text, yesNo, custom, prioritize) {
+    if (prioritize == true || $(".popUp").length == 0)
+    {
+        $(".popUp").remove();
 
-    $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt"><span>' + (typeof(custom) === 'undefined' ? text : custom) + '</span></div></div>');
-    
-    if (yesNo)
-        $(".popUp > .prompt").append('<div><button id="closePrompt">Non</button><button id="confirmPrompt">Oui</button></div>');
-    else
-        $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
+        $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (typeof (custom) === 'undefined' ? '<span>' + text + '</span>' : custom) + '</div></div>');
 
-    h_align_window($(".prompt"));
-    
-    $(".popUp").animate({
-        height: '100%'
-    }, 100);
-    setTimeout(function () {
-        $(".prompt").animate({
-            padding: '25px 0',
-            opacity: '1'
-        }, 200);
-    }, 100);
+        if (yesNo)
+            $(".popUp > .prompt").append('<div><button id="closePrompt">Non</button><button id="confirmPrompt">Oui</button></div>');
+        else
+            $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
+
+        h_align_window($(".prompt"));
+
+        $(".popUp").animate({
+            height: '100%'
+        }, 100);
+        setTimeout(function () {
+            $(".prompt").animate({
+                padding: '25px 0',
+                opacity: '1'
+            }, 200);
+        }, 100);
+    }
 }
 
 $(document).on("click", ".popUp > .prompt > div > button", function () {
@@ -139,10 +151,8 @@ $(document).on("click", ".popUp > .prompt > div > button", function () {
     setTimeout(function () {
         $(".popUp").animate({
             height: '0'
-        }, 100);
+        }, 100, function () {
+            $(".popUp").remove();
+        });
     }, 100);
-
-    setTimeout(function () {
-        $(".popUp").remove();
-    }, 200);
 });

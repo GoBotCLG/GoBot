@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The description of my page" />
+    <meta name="description" content="@ViewBag.Desc" />
+    <meta name="keywords" content="@ViewBag.Keywords">
+    <link rel="icon" href="~/Images/gobot_logo.png" type="image/png" sizes="16x16 32x32 64x64">
     <title>@ViewBag.Title - Gobotter</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
@@ -12,13 +14,6 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <iframe id="matchResult">
-        
-    </iframe>
-    <div id="matchResult_popUp">
-
-    </div>
-
     <div id="navBig">
         <a id="compte" href="@Url.Action("Index", "Account")">
             <div id="img"><img src="@(Session["User_img"])" /></div>
@@ -128,10 +123,10 @@
         var text = '\
             <div class="lastMatch">\
                 <div class="imgTeam"><img src=""/></div>\
-                <div><h1><green>TEAM_VICTORY</green> A GAGNE CONTRE <red>TEAM_LOSS</red></h1></div>\
+                <div><h1><green>Tism</green> A GAGNE CONTRE <red>Pirates in pyjamas</red></h1></div>\
                 <div class="imgTeam"><img src=""/></div>\
             </div>\
-            <div><h2>Vous avez gagné <green>500GC</green>(17.56& de 2848GC)</h2><h3>Additionnellement, votre mise de départ de 500GC vous à été remise.</h3></div>\
+            <div class="gain"><h2>Vous avez gagné <green>500GC</green>(17.56% de 2848GC)</h2><h3>Additionnellement, votre mise de départ de 500GC vous à été remise.</h3></div>\
             <div class="nextMatch">\
                   <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
                   <div>\
@@ -141,7 +136,7 @@
                      <div><h2><grey>DANS LA CARTE</grey> DE_COBBLESTONE</h2><img src="~/Images/de_cobblestone.png"/></div>\
                   </div>\
             </div>';
-        popUp("", false, text);
+        popUp("", false, text, false);
     }
 
     $(document).ready(function () {
@@ -154,7 +149,7 @@
         if (getCookie("seenResults") == null)
             getMatchResults();
 
-        createMatchResult_PopUp();
+        //createMatchResult_PopUp();
     });
 
     $(window).on('resize', function () {

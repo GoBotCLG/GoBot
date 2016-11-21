@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "S'enregistrer";
+    ViewBag.Desc = "S'enregistrer sur Gobot pour profiter de tout les services offerts par Gobot.";
+    ViewBag.Keywords = "S'enregistrer, Gobot, CS:GO";
     Layout = null;
 }
 
@@ -9,7 +11,11 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@ViewBag.Desc" />
+    <meta name="keywords" content="@ViewBag.Keywords">
+    <link rel="icon" href="~/Images/gobot_logo.png" type="image/png" sizes="16x16 32x32 64x64">
     <title>@ViewBag.Title - Gobotter</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -136,8 +142,10 @@
         }
 
         $(document).on("focus", "form > input", function () {
+            $(this).css("border-color", "#eee");
             $(this).prev().css("color", "#f16651");
         }).on("blur", "form > input", function () {
+            $(this).css("border-color", "#323232");
             $(this).prev().css("color", "#626262");
         });
     </script>

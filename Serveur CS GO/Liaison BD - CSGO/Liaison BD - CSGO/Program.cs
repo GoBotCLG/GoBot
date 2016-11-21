@@ -251,16 +251,8 @@ namespace Liaison_BD___CSGO
             Thread.Sleep(2000);
             //SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round03.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round04.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round05.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round06.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round07.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round08.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round09.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round10.txt");
+            for (int i = 1; i <= 10; i++)
+                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
 
             StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
             Dictionary<string, int> KillsBots = new Dictionary<string, int>();
@@ -465,14 +457,17 @@ namespace Liaison_BD___CSGO
 
                 if (bets != null && bets.Rows.Count > 0)
                 {
+                    int remains = 0;
                     foreach (DataRow bet in bets.Rows)
                     {
                         try
                         {
-                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]) : 0;
-
-                            if (toAdd > 0)
+                            if ((int)bet["Team_IdTeam"] == WinnerID)
                             {
+                                List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]);
+
+                                int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)gains[0] : 0;
+
                                 DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
                                 int userCredit = user.Length > 0 ? (int)user[0]["Credit"] : -1;
 
@@ -482,18 +477,14 @@ namespace Liaison_BD___CSGO
                                     List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
                                     Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
                                 }
+                                updateBetsAdmin((int)Math.Floor((decimal)totalBets["admin"] + gains[1]));
                             }
                         }
                         catch (Exception) { }
                     }
-
-                    updateBetsAdmin(totalBets["admin"]);
                 }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
         }
 
         private static Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
@@ -510,21 +501,29 @@ namespace Liaison_BD___CSGO
             }
 
             total = loserTotal;
-            loserTotal = (int)Math.Floor(Decimal.Multiply(reduction, loserTotal));
-            winnerTotal = (int)Math.Floor(Decimal.Multiply(reduction, winnerTotal));
+            loserTotal = (int)Math.Floor(decimal.Multiply(reduction, loserTotal));
+            winnerTotal = (int)Math.Floor(decimal.Multiply(reduction, winnerTotal));
             int admin = total - loserTotal;
 
             return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", total} };
         }
 
-        private static int getGain(int bet, int total, int losers)
+        private static List<decimal> getGain(int bet, int total, int losers)
         {
-            return 0; // TO DO
+            decimal totalGain = decimal.Multiply(decimal.Divide(bet, total), losers);
+            decimal roundedDown = Math.Floor(totalGain);
+            return new List<decimal>() { roundedDown, totalGain - roundedDown};
         }
 
         private static void updateBetsAdmin(int amount)
         {
-            // TO DO
+            try
+            {
+                int update = new MySQLWrapper().Update("user",
+                    new List<string>() { "Credit" }, new List<OdbcParameter>() { new OdbcParameter(":Amount", amount) },
+                    "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", "admin") });
+            }
+            catch (Exception) { }
         }
     }
 }

@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Connection";
+    ViewBag.Desc = "Gobot vous permet de gager sur les équipes (bots vs bots) de votre choix sur le jeu Counter-strike: Global Offensive.";
+    ViewBag.Keywords = "accueil, Gobot, CS:GO, Counter-strike: Global Offensive";
     Layout = null;
 }
 
@@ -9,7 +11,11 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="@ViewBag.Desc" />
+    <meta name="keywords" content="@ViewBag.Keywords">
+    <link rel="icon" href="~/Images/gobot_logo.png" type="image/png" sizes="16x16 32x32 64x64">
     <title>@ViewBag.Title - Gobotter</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900,900italic,300italic,400italic,700italic' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
