@@ -85,11 +85,9 @@ namespace Gobot.Controllers
                                 loserRounds = currentMatch.Team1Rounds;
                             }
 
-                            int bet = winner.Id == (int)userBet[0]["Team_IdTeam"] ? (int)userBet[0]["Mise"] : -(int)userBet[0]["Mise"];
-
                             object winner_obj = new { name = winner.Name, img = winner.ImagePath, rounds = winnerRounds };
                             object loser_obj = new { name = loser.Name, img = loser.ImagePath, rounds = loserRounds };
-                            object bets_obj = new { user = new { won = (winner.Id == (int)userBet[0]["Team_IdTeam"]), amount = bet, gain = (int)userBet[0]["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
+                            object bets_obj = new { user = new { won = (winner.Id == (int)userBet[0]["Team_IdTeam"]), amount = (int)userBet[0]["Mise"], gain = (int)userBet[0]["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
 
                             if (nextMatch != null)
                             {
@@ -136,6 +134,7 @@ namespace Gobot.Controllers
                 }
                 catch (Exception)
                 {
+                    Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMinutes(1));
                     return Json("", JsonRequestBehavior.AllowGet);
                 }
             }

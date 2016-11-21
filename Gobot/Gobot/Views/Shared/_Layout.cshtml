@@ -149,17 +149,19 @@
         setInterval(function () {
             if (getCookie("seenResults") == null)
                 getMatchResults();
-        }, 60 * 1000 * 0.1); // * 2 ####################################### CANCEROUS AS FUCK. TO CHANGE.
+        }, 60 * 1000 * 2);
 
         if (getCookie("seenResults") == null)
             getMatchResults();
+
+        createMatchResult_PopUp();
     });
 
     $(window).on('resize', function () {
 
     });
 
-    // Get cursor position on each mousemove.
+    // Get cursor position on each mouse move.
     var cursor = { x: -1, y: -1 };
     $(document).mousemove(function (event) {
         cursor.x = event.pageX;
@@ -167,35 +169,33 @@
     });
 
     $(document).on("mouseenter", "#navBig > a > div", function (e) {
-        // If tab is not active page
         if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
             var parent = $(this).parent();
 
-            waterDrop(parent, e); // Add waterdrop effect
+            waterDrop(parent, e);
             waterDropInterval = setInterval(function () {
                 waterDrop(parent, e);
-            }, 1000); // Set interval for waterdrop effect
+            }, 1000);
 
-            showNavText($(this)); // Show descriptive text
+            showNavText($(this));
             var color = $(this).parent().css("background-color");
             var colors = (color.substring(color.indexOf("(") + 1, color.indexOf(")"))).replace(" ", "").split(",");
             for (var i = 0; i < colors.length; i++)
-                colors[i] = Math.round(colors[i] * 0.85); // Get background-color (bg *0.85)
+                colors[i] = Math.round(colors[i] * 0.85);
 
             color = "rgb(" + colors.join() + ")";
 
-            $(this).parent().css({ backgroundColor: color }); // Change background-color
+            $(this).parent().css({ backgroundColor: color });
         }
     }).on("mouseleave", "#navBig > a > div", function (e) {
         if (!$(this).parent().hasClass("active") && !$(this).parent().hasClass("active_anim")) {
-            clearInterval(waterDropInterval); // Remove waterdrop
-            hideNavText($(this)); // Remove text
+            clearInterval(waterDropInterval);
+            hideNavText($(this));
 
             $(this).parent().css({ backgroundColor: "#f16651" });
         }
     });
 
-    // Active page
     $("#navBig > a > div").click(function () {
         setClickedTab($(this), true);
     });
