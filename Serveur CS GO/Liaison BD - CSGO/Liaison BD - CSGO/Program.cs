@@ -137,16 +137,8 @@ namespace Liaison_BD___CSGO
             //Thread.Sleep(500);
             //SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round03.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round04.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round05.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round06.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round07.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round08.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round09.txt");
-            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round10.txt");
+            for (int i = 1; i <= 10; i++)
+                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + (i < 10 ? "0" + i.ToString() : i.ToString()) + ".txt");
 
             StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
             Dictionary<string, int> KillsBots = new Dictionary<string, int>();
@@ -195,8 +187,18 @@ namespace Liaison_BD___CSGO
         {
             if(e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
-                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[0]["Name"] + " contre " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[1]["Name"] + " est terminé avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
-                StopMatch();
+                DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
+                try
+                {
+                    int winnerId = CurrentTeam1Score > CurrentTeam2Score ? (int)teams.Rows[0]["IdTeam"] : (int)teams.Rows[1]["IdTeam"];
+                    Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                    SetVictoryBets(CurrentMatchId, winnerId);
+                    StopMatch();
+                }
+                catch (Exception)
+                {
+
+                }
             }
             else if(e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
             {

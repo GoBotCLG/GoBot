@@ -84,20 +84,55 @@
     }
 
     function createMatchResult_PopUp(json) {
+        //var current = 
+        //    '<div class="lastMatch">\
+        //        <div class="imgTeam"><img src="' + json.winner.img + '"/></div>\
+        //        <div><h1><green>' + json.winner.name + ' (' + json.winner.rounds + ')</green> À GAGNÉ CONTRE <red>' + json.loser.name + ' (' + json.loser.rounds + ')</red></h1></div>\
+        //        <div class="imgTeam"><img src="' + json.loser.img + '"/></div>\
+        //    </div>';
+
+        //var bet = '';
+        //if (json.bets.user.won) {
+        //    var percent = (json.bets.user.amount / json.bets.winners).toFixed(2);
+        //    if (json.bets.user.gain == 0)
+        //        bet = "<div><h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">";
+        //    else
+        //        bet = "<div><h2>Vous avez gagné <green>" + json.bets.user.gain + "GC</green> (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">Additionnellement, ";
+
+        //    bet += 'votre mise de départ de ' + json.bets.user.bet + 'GC vous à été remise.</h3></div>';
+        //}
+        //else
+        //    bet = "<div><h2>Vous avez perdu votre mise de départ de <red>" + json.bets.user.amount + "GC</red>";
+
+        //var next = '';
+        //if (json.next.has("map")) {
+        //    next = 
+        //        '<div class="nextMatch">\
+        //              <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
+        //              <div>\
+        //                 <div class="imgTeam smallerImg"><img src="' + json.next.teams[0].img + '"/></div>\
+        //                 <div><h2>' + json.next.teams[0].name + '<grey> VS </grey>' + json.next.teams[1].name + '</h2></div>\
+        //                 <div class="imgTeam smallerImg"><img src="' + json.next.teams[1].img + '"/></div>\
+        //                 <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="~/Images/maps/' + json.next.map + '.png"/></div>\
+        //              </div>\
+        //        </div>';
+        //}
+
+        //var text = current + bet + next;
         var text = '\
             <div class="lastMatch">\
                 <div class="imgTeam"><img src=""/></div>\
                 <div><h1><green>TEAM_VICTORY</green> A GAGNE CONTRE <red>TEAM_LOSS</red></h1></div>\
                 <div class="imgTeam"><img src=""/></div>\
             </div>\
-            <div><h2>VOUS AVEZ (TEAM_BET == TEAM_VICTORY ? GAGNE <green>BET_AMOUNT</green> : PERDU <red>BET_AMOUNT</red>) GC.</h2></div>\
+            <div><h2>Vous avez gagné <green>500GC</green>(17.56& de 2848GC)</h2><h3>Additionnellement, votre mise de départ de 500GC vous à été remise.</h3></div>\
             <div class="nextMatch">\
                   <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
                   <div>\
-                     <div class="imgTeam smallerImg"><img src=""/></div>\
-                     <div><h2>SOLID <grey>VS</grey> PIRATES IN PYJAMAS</h2></div>\
-                     <div class="imgTeam smallerImg"><img src=""/></div>\
-                     <div><h2><grey>DANS LA CARTE</grey> COBBLESTONE</h2><img src="MAP_IMG"/></div>\
+                     <div class="imgTeam smallerImg"><img src="~/Images/teams/clown6.png"/></div>\
+                     <div><h2>CLOWN6 <grey>VS</grey> PIRATES IN PYJAMAS</h2></div>\
+                     <div class="imgTeam smallerImg"><img src="~/Images/teams/piratesinpyjamas.png"/></div>\
+                     <div><h2><grey>DANS LA CARTE</grey> DE_COBBLESTONE</h2><img src="~/Images/de_cobblestone.png"/></div>\
                   </div>\
             </div>';
         popUp("", false, text);
