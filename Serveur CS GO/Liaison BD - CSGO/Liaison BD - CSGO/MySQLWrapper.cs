@@ -13,10 +13,12 @@ namespace Liaison_BD___CSGO
     public class MySQLWrapper
     {
         private OdbcConnection connection;
+        static public Mutex mutex;
 
         public MySQLWrapper()
         {
             connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=69.156.206.162;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
+            mutex = new Mutex();
         }
 
         /// <summary>
@@ -228,9 +230,11 @@ namespace Liaison_BD___CSGO
                 }
                 DataTable result = new DataTable();
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                mutex.WaitOne();
                 connection.Open();
                 adapt.Fill(result);
                 connection.Close();
+                mutex.ReleaseMutex();
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (OdbcParameter param in args)

@@ -176,7 +176,7 @@ namespace Liaison_BD___CSGO
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 0;mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -237,7 +237,7 @@ namespace Liaison_BD___CSGO
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 0; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -248,7 +248,7 @@ namespace Liaison_BD___CSGO
             SetForegroundWindow(window);
             ConnectionServeur.ServerCommand("log off");
             ConnectionServeur.ServerCommand("bot_kick");
-            //Thread.Sleep(500);
+            Thread.Sleep(2000);
             //SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
@@ -399,7 +399,7 @@ namespace Liaison_BD___CSGO
         private static void StartMatch()
         {
             ConnectionServeur.ServerCommand("changelevel " + NextMap);
-            Thread.Sleep(60000);
+            Thread.Sleep(30000);
 
 
             Team1CTCurrentMatch = Team1CTNextMatch;
