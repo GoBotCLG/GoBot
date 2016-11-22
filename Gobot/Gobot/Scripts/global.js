@@ -25,6 +25,7 @@ function setErrorMessage() {
 function setPopUp() {
     if ($(".popUp").length > 0) {
         h_align_window($(".popUp > .prompt"));
+        h_align($(".popUp .lastMatch"), $(".popUp > .prompt"), $(".popUp .lastMatch").width());
     }
 }
 
@@ -118,8 +119,7 @@ function setWidthFromChilds(e, maxE) {
 }
 
 function popUp(text, yesNo, custom, prioritize) {
-    if (prioritize == true || $(".popUp").length == 0)
-    {
+    if (prioritize == true || $(".popUp").length == 0) {
         $(".popUp").remove();
 
         $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (typeof (custom) === 'undefined' ? '<span>' + text + '</span>' : custom) + '</div></div>');
@@ -129,7 +129,8 @@ function popUp(text, yesNo, custom, prioritize) {
         else
             $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
 
-        h_align_window($(".prompt"));
+        setPopUp();
+        v_align($(".popUp .nextMatch .imgTeam"), $(".popUp .nextMatch .imgTeam").parent(), $(".popUp .nextMatch .imgTeam").height());
 
         $(".popUp").animate({
             height: '100%'
@@ -140,7 +141,11 @@ function popUp(text, yesNo, custom, prioritize) {
                 opacity: '1'
             }, 200);
         }, 100);
+
+        return 1;
     }
+    else
+        return 0;
 }
 
 $(document).on("click", ".popUp > .prompt > div > button", function () {
