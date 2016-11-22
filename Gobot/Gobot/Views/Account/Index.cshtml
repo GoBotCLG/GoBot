@@ -184,11 +184,37 @@
         });
         
         $(document).on("click", "#modSteamLink", function() {
-            // TO DO: Create .popUp window to modify steam link
+            var link = $("#userInfo > a").attr("href");
+            link = link.substring(link.lastIndexOf("/") + 1);
+            createSteamPopUp(link);
         });
         $(document).on("click", "#addSteamLink", function() {
-            // TO DO: Create .popUp window to add steam link
+            createSteamPopUp();
         });
+
+        function createSteamPopUp(link) {
+            var baseLink = "http://www.steamcommunity.com/id/";
+            var text = '<span></span><div id="steamLink"><span>' + baseLink + '</span><input type="text"></div>';
+
+            popUp("", true, text, false, ["Envoyer", "Annuler"]);
+
+            $(document).on("click", "#confirmPrompt", function() {
+                if ($(this).text() == "Envoyer") {
+                    submitSteamLink($("#steamLink > input").val());
+                }
+            });
+        }
+
+        function submitSteamLink(newLink) {
+            $.ajax({
+                type: "POST",
+                url: "/Account/UpdateSteamLink",
+                data: JSON.stringify({ newLink: newLink }),
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            });
+        }
 
         $(document).on("click", "#options > div", function() {
             $("#options > div").not($(this)).each(function() {
@@ -244,7 +270,7 @@
         });
 
         $(document).on("click", "#removeAccount", function() {
-            popUp("Êtes-vous certains de vouloir supprimer votre compte? La suppression du compte est définitive. Toutes informations concernant votre compte seront supprimées, incluant vos crédits Gobot.", true);
+            popUp("Êtes-vous certains de vouloir supprimer votre compte? La suppression du compte est définitive. Toutes informations concernant votre compte seront supprimées, incluant vos crédits Gobot.", true, false, false);
 
             $(document).on("click", "#confirmPrompt", function() {
                 deleteAccount();

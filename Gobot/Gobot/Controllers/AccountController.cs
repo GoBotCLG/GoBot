@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 
 namespace Gobot.Controllers
 {
@@ -26,9 +27,35 @@ namespace Gobot.Controllers
 
             return View((User)Session["User"]);
         }
+
+        public JsonResult UpdateSteamLink(string newLink)
+        {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json(0, JsonRequestBehavior.DenyGet);
+
+            if (newLink == null || newLink == "" || newLink.All(c => Char.IsLetterOrDigit(c)))
+            {
+                TempData["error"] = "Le lien entré contient des caractères invalides.";
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+
+            int update = new MySQLWrapper().Update("user", 
+                new List<string>() { "SteamProfile" }, new List<OdbcParameter>() { new OdbcParameter(":SteamProfile", newLink) }, 
+                "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+
+            if (update > 0)
+                TempData["success"] = "Le lien vers votre compte Steam à été modifié avec succès.";
+            else
+                TempData["error"] = "Une erreur est survenue lors de la modification du lien vers votre compte Steam.";
+
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
         
         public JsonResult UpdatePassword(string oldPassword, string newPassword, string confirmPassword)
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json(0, JsonRequestBehavior.DenyGet);
+
             if (newPassword != confirmPassword)
             {
                 TempData["error"] = "Les deux mots de passe ne sont pas identiques.";
@@ -73,6 +100,9 @@ namespace Gobot.Controllers
         [HttpPost]
         public JsonResult UpdateImage(FormCollection data)
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json(0, JsonRequestBehavior.DenyGet);
+
             if (Request.Files["file"] != null)
             {
                 using (var binaryReader = new BinaryReader(Request.Files["file"].InputStream))
@@ -184,6 +214,9 @@ namespace Gobot.Controllers
         [HttpPost]
         public JsonResult UpdateEmail(string newEmail, string confirmEmail)
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json(0, JsonRequestBehavior.DenyGet);
+
             if (newEmail != confirmEmail)
             {
                 TempData["error"] = "Les deux adresse courriels saisies ne sont pas identiques.";
@@ -217,7 +250,7 @@ namespace Gobot.Controllers
 
         public JsonResult UpdateAccountInfo()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
             {
                 return Json(0, JsonRequestBehavior.DenyGet);
             }

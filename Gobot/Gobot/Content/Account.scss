@@ -1,4 +1,4 @@
-﻿@import 'global';
+﻿@import '_utils.scss';
 
 $height: 130px;
 
@@ -60,12 +60,14 @@ html, body { min-height: 100%; }
     > div:last-of-type {
         float: right;
     }
-    a, #modSteamLink { float: left !important; clear: none; margin-left: 5px;  }
+    a, #modSteamLink, #addSteamLink { float: left !important; clear: none; margin-left: 5px; font-style: italic; }
     #modSteamLink { 
         height: 0; 
         cursor: pointer;
     }
-        #modSteamLink:hover, #addSteamLink:hover { color: $off-white !important; text-decoration: underline; }
+    #addSteamLink { cursor: pointer; }
+        #modSteamLink:hover, #addSteamLink:hover, a:hover {  text-decoration: underline; color: $off-white !important; }
+        a:hover { color: $orange !important; }
 }
 
 #userInfo {

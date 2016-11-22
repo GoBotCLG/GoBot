@@ -1,4 +1,4 @@
-﻿@import 'global';
+﻿@import '_global.scss';
 
 /* -------------------------------------------------------------------------------------------------------------------
                                                         MENU
@@ -169,14 +169,4 @@
     #first { display: block; }
     #second { display: none; }
     #third { display: none; }
-}
-
-iframe#matchResult {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
-
-#matchResult_popUp {
-
 }

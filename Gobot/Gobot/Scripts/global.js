@@ -118,14 +118,17 @@ function setWidthFromChilds(e, maxE) {
     h_align_window(e.parent());
 }
 
-function popUp(text, yesNo, custom, prioritize) {
+function popUp(text, yesNo, custom, prioritize, buttonText) {
+    if (buttonText === 'undefined')
+        buttonText = ["Oui", "Non"];
+
     if (prioritize || ($("#error_overlay").length == 0 && $(".popUp").length == 0)) {
         $(".popUp").remove();
 
-        $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (typeof (custom) === 'undefined' ? '<span>' + text + '</span>' : custom) + '</div></div>');
+        $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (!custom ? '<span>' + text + '</span>' : custom) + '</div></div>');
 
         if (yesNo)
-            $(".popUp > .prompt").append('<div><button id="closePrompt">Non</button><button id="confirmPrompt">Oui</button></div>');
+            $(".popUp > .prompt").append('<div><button id="closePrompt">' + buttonText[1] + '</button><button id="confirmPrompt">' + buttonText[0] + '</button></div>');
         else
             $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
 
@@ -134,13 +137,12 @@ function popUp(text, yesNo, custom, prioritize) {
 
         $(".popUp").animate({
             height: '100%'
-        }, 100);
-        setTimeout(function () {
+        }, 100, function () {
             $(".prompt").animate({
                 padding: '25px 0',
                 opacity: '1'
             }, 200);
-        }, 100);
+        });
 
         return 1;
     }
