@@ -264,11 +264,15 @@ namespace Liaison_BD___CSGO
 
         private static void NewEvent(object sender, ProgressChangedEventArgs e)
         {
-            if(e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
+            DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
+            if (e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
-                DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
                 //Exception qui fait tout exploser à cette putain de ligne
-                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                if (CurrentTeam1Score > CurrentTeam2Score)
+                    Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[0]["Name"] + " avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                else
+                    Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
+
                 SetVictoryBets(CurrentMatchId, (int)(CurrentTeam1Score > CurrentTeam2Score ? teams.Rows[0]["IdTeam"] : teams.Rows[1]["IdTeam"]));
                 StopMatch();
             }
@@ -276,18 +280,19 @@ namespace Liaison_BD___CSGO
             {
                 CurrentRoundNumber++;
                 UploadScores();
+
                 if(CurrentTeam1Score > CurrentTeam2Score)
                 {
-                    Console.WriteLine("C'est maintenant " + CurrentTeam1Score + "-" + CurrentTeam2Score + " en faveur de " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[0]["Name"]);
+                    Console.WriteLine("C'est maintenant " + CurrentTeam1Score + "-" + CurrentTeam2Score + " en faveur de " + teams.Rows[0]["Name"]);
                 }
                 else
                 {
-                    Console.WriteLine("C'est maintenant " + CurrentTeam1Score + "-" + CurrentTeam2Score + " en faveur de " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[1]["Name"]);
+                    Console.WriteLine("C'est maintenant " + CurrentTeam2Score + "-" + CurrentTeam1Score + " en faveur de " + teams.Rows[1]["Name"]);
                 }
             }
             else if(e.ProgressPercentage == (int)MatchEvent.START_NEXT_MATCH)
             {
-                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[0]["Name"] + " contre " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[1]["Name"] + " commence à l'instant!");
+                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " commence à l'instant!");
                 StartMatch();
                 PrepareNextMatch();
             }
