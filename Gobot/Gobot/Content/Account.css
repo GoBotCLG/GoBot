@@ -427,6 +427,16 @@ html, body {
     margin-left: 10px; }
   #accountInfo > div:last-of-type {
     float: right; }
+  #accountInfo a, #accountInfo #modSteamLink {
+    float: left !important;
+    clear: none;
+    margin-left: 5px; }
+  #accountInfo #modSteamLink {
+    height: 0;
+    cursor: pointer; }
+  #accountInfo #modSteamLink:hover, #accountInfo #addSteamLink:hover {
+    color: #eeeeee !important;
+    text-decoration: underline; }
 
 #userInfo {
   display: block;

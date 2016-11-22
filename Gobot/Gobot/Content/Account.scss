@@ -60,6 +60,12 @@ html, body { min-height: 100%; }
     > div:last-of-type {
         float: right;
     }
+    a, #modSteamLink { float: left !important; clear: none; margin-left: 5px;  }
+    #modSteamLink { 
+        height: 0; 
+        cursor: pointer;
+    }
+        #modSteamLink:hover, #addSteamLink:hover { color: $off-white !important; text-decoration: underline; }
 }
 
 #userInfo {

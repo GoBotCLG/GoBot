@@ -119,7 +119,7 @@ function setWidthFromChilds(e, maxE) {
 }
 
 function popUp(text, yesNo, custom, prioritize) {
-    if (prioritize == true || $(".popUp").length == 0) {
+    if (prioritize || ($("#error_overlay").length == 0 && $(".popUp").length == 0)) {
         $(".popUp").remove();
 
         $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (typeof (custom) === 'undefined' ? '<span>' + text + '</span>' : custom) + '</div></div>');

@@ -61,10 +61,11 @@
             if (data.readyState == 4) {
                 var json = JSON.parse(data.response);
                 if (json != null && json != "") {
+                    var shown;
                     if (json.bet != "noBet")
-                        createMatchResult_PopUp(json);
+                        shown = createMatchResult_PopUp(json);
 
-                    if (json.next.time != 0)
+                    if (shown && json.next.time != 0)
                         createCookie(json.next.time);
                 }
             }
@@ -137,7 +138,7 @@
                      <div class="map"><h2><grey>DANS LA CARTE</grey> DE_COBBLESTONE</h2><img src="/Images/maps/de_cobblestone.png"/></div>\
                   </div>\
             </div>';
-        popUp("", false, text, false);
+        return popUp("", false, text, true);
     }
 
     $(document).ready(function () {
@@ -150,7 +151,7 @@
         if (getCookie("seenResults") == null)
             getMatchResults();
 
-        createMatchResult_PopUp();
+        //createMatchResult_PopUp();
     });
 
     $(window).on('resize', function () {
