@@ -72,45 +72,10 @@ namespace Liaison_BD___CSGO
             while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
             ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));
 
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt"))
+            for (int i = 1; i <= 10; i++)
             {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round01.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round02.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round03.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round03.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round04.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round04.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round05.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round05.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round06.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round06.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round07.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round07.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round08.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round08.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round09.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round09.txt");
-            }
-            if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round10.txt"))
-            {
-                File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round10.txt");
+                if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt"))
+                    File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
             }
 
             string[] files = Directory.GetFiles(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\logs");
@@ -301,8 +266,10 @@ namespace Liaison_BD___CSGO
         {
             if(e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
-                //Esception qui fait tout exploser à cette putain de ligne
-                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[0]["Name"] + " contre " + BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId)).Rows[1]["Name"] + " est terminé avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
+                //Exception qui fait tout exploser à cette putain de ligne
+                Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                SetVictoryBets(CurrentMatchId, (int)(CurrentTeam1Score > CurrentTeam2Score ? teams.Rows[0]["IdTeam"] : teams.Rows[1]["IdTeam"]));
                 StopMatch();
             }
             else if(e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
@@ -457,7 +424,7 @@ namespace Liaison_BD___CSGO
 
                 if (bets != null && bets.Rows.Count > 0)
                 {
-                    int remains = 0;
+                    decimal remains = 0;
                     foreach (DataRow bet in bets.Rows)
                     {
                         try
@@ -465,6 +432,7 @@ namespace Liaison_BD___CSGO
                             if ((int)bet["Team_IdTeam"] == WinnerID)
                             {
                                 List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]);
+                                remains += gains[1];
 
                                 int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)gains[0] : 0;
 
@@ -477,11 +445,11 @@ namespace Liaison_BD___CSGO
                                     List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
                                     Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
                                 }
-                                updateBetsAdmin((int)Math.Floor((decimal)totalBets["admin"] + gains[1]));
                             }
                         }
                         catch (Exception) { }
                     }
+                    updateBetsAdmin((int)Math.Floor(totalBets["admin"] + remains));
                 }
             }
             catch (Exception) { }
