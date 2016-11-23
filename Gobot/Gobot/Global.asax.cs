@@ -22,12 +22,11 @@ namespace Gobot
 // TODO: In new popUp window, when user clicks another user, show details of this user in the same window.
 // TODO: Find how to count the number of videos watched + favorite team of user. (/Account/Index + /Watch/Index)
 // TODO: Implement the number of GC gained and lost on betting for the user. (/Account/Index)
-// TODO: Add xp when user places bet, when he wins a bet and when he watches a game.
+// TODO: Add xp when user watches a game.
 // TODO: Code /Support/Contact with a form to send an email to us.
 // TODO: Create a method (json) to get portion of bets to reduce load on refresh in [/bet/index, /stats/schedule, /stats/history] (load first day on refresh and click button to load the next 20).
 // TODO: Add an header to show which day is currently shown in [/bet/index, /stats/schedule, /stats/history] before the matches of the said day.
 // TODO: Reduce match length for the next week to be able to test EOM bet's handling...
 // TODO: Create (modify???) a method (json) to get current match information in /Home/Index.
-// TODO: Create method to add level when user reach max amount of xp and adjust remaining xp accordingly.
 // TODO: Set default EXP to 0 and LVL to 1 in DB.
 // TODO: Create a 404 and a 403 page
