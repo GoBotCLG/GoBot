@@ -230,11 +230,17 @@ namespace Liaison_BD___CSGO
                 }
                 DataTable result = new DataTable();
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
-                mutex.WaitOne();
-                connection.Open();
-                adapt.Fill(result);
-                connection.Close();
-                mutex.ReleaseMutex();
+                Monitor.Enter(connection);
+                try
+                {
+                    connection.Open();
+                    adapt.Fill(result);
+                    connection.Close();
+                }
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (OdbcParameter param in args)
