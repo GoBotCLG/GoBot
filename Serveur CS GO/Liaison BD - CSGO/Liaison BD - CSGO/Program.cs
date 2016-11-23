@@ -14,7 +14,7 @@ using System.Net;
 
 namespace Liaison_BD___CSGO
 {
-    public enum MatchEvent { MATCH_ENDED, ROUND_ENDED, START_NEXT_MATCH }
+    public enum MatchEvent { MATCH_ENDED, ROUND_ENDED, START_NEXT_MATCH, START_KNIFE_ROUND, TEAM1_WON_KNIFE_ROUND, TEAM2_WON_KNIFE_ROUND }
 
     class Program
     {
@@ -64,7 +64,7 @@ namespace Liaison_BD___CSGO
         {
             Serveur = new Process();
             Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
-            Serveur.StartInfo.Arguments = "-game csgo -console -usercon -maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
+            Serveur.StartInfo.Arguments = "-game csgo -console -usercon -maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
             Thread.Sleep(60000);
@@ -130,18 +130,34 @@ namespace Liaison_BD___CSGO
 
             if ((int)Teams.Rows[0]["IdTeam"] == (int)CurrentMatch.Rows[0]["Team_IdTeam1"])
             {
-                Team1Name = Teams.Rows[0]["Name"].ToString();
-                Team2Name = Teams.Rows[1]["Name"].ToString();
+                if (Team1CTNextMatch)
+                {
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                }
+                else
+                {
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                }
             }
             else
             {
-                Team1Name = Teams.Rows[1]["Name"].ToString();
-                Team2Name = Teams.Rows[0]["Name"].ToString();
+                if (Team1CTNextMatch)
+                {
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                }
+                else
+                {
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                }
             }
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_restartgame 0;mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 1;mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -191,13 +207,29 @@ namespace Liaison_BD___CSGO
 
             if ((int)Teams.Rows[0]["IdTeam"] == (int)NextMatch.Rows[0]["Team_IdTeam1"])
             {
-                Team1Name = Teams.Rows[0]["Name"].ToString();
-                Team2Name = Teams.Rows[1]["Name"].ToString();
+                if(Team1CTNextMatch)
+                {
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                }
+                else
+                {
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                }
             }
             else
             {
-                Team1Name = Teams.Rows[1]["Name"].ToString();
-                Team2Name = Teams.Rows[0]["Name"].ToString();
+                if (Team1CTNextMatch)
+                {
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                }
+                else
+                {
+                    Team2Name = Teams.Rows[1]["Name"].ToString();
+                    Team1Name = Teams.Rows[0]["Name"].ToString();
+                }
             }
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
@@ -267,11 +299,15 @@ namespace Liaison_BD___CSGO
             DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
             if (e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
-                //Exception qui fait tout exploser à cette putain de ligne
                 if (CurrentTeam1Score > CurrentTeam2Score)
+                {
+                    ConnectionServeur.ServerCommand("tv_msg \"" + teams.Rows[0]["Name"] + " won \"");
                     Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[0]["Name"] + " avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                }
                 else
+                {
                     Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
+                }
 
                 SetVictoryBets(CurrentMatchId, (int)(CurrentTeam1Score > CurrentTeam2Score ? teams.Rows[0]["IdTeam"] : teams.Rows[1]["IdTeam"]));
                 StopMatch();
@@ -279,7 +315,14 @@ namespace Liaison_BD___CSGO
             else if(e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
             {
                 CurrentRoundNumber++;
-                UploadScores();
+                if(CurrentRoundNumber < 12)
+                {
+                    UploadScores();
+                }
+                else
+                {
+                    EndKnifeRound();
+                }
 
                 if(CurrentTeam1Score > CurrentTeam2Score)
                 {
@@ -295,6 +338,14 @@ namespace Liaison_BD___CSGO
                 Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " commence à l'instant!");
                 StartMatch();
                 PrepareNextMatch();
+            }
+            else if(e.ProgressPercentage == (int)MatchEvent.START_KNIFE_ROUND)
+            {
+                Console.WriteLine("Un knife round est lancé pour déterminer l'équipe gagnante!");
+                ConnectionServeur.ServerCommand("mp_give_player_c4 0");
+                ConnectionServeur.ServerCommand("mp_restartgame 1");
+                ConnectionServeur.ServerCommand("bot_knives_only");
+                ConnectionServeur.ServerCommand("mp_warmup_end");
             }
         }
 
@@ -360,9 +411,52 @@ namespace Liaison_BD___CSGO
             File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
         }
 
+        private static void EndKnifeRound()
+        {
+            StreamReader InRound = new StreamReader(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
+            
+            int TotalCT = 5;
+            int TotalT = 5;
+
+            while (!InRound.EndOfStream)
+            {
+                string ligne = InRound.ReadLine();
+                if (ligne.Contains("FirstHalfScore"))
+                {
+                    InRound.ReadLine();                             //{
+                    ligne = InRound.ReadLine();                     //  "team1"     "2"
+                    TotalCT += int.Parse(ligne.Split('"')[3]);
+                    ligne = InRound.ReadLine();                     //  "team2"     "3"
+                    TotalT += int.Parse(ligne.Split('"')[3]);
+                }
+            }
+
+            if (Team1CTCurrentMatch)
+            {
+                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                CurrentTeam1Score = TotalCT;
+                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                CurrentTeam2Score = TotalT;
+            }
+            else
+            {
+                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                CurrentTeam1Score = TotalT;
+                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                CurrentTeam2Score = TotalCT;
+            }
+
+            InRound.Close();
+            File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
+
+            ConnectionServeur.ServerCommand("bot_all_weapons");
+
+        }
+
         private static void StartMatch()
         {
             ConnectionServeur.ServerCommand("changelevel " + NextMap);
+            SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
             Thread.Sleep(30000);
 
 
@@ -402,6 +496,18 @@ namespace Liaison_BD___CSGO
 
                 if(Round == 11 || CurrentTeam1Score == 6 || CurrentTeam2Score == 6)
                 {
+                    if(Round == 11 && CurrentTeam1Score == 5 && CurrentTeam2Score == 5)
+                    {
+                        Round = 1;
+                        ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_KNIFE_ROUND);
+                        while(!File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + Round.ToString("00") + ".txt"))
+                        {
+                            Thread.Sleep(1000);
+                        }
+                        ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
+                        ConnectionServeur.ServerCommand("bot_all_weapons");
+                        ConnectionServeur.ServerCommand("mp_give_player_c4 1");
+                    }
                     Thread.Sleep(4500);
                     Round = 0;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.MATCH_ENDED);
