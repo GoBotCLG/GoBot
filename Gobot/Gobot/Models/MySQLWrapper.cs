@@ -22,7 +22,7 @@ namespace Gobot.Models
 
         public void Connect()
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=69.156.206.162;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
+            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             try { connection.Open(); } catch (Exception) { }
         }
 

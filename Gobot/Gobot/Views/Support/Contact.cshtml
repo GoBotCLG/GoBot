@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="info_container">
+    <div class="info" id="header">
+        <h6></h6>
+    </div>
+    <div class="info">
+        @using (Html.BeginForm("SendEmail", "Support", FormMethod.Post))
+        {
+            <label>Nom</label>
+            <input type="text" name="name"/>
+            <label>Message</label>
+            <textarea name="msg" rows="4"></textarea>
+            <input type="submit" value="Envoyer" />
+        }
+    </div>
+</div>
