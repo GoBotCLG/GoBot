@@ -337,21 +337,23 @@ namespace Gobot.Controllers
         [HttpPost]
         public ActionResult Remove()
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return RedirectToAction("Index", "Home");
+
             MySQLWrapper Bd = new MySQLWrapper();
             List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
 
-            //int DeleteResult = Bd.Delete("user", "Username = ?", user);
-            //if (DeleteResult == 1)
-            //{
-            //    Logout();
-            //    TempData["success"] = "Votre compte à été supprimé.";
-            //    return RedirectToAction("Index", "Home");
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Index", "Account");
-            //}
-            return RedirectToAction("Index", "Account");
+            int DeleteResult = Bd.Delete("user", "Username = ?", user);
+            if (DeleteResult == 1)
+            {
+                Logout();
+                TempData["success"] = "Votre compte à été supprimé.";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Account");
+            }
         }
 
         public ActionResult AddCredit()

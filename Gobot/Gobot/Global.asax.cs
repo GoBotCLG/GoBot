@@ -20,7 +20,6 @@ namespace Gobot
 // TODO: Find a way to store image files directly in folder (have the windows rights to do so).
 // TODO: Create new popUp window in [/bet/index, /stats/schedule, /stats/history] to show users who have also bet on that team.
 // TODO: In new popUp window, when user clicks another user, show details of this user in the same window.
-// TODO: Remove comments in AccountController in DeleteAccount.
 // TODO: Find how to count the number of videos watched + favorite team of user. (/Account/Index + /Watch/Index)
 // TODO: Code the little css /Bet/Ad needs.
 // TODO: Implement the number of GC gained and lost on betting for the user. (/Account/Index)
@@ -32,3 +31,4 @@ namespace Gobot
 // TODO: Create (modify???) a method (json) to get current match information in /Home/Index.
 // TODO: Create method to add level when user reach max amount of xp and adjust remaining xp accordingly.
 // TODO: Set default EXP to 0 and LVL to 1 in DB.
+// TODO: Create a 404 and a 403 page

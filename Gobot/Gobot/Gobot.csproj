@@ -220,6 +220,12 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\GetCredits.css">
+      <DependentUpon>GetCredits.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\GetCredits.min.css">
+      <DependentUpon>GetCredits.css</DependentUpon>
+    </Content>
     <Content Include="Content\Home.css">
       <DependentUpon>Home.scss</DependentUpon>
     </Content>
@@ -302,6 +308,7 @@
     <Content Include="Images\triangle.png" />
     <Content Include="Images\t_side.png" />
     <Content Include="Images\user.png" />
+    <Content Include="Scripts\ads.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Menu.scss" />
@@ -326,6 +333,7 @@
     <Content Include="Content\Support.scss" />
     <Content Include="Content\Watch.scss" />
     <Content Include="Content\_utils.scss" />
+    <Content Include="Content\GetCredits.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\global.js" />

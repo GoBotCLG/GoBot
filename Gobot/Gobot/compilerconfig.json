@@ -42,5 +42,13 @@
   {
     "outputFile": "Content/Watch.css",
     "inputFile": "Content/Watch.scss"
+  },
+  {
+    "outputFile": "Content/Ad.css",
+    "inputFile": "Content/Ad.scss"
+  },
+  {
+    "outputFile": "Content/GetCredits.css",
+    "inputFile": "Content/GetCredits.scss"
   }
 ]

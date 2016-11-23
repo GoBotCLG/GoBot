@@ -1,0 +1,16 @@
+﻿@import '_utils.scss';
+
+#header {
+    > h6 {
+        margin-top: 70px !important;
+        margin-bottom: 0 !important;
+    }
+    > h4 {
+        font: 400 20px $font;
+        color: $off-white;
+        margin-bottom: 50px;
+        margin-top: 0;
+        width: 100%;
+        text-align: center;
+    }
+}

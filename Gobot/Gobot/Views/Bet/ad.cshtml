@@ -4,4 +4,32 @@
     ViewBag.Keywords = "Annonce, récompenses, crédits, pub, Gobot";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Styles.Render("~/Content/Account.min.css")
+@Styles.Render("~/Content/GetCredits.min.css")
+
+<div class="info_container">
+    <div class="info" id="header">
+        <h6>REGARDEZ UNE ANNONCE</h6>
+        <h4 class="grey">et bénéficiez d’une récompense allant de 10 à 50 crédits.</h4>
+    </div>
+
+    <div id="video">
+
+    </div>
+</div>
+
+@Scripts.Render("~/Scripts/ads.js")
+@section Scripts {
+    <script>
+        $(function () {
+            if (window.canRunAds === undefined) {
+                $("body").prepend('<div id="error_overlay"><div><div id="error_overlay_image"></div><h1>Veuillez désactiver AdBlock pour visionner une publicité.</h1></div></div>');
+            }
+
+            h_align_window($(".info_container"));
+        })
+
+        $(window).resize(function () {
+            h_align_window($(".info_container"));
+        });
+    </script>    
+}
