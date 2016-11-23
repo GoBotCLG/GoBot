@@ -17,7 +17,7 @@ namespace Liaison_BD___CSGO
 
         public MySQLWrapper()
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=69.156.206.162;PORT=3306;DATABASE=gobot;USER=Max;PASSWORD=yolo;OPTION=3;");
+            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             mutex = new Mutex();
         }
 
@@ -230,11 +230,17 @@ namespace Liaison_BD___CSGO
                 }
                 DataTable result = new DataTable();
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
-                mutex.WaitOne();
-                connection.Open();
-                adapt.Fill(result);
-                connection.Close();
-                mutex.ReleaseMutex();
+                Monitor.Enter(connection);
+                try
+                {
+                    connection.Open();
+                    adapt.Fill(result);
+                    connection.Close();
+                }
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (OdbcParameter param in args)
