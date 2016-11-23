@@ -50,7 +50,7 @@ namespace Gobot.Controllers
 
             return Json("", JsonRequestBehavior.AllowGet);
         }
-        
+
         public JsonResult UpdatePassword(string oldPassword, string newPassword, string confirmPassword)
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
