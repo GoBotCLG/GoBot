@@ -21,7 +21,6 @@ namespace Gobot
 // TODO: Create new popUp window in [/bet/index, /stats/schedule, /stats/history] to show users who have also bet on that team.
 // TODO: In new popUp window, when user clicks another user, show details of this user in the same window.
 // TODO: Find how to count the number of videos watched + favorite team of user. (/Account/Index + /Watch/Index)
-// TODO: Code the little css /Bet/Ad needs.
 // TODO: Implement the number of GC gained and lost on betting for the user. (/Account/Index)
 // TODO: Add xp when user places bet, when he wins a bet and when he watches a game.
 // TODO: Code /Support/Contact with a form to send an email to us.

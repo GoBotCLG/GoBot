@@ -416,11 +416,13 @@ namespace Liaison_BD___CSGO
         /// <param name="VictoryTeam">Winner's team ID</param>
         private static void SetVictoryBets(int CurrentMatchId, int WinnerID)
         {
+            int xpWin = 100; // Amount of xp a user gain when winning bet.
+            int xpLvl = 1500;
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
                 DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
-                DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit");
+                DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit", "EXP", "LVL");
                 var totalBets = getTotalBets(ref bets, WinnerID);
 
                 Bd.Update("matchs", 
@@ -442,13 +444,21 @@ namespace Liaison_BD___CSGO
                                 int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)gains[0] : 0;
 
                                 DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
-                                int userCredit = user.Length > 0 ? (int)user[0]["Credit"] : -1;
+                                int userCredit = user != null && user.Length > 0 ? (int)user[0]["Credit"] : -1;
 
                                 if (userCredit != -1)
                                 {
-                                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd) };
+                                    int xp = (int)user[0]["EXP"] + xpWin;
+                                    int lvl = (int)user[0]["LVL"];
+                                    if (xp >= xpLvl)
+                                    {
+                                        xp -= xpLvl;
+                                        lvl += 1;
+                                    }
+
+                                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
                                     List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
-                                    Bd.Update("user", new List<string>() { "Credit" }, values, "Username = ?", cond);
+                                    Bd.Update("user", new List<string>() { "Credit", "EXP", "LVL" }, values, "Username = ?", cond);
                                 }
                             }
                         }

@@ -23,5 +23,7 @@ namespace Gobot.Models
         public string Username { get; set; }
         public int TeamId { get; set; }
         public int MatchId { get; set; }
+
+        public static int xpBet = 100;
     }
 }

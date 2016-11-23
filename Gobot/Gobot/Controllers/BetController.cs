@@ -180,8 +180,15 @@ namespace Gobot.Controllers
 
                 if (result > 0)
                 {
-                    List<string> columns = new List<string>() { "Credit" };
-                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - Amount) };
+                    int xp = ((User)Session["User"]).EXP + Bet.xpBet;
+                    int lvl = ((User)Session["User"]).Level;
+                    if (xp >= Models.User.xpLvl)
+                    {
+                        xp -= Models.User.xpLvl;
+                        lvl += 1;
+                    }
+                    List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
+                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - Amount), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
                     List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
                     int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                     if (updateresult == 1)
@@ -243,9 +250,15 @@ namespace Gobot.Controllers
                         int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
                         if (result > 0)
                         {
-
-                            List<string> columns = new List<string>() { "Credit" };
-                            List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits + Amount) };
+                            int xp = ((User)Session["User"]).EXP - Models.Bet.xpBet;
+                            int lvl = ((User)Session["User"]).Level;
+                            if (xp < 0)
+                            {
+                                xp += Models.User.xpLvl;
+                                lvl -= 1;
+                            }
+                            List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
+                            List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits + Amount), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
                             List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
                             int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                             if (updateresult == 1)

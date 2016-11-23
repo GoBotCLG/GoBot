@@ -35,5 +35,7 @@ namespace Gobot.Models
         public int Team1Rounds { get; set; }
         public int Team2Rounds { get; set; }
         public string Map { get; set; }
+
+        public static int xpReward = 10;
     }
 }
