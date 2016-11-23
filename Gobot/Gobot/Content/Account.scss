@@ -70,6 +70,42 @@ html, body { min-height: 100%; }
         a:hover { color: $orange !important; }
 }
 
+#steamLink {
+    display: block;
+    height: auto;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 25px;
+
+    > span, > input {
+        display: block;
+        float: left !important;
+        font: 400 18px $font;
+        min-width: 0;
+    }
+    > span {
+        color: $grey;
+        text-align: right;
+        padding: 10px 0;
+        width: auto
+    }
+    > input {
+        color: $lightGrey;
+        background-color: transparent;
+        border: 1px solid $grey;
+        text-indent: 15px;
+        padding: 10px 0;
+        margin-left: 15px;
+        width: 35%;
+    }
+        > input:focus { color: $off-white; border: 1px solid $menuColor; }
+
+        > input::-moz-placeholder           { color: $lightGrey !important; }
+        > input::-webkit-input-placeholder  { color: $lightGrey !important; }
+        > input:-ms-input-placeholder       { color: $lightGrey !important; }
+        > input:-moz-placeholder            { color: $lightGrey !important; }
+}
+
 #userInfo {
     display: block;
     width: auto;

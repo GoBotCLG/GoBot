@@ -33,7 +33,7 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json(0, JsonRequestBehavior.DenyGet);
 
-            if (newLink == null || newLink == "" || newLink.All(c => Char.IsLetterOrDigit(c)))
+            if (newLink == null || newLink == "" || !newLink.All(c => Char.IsLetterOrDigit(c)))
             {
                 TempData["error"] = "Le lien entré contient des caractères invalides.";
                 return Json("", JsonRequestBehavior.AllowGet);

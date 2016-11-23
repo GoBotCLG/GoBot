@@ -182,6 +182,23 @@
             onResize();
             posRepBar(false);
         });
+
+        $(document).on("input", "#steamLink > input", function() {
+            var input = $(this);
+
+            if (input.val() == "") {
+                input_error_show(input, "Le lien ne peut pas être vide.", true);
+                $("#confirmPrompt").prop('disabled', true);
+            }
+            else if (!input.val().match(/^[0-9a-zA-Z]+$/)) {
+                input_error_show(input, "Le lien ne peut contenir que des chiffres et des lettres.", true);
+                $("#confirmPrompt").prop('disabled', true);
+            }
+            else {
+                input_error_hide(input);
+                $("#confirmPrompt").prop('disabled', false);
+            }
+        });
         
         $(document).on("click", "#modSteamLink", function() {
             var link = $("#userInfo > a").attr("href");
@@ -194,7 +211,8 @@
 
         function createSteamPopUp(link) {
             var baseLink = "http://www.steamcommunity.com/id/";
-            var text = '<span></span><div id="steamLink"><span>' + baseLink + '</span><input type="text"></div>';
+            var text = '<h1>MODIFIER MON LIEN STEAM</h1><span>Le lien vers votre compte steam permet de partager votre profil steam avec les autres utilisateurs du site.</span><div id="steamLink"><span>' 
+                + baseLink + '</span><input name="newSteamLink" type="text" placeholder="' + (link == undefined ? 'monUrlSteam' : link) + '"></div>';
 
             popUp("", true, text, false, ["Envoyer", "Annuler"]);
 
@@ -206,14 +224,17 @@
         }
 
         function submitSteamLink(newLink) {
-            $.ajax({
-                type: "POST",
-                url: "/Account/UpdateSteamLink",
-                data: JSON.stringify({ newLink: newLink }),
-                success: function(){},
-                dataType: "json",
-                contentType : "application/json"
-            });
+            if (newLink != null && newLink != "" && newLink.match(/^[0-9a-zA-Z]+$/)) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/UpdateSteamLink",
+                    data: JSON.stringify({ newLink: newLink }),
+                    success: function(){},
+                    dataType: "json",
+                    contentType : "application/json"
+                });
+                location.reload();
+            }
         }
 
         $(document).on("click", "#options > div", function() {
@@ -247,7 +268,6 @@
                 $("#closeOption").show();
 
                 onResize();
-                //posOptionTabs();
             }
             else {
                 $("#options").remove();
@@ -314,19 +334,6 @@
                 if (i < levels)
                     animateRanks(i+ 1);
             }, 750 / levels);
-        }
-
-        function posOptionTabs() {
-            let elems = ["#changeImg", "#changeEmail"];
-            for (var i = 0; i < elems.length; i++) {
-                var pwdImg = $("#changePwd > img").css("top").replace("px", "");
-                var pwdImgHeight = $("#changePwd > img").height()
-                var elemImgHeight = $(elems[i] + " > img").height();
-                var total = parseFloat(pwdImg) + parseFloat(pwdImgHeight) - parseFloat(elemImgHeight);
-                $(elems[i] + "> img").attr("style", "top: " + total + "px !important;");
-                $(elems[i] + "> h2").attr("style", "top: " + total + "px !important;");
-            }
-            $("#changePwd > h2").attr("style", "top: " + $("#changePwd > img").css("top").replace("px", "") + "px !important;");
         }
 
         function posRepBar(animate) {

@@ -196,6 +196,15 @@ img                         { border: 0; }
         overflow: hidden;
         opacity: 0;
 
+        > h1 {
+            display: block;
+            width: 90%;
+            padding: 15px 5%;
+            text-align: center;
+            font: italic 900 36px $font;
+            color: $off-white;
+        }
+
         > span {
             display: block;
             max-width: 80%;
@@ -229,7 +238,8 @@ img                         { border: 0; }
                 height: 65px;
                 transition: background 0.4s;
             }
-                > button:hover {
+                > button:disabled { background-color: $grey !important; cursor: default;}
+                > button:not(:disabled):hover {
                     background-position-x: calc(100% - 30px) !important;
                     color: white;
                     transition: 0.4s, color 0.2s ease 0.4s;
@@ -340,6 +350,46 @@ img                         { border: 0; }
     }
     > #closePrompt { 
         background: $red no-repeat center url("/Images/close_white.png");
+    }
+}
+
+.inputError {
+    $triangle_height: 14px;
+
+    position: absolute;
+    display: block;
+    border: 2px solid $red;
+    background-color: rgba(0,0,0,0.8);
+    margin: $triangle_height + 4px 0;
+    z-index: 3000;
+
+    > .popUp_triangle {
+        position: absolute;
+        display: block;
+        height: $triangle_height;
+        width: $triangle_height * 2;
+        left: calc(50% - 14px) !important;
+        background-color: $red;
+
+        -webkit-clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+        clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+    }
+        > .popUp_triangle.top {
+            top: -$triangle_height - 2px;
+        }
+        > .popUp_triangle.below {
+            top: 100%;
+            @include rotate(180deg);
+        }
+
+    > h3 {
+        display: block;
+        position: relative;
+        width: auto;
+        padding: 5px 0;
+        font: 400 14px $font;
+        color: $off-white;
+        margin-left: 15px;
     }
 }
 

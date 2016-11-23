@@ -227,6 +227,13 @@ img {
     max-width: 1350px;
     overflow: hidden;
     opacity: 0; }
+    .popUp > .prompt > h1 {
+      display: block;
+      width: 90%;
+      padding: 15px 5%;
+      text-align: center;
+      font: italic 900 36px Lato, Arial, sans-serif;
+      color: #eeeeee; }
     .popUp > .prompt > span {
       display: block;
       max-width: 80%;
@@ -256,7 +263,10 @@ img {
         background-size: 30px !important;
         height: 65px;
         transition: background 0.4s; }
-      .popUp > .prompt > div > button:hover {
+      .popUp > .prompt > div > button:disabled {
+        background-color: #626262 !important;
+        cursor: default; }
+      .popUp > .prompt > div > button:not(:disabled):hover {
         background-position-x: calc(100% - 30px) !important;
         color: white;
         transition: 0.4s, color 0.2s ease 0.4s; }
@@ -356,6 +366,38 @@ img {
 
 .popUp.yesNo > .prompt > div > #closePrompt {
   background: #963434 no-repeat center url("/Images/close_white.png"); }
+
+.inputError {
+  position: absolute;
+  display: block;
+  border: 2px solid #963434;
+  background-color: rgba(0, 0, 0, 0.8);
+  margin: 18px 0;
+  z-index: 3000; }
+  .inputError > .popUp_triangle {
+    position: absolute;
+    display: block;
+    height: 14px;
+    width: 28px;
+    left: calc(50% - 14px) !important;
+    background-color: #963434;
+    -webkit-clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+    clip-path: polygon(50% 0, 0% 100%, 100% 100%); }
+  .inputError > .popUp_triangle.top {
+    top: -16px; }
+  .inputError > .popUp_triangle.below {
+    top: 100%;
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg); }
+  .inputError > h3 {
+    display: block;
+    position: relative;
+    width: auto;
+    padding: 5px 0;
+    font: 400 14px Lato, Arial, sans-serif;
+    color: #eeeeee;
+    margin-left: 15px; }
 
 @media screen and (max-width: 840px) {
   .prompt {

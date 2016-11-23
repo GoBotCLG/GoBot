@@ -119,8 +119,7 @@ function setWidthFromChilds(e, maxE) {
 }
 
 function popUp(text, yesNo, custom, prioritize, buttonText) {
-    if (buttonText === 'undefined')
-        buttonText = ["Oui", "Non"];
+    var buttons = buttonText == undefined ? ["Oui", "Non"] : buttonText;
 
     if (prioritize || ($("#error_overlay").length == 0 && $(".popUp").length == 0)) {
         $(".popUp").remove();
@@ -128,7 +127,7 @@ function popUp(text, yesNo, custom, prioritize, buttonText) {
         $("body").prepend('<div class="popUp ' + (yesNo ? 'yesNo' : '') + '"><div class="prompt">' + (!custom ? '<span>' + text + '</span>' : custom) + '</div></div>');
 
         if (yesNo)
-            $(".popUp > .prompt").append('<div><button id="closePrompt">' + buttonText[1] + '</button><button id="confirmPrompt">' + buttonText[0] + '</button></div>');
+            $(".popUp > .prompt").append('<div><button id="closePrompt">' + buttons[1] + '</button><button id="confirmPrompt">' + buttons[0] + '</button></div>');
         else
             $(".popUp > .prompt").append('<div><button id="closePrompt">Ok</button></div>');
 
@@ -163,3 +162,25 @@ $(document).on("click", ".popUp > .prompt > div > button", function () {
         });
     }, 100);
 });
+
+function input_error_show(input, text, onTop) {
+    if (input.next().hasClass("inputError"))
+        input.next().remove();
+
+    var id = "error_" + input.attr('name');
+    $('<div class="inputError" id="' + id + '"><div class="popUp_triangle ' + (onTop ? 'below' : 'top') + '"></div><h3>' + text + '</h3></div>').insertAfter(input);
+
+    var top = onTop ? input.position().top - input.outerHeight() - $("#" + id).height() + 6 : input.position().top + input.outerHeight();
+    var margin = input.css("margin-left").replace("px", "");
+    var left = input.position().left;
+    $("#" + id).css({
+        width: input.width() - 2,
+        top: top,
+        left: left + parseInt(margin)
+    });
+}
+
+function input_error_hide(input) {
+    if (input.next().hasClass("inputError"))
+        input.next().remove();
+}

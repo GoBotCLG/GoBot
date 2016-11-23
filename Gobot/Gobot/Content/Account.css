@@ -88,6 +88,42 @@ html, body {
   #accountInfo a:hover {
     color: #ffbf5c !important; }
 
+#steamLink {
+  display: block;
+  height: auto;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 25px; }
+  #steamLink > span, #steamLink > input {
+    display: block;
+    float: left !important;
+    font: 400 18px Lato, Arial, sans-serif;
+    min-width: 0; }
+  #steamLink > span {
+    color: #626262;
+    text-align: right;
+    padding: 10px 0;
+    width: auto; }
+  #steamLink > input {
+    color: #5f5f5f;
+    background-color: transparent;
+    border: 1px solid #626262;
+    text-indent: 15px;
+    padding: 10px 0;
+    margin-left: 15px;
+    width: 35%; }
+  #steamLink > input:focus {
+    color: #eeeeee;
+    border: 1px solid #f16651; }
+  #steamLink > input::-moz-placeholder {
+    color: #5f5f5f !important; }
+  #steamLink > input::-webkit-input-placeholder {
+    color: #5f5f5f !important; }
+  #steamLink > input:-ms-input-placeholder {
+    color: #5f5f5f !important; }
+  #steamLink > input:-moz-placeholder {
+    color: #5f5f5f !important; }
+
 #userInfo {
   display: block;
   width: auto;
