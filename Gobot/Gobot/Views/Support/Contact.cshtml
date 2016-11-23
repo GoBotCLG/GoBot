@@ -3,6 +3,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    if (TempData["error"] != null)
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="error_overlay_image"></div>
+                <h1>@TempData["error"]</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+    else if (TempData["success"] != null)
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="success_overlay_image"></div>
+                <h1>@TempData["success"]</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+}
+
 <div class="info_container">
     <div class="info" id="header">
         <h6></h6>

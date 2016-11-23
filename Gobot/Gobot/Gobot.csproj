@@ -262,6 +262,12 @@
     <Content Include="Content\Watch.min.css">
       <DependentUpon>Watch.css</DependentUpon>
     </Content>
+    <Content Include="Errors\403.aspx" />
+    <Content Include="Errors\403.html" />
+    <Content Include="Errors\404.aspx" />
+    <Content Include="Errors\404.html" />
+    <Content Include="Errors\503.html" />
+    <Content Include="Errors\error.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

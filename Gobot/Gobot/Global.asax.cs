@@ -28,5 +28,4 @@ namespace Gobot
 // TODO: Add an header to show which day is currently shown in [/bet/index, /stats/schedule, /stats/history] before the matches of the said day.
 // TODO: Reduce match length for the next week to be able to test EOM bet's handling...
 // TODO: Create (modify???) a method (json) to get current match information in /Home/Index.
-// TODO: Set default EXP to 0 and LVL to 1 in DB.
 // TODO: Create a 404 and a 403 page

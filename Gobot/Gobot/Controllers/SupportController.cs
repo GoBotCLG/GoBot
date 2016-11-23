@@ -27,7 +27,7 @@ namespace Gobot.Controllers
                 return View();
         }
 
-        public JsonResult SendEmail()
+        public ActionResult SendEmail()
         {
             string name = string.Format("{0}", Request.Form["name"]);
             string msg = string.Format("{0}", Request.Form["msg"]);
@@ -67,8 +67,10 @@ namespace Gobot.Controllers
                 else
                     TempData["error"] = "Le message doit contenir au moins 15 caractères.";
             }
+            else
+                RedirectToAction("Index", "Home");
 
-            return Json("", JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Contact", "Support");
         }
     }
 }
