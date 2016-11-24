@@ -1,4 +1,5 @@
-﻿/* -------------------------------------------------------------------------------------------------------------------
+﻿@charset "UTF-8";
+/* -------------------------------------------------------------------------------------------------------------------
                                                     VARIABLES
  ------------------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------
@@ -343,4 +344,98 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: transparent !important; }
     .info.smaller > .separator > div {
       background-color: #323232 !important; }
+
+/*
+    <div id="teamBets_container">
+        <div id="teamBets">
+            <div id="bets_header">
+                <h1>TEAM_NAME</h1>
+                <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>
+                <div id="teamBets_close"></div>
+            </div>
+            <div id="bets_users">
+                <div class="user">
+                    <div class="bet_img">
+                        <img/><h2>PLAYER_NAME</h2><div class="link"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+*/
+#teamBets_container {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75); }
+  #teamBets_container > #teamBets {
+    position: relative;
+    display: block;
+    height: 75%;
+    width: 100%;
+    max-width: 675px;
+    max-height: 715px;
+    background-color: #1c1c1c; }
+    #teamBets_container > #teamBets > #bets_header {
+      position: relative;
+      display: block;
+      height: auto;
+      width: 90%;
+      padding: 15px 5%;
+      background-color: #232323; }
+      #teamBets_container > #teamBets > #bets_header > h1, #teamBets_container > #teamBets > #bets_header > h3 {
+        position: relative;
+        display: block;
+        width: 100%;
+        color: #eeeeee; }
+      #teamBets_container > #teamBets > #bets_header h1 {
+        font: italic 900 48px Lato, Arial, sans-serif; }
+      #teamBets_container > #teamBets > #bets_header h3 {
+        font: italic 900 22px Lato, Arial, sans-serif; }
+      #teamBets_container > #teamBets > #bets_header > #teamBets_close {
+        position: absolute;
+        display: block;
+        width: 70px;
+        height: 70px;
+        right: 0 !important;
+        background: no-repeat center url("~/Images/close_grey.png");
+        background-size: 23px; }
+      #teamBets_container > #teamBets > #bets_header > #teamBets_close:hover {
+        background-image: url("~/Images/close_red.png"); }
+    #teamBets_container > #teamBets > #bets_users {
+      display: block;
+      position: relative;
+      width: 90%;
+      height: auto;
+      overflow: scroll;
+      padding: 0 5%; }
+      #teamBets_container > #teamBets > #bets_users > .user {
+        display: block;
+        width: 100%; }
+        #teamBets_container > #teamBets > #bets_users > .user > .bet_img {
+          float: left; }
+          #teamBets_container > #teamBets > #bets_users > .user > .bet_img > img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.3); }
+        #teamBets_container > #teamBets > #bets_users > .user > .link {
+          float: left;
+          display: block;
+          height: 100%;
+          width: auto;
+          background: no-repeat center url("~/Images/ext_link.png");
+          background-size: 26px;
+          display: none; }
+        #teamBets_container > #teamBets > #bets_users > .user > h2 {
+          float: left;
+          display: block;
+          font: italic 900 30px Lato, Arial, sans-serif;
+          color: #626262; }
+      #teamBets_container > #teamBets > #bets_users > .user:hover > h2 {
+        color: #eeeeee; }
+      #teamBets_container > #teamBets > #bets_users > .user:hover > .link {
+        display: block; }
 

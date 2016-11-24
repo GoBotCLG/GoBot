@@ -338,22 +338,135 @@ $betH: 300px;
             } 
         }
     }
-    .info.smaller {
-        width: 50% !important;
+
+.info.smaller {
+    width: 50% !important;
+    background-color: transparent !important;
+    margin: 0 !important;
+
+    > a { 
         background-color: transparent !important;
-        margin: 0 !important;
-
-        > a { 
-            background-color: transparent !important;
-            > h2 { padding: 0; text-transform: uppercase; color: #686868 !important; margin: 15px !important; }
-        }
-            > a:hover > h2 { color: white !important; }
-
-        > a.active {
-            background-color: $menuColor !important;
-            cursor: default !important;
-            > h2 { color: white !important; }
-        }
-
-        > .separator { background-color: transparent !important; > div { background-color: $darkGrey !important; } }
+        > h2 { padding: 0; text-transform: uppercase; color: #686868 !important; margin: 15px !important; }
     }
+        > a:hover > h2 { color: white !important; }
+
+    > a.active {
+        background-color: $menuColor !important;
+        cursor: default !important;
+        > h2 { color: white !important; }
+    }
+
+    > .separator { background-color: transparent !important; > div { background-color: $darkGrey !important; } }
+}
+
+/*
+    <div id="teamBets_container">
+        <div id="teamBets">
+            <div id="bets_header">
+                <h1>TEAM_NAME</h1>
+                <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>
+                <div id="teamBets_close"></div>
+            </div>
+            <div id="bets_users">
+                <div class="user">
+                    <div class="bet_img">
+                        <img/><h2>PLAYER_NAME</h2><div class="link"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+*/
+#teamBets_container {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75);
+
+    > #teamBets {
+        position: relative;
+        display: block;
+        height: 75%;
+        width: 100%;
+        max-width: 675px;
+        max-height: 715px;
+        background-color: #1c1c1c;
+
+        > #bets_header {
+            position: relative;
+            display: block;
+            height: auto;
+            width: 90%;
+            padding: 15px 5%;
+            background-color: $infoBgColor;
+
+            > h1, > h3 {
+                position: relative;
+                display: block;
+                width: 100%;
+                color: $off-white;
+            }
+                h1 { font: italic 900 48px $font; }
+                h3 { font: italic 900 22px $font; }
+
+            > #teamBets_close {
+                position: absolute;
+                display: block;
+                width: 70px;
+                height: 70px;
+                right: 0 !important;
+                background: no-repeat center url('~/Images/close_grey.png');
+                background-size: 23px;
+            }
+                > #teamBets_close:hover { background-image: url('~/Images/close_red.png'); }
+        }
+
+        > #bets_users {
+            display: block;
+            position: relative;
+            width: 90%;
+            height: auto;
+            overflow: scroll;
+            padding: 0 5%;
+
+            > .user {
+                display: block;
+                width: 100%;
+
+                > .bet_img {
+                    float: left;
+
+                    > img {
+                        position: absolute;
+                        width: 70px;
+                        height: 70px;
+                        border-radius: 50%;
+                        border: 5px solid rgba(255,255,255,0.3);
+                    }
+                }
+
+                > .link {
+                    float: left;
+                    display: block;
+                    height: 100%;
+                    width: auto;
+                    background: no-repeat center url('~/Images/ext_link.png');
+                    background-size: 26px;
+                    display: none;
+                }
+
+                > h2 {
+                    float: left;
+                    display: block;
+                    font: italic 900 30px $font;
+                    color: $grey;
+                }
+            }
+                > .user:hover {
+                    > h2 { color: $off-white; }
+                    > .link { display: block; }
+                }
+        }
+    }
+}
