@@ -19,7 +19,25 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetMatches(true);
+            List<Match> FutureMatches = Bd.GetMatches(true);
+            List<Match> Matches = new List<Match>();
+
+            if (FutureMatches.Count() > 0)
+            {
+                int firstDate = FutureMatches[0].Date.DayOfYear;
+                int secondDate = FutureMatches[0].Date.AddDays(1).DayOfYear;
+                foreach (Match m in FutureMatches)
+                {
+                    if (m.Date.DayOfYear == firstDate || m.Date.DayOfYear == secondDate)
+                        Matches.Add(m);
+                    else
+                    {
+                        Matches.Add(m);
+                        break;
+                    }
+                }
+            }
+
             List<Bet> Bets = new List<Bet>();
 
             DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
@@ -317,6 +335,25 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             return View();
+        }
+
+        public JsonResult GetBetUsers(int TeamId, int MatchId)
+        {
+            // Get users who have bet on the match and team in parameters
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetBetUser(string Username)
+        {
+            string username = Request.Form["Username"];
+            // Redirect to view with user info of Username
+            return RedirectToAction("Index", "Account", new { Username = username });
+        }
+
+        public JsonResult GetNextDay(int lastMatchId)
+        {
+            // Get bets that are one day after lastMatchId
+            return Json("", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -14,18 +14,25 @@ namespace Gobot.Controllers
 {
     public class AccountController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(string Username)
         {
             if ((User)Session["User"] == null)
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            User user = Bd.GetUserFromDB(((User)Session["User"]).Username); ;
-            Session["User"] = user;
-            Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
-            Session["limitBetRefreshDate"] = DateTime.Now;
-
-            return View((User)Session["User"]);
+            if (string.IsNullOrEmpty(Username))
+            {
+                User user = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                Session["User"] = user;
+                Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
+                Session["limitBetRefreshDate"] = DateTime.Now;
+                return View((User)Session["User"]);
+            }
+            else
+            {
+                User user = Bd.GetUserFromDB(Username);
+                return View(user);
+            }
         }
 
         public JsonResult UpdateSteamLink(string newLink)

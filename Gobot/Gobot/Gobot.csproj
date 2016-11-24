@@ -315,6 +315,7 @@
     <Content Include="Images\t_side.png" />
     <Content Include="Images\user.png" />
     <Content Include="Scripts\ads.js" />
+    <Content Include="Scripts\bets.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\Menu.scss" />
