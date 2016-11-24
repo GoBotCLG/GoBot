@@ -21,6 +21,54 @@
     }
 }
 
+<div id="teamBets_container">
+    <div id="teamBets">
+        <div id="bets_header">
+            <div id="teamBets_close"></div>
+            <h1>Pirates in pyjamas</h1>
+            <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>
+        </div>
+        <div id="bets_users">
+            @using (Html.BeginForm("GetBetUser", "Bet"))
+            {
+                <div class="user" id="maxime">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="maxime2">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <div class="user" id="antoine3990">
+                    <img />
+                    <h2>JEU BRISE</h2><div class="link"></div>
+                </div>
+                <input type="hidden" name="username" value=""/>
+            }
+        </div>
+    </div>
+</div>
+
 <div class="info_container">
     @{
         if (Model.Count() > 0)
@@ -46,8 +94,15 @@
     @{
         if (Model.Count() > 0)
         {
-            for (int i = 0; i < Model.Count; i++)
+            int year = Model[0].Date.Year;
+            int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(1).DayOfYear;
+            for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
+                if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
+                {
+                    <div class="info day"><h2>@(Model[i].Date.DayOfYear == secondDay ? "DEMAIN" : Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                }
+
                 <div class="info">
                     <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute</h3></div>
 
@@ -105,8 +160,13 @@
                     </div>
                     <input name="matchId" type="hidden" value="@(Model[i].Id)" />
                 </div>
-            }
-        }
+                                }
+
+                                if (Model[Model.Count() - 1].Date.DayOfYear > secondDay || Model[Model.Count() - 1].Date.Year > year)
+                                {
+                                    <div class="info" id="showNextDay"><h2>Afficher le jour suivant</h2><div></div></div>
+                                    }
+                                }
     }
 </div>
 
@@ -143,8 +203,7 @@
             onResize();
         });
 
-        function getBackgroundImage(div)
-        {
+        function getBackgroundImage(div) {
             var bg = div.css('background-image');
             bg = bg.replace('url(', '').replace(')', '').replace(/\"/gi, "");
             return bg;
@@ -178,7 +237,6 @@
 
         $(document).on("click", "#bet_chooseTeam > div:not(.separator)", function () {
             let selectedTeam = $(this).is(':first-child') ? 1 : 2;
-            //let teamName = $(this).find("> h1").text();
             let imagePath = getBackgroundImage($(this));
             let teamId = $(this).parent().prev().find(".team" + selectedTeam + "> input").attr("value");
             let matchId = $(this).parent().prev().find("> input").attr("value");
@@ -265,15 +323,7 @@
 
         function onResize() {
             resizeInfo();
-            h_align_window($(".info_container"));
             h_align_margin($(".betSelector"), $("#bet_placeBet > form"), getWidthOfChilds($(".betSelector")));
-
-            $(".info > div").each(function () {
-                if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
-                    v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
-                else
-                    v_align($(this).children(), $(this), getHeightOfChilds($(this)))
-            });
         }
 
         function resizeInfo() {
@@ -308,3 +358,4 @@
         }
     </script>
 }
+@Scripts.Render("~/Scripts/bets.js")

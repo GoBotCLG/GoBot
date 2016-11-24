@@ -1,5 +1,4 @@
-﻿@charset "UTF-8";
-/* -------------------------------------------------------------------------------------------------------------------
+﻿/* -------------------------------------------------------------------------------------------------------------------
                                                     VARIABLES
  ------------------------------------------------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------------------------------------------------
@@ -86,7 +85,7 @@
     float: right; }
 
 .manageBet {
-  z-index: 995;
+  z-index: 800;
   float: right !important;
   height: 100px; }
   .manageBet > div {
@@ -181,7 +180,7 @@ input[type=number]::-webkit-outer-spin-button {
     width: 4px;
     left: calc(50% - 2px);
     background-color: #1f1f1f;
-    z-index: 999; }
+    z-index: 801; }
     #bet_chooseTeam > .separator > div, #bet_placeBet > .separator > div, #getCredits > .separator > div {
       position: relative;
       height: 50px;
@@ -345,30 +344,13 @@ input[type=number]::-webkit-outer-spin-button {
     .info.smaller > .separator > div {
       background-color: #323232 !important; }
 
-/*
-    <div id="teamBets_container">
-        <div id="teamBets">
-            <div id="bets_header">
-                <h1>TEAM_NAME</h1>
-                <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>
-                <div id="teamBets_close"></div>
-            </div>
-            <div id="bets_users">
-                <div class="user">
-                    <div class="bet_img">
-                        <img/><h2>PLAYER_NAME</h2><div class="link"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-*/
 #teamBets_container {
   position: fixed;
   display: block;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75); }
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 899; }
   #teamBets_container > #teamBets {
     position: relative;
     display: block;
@@ -388,54 +370,112 @@ input[type=number]::-webkit-outer-spin-button {
         position: relative;
         display: block;
         width: 100%;
-        color: #eeeeee; }
+        color: #eeeeee;
+        text-align: center;
+        text-transform: uppercase; }
       #teamBets_container > #teamBets > #bets_header h1 {
-        font: italic 900 48px Lato, Arial, sans-serif; }
+        font: italic 900 48px Lato, Arial, sans-serif;
+        margin-bottom: 10px; }
       #teamBets_container > #teamBets > #bets_header h3 {
-        font: italic 900 22px Lato, Arial, sans-serif; }
+        font: italic 900 22px Lato, Arial, sans-serif;
+        margin-top: 5px; }
       #teamBets_container > #teamBets > #bets_header > #teamBets_close {
         position: absolute;
         display: block;
+        top: 0;
         width: 70px;
         height: 70px;
         right: 0 !important;
-        background: no-repeat center url("~/Images/close_grey.png");
-        background-size: 23px; }
+        background: no-repeat center url("/Images/close_grey.png");
+        background-size: 23px;
+        cursor: pointer;
+        z-index: 90; }
       #teamBets_container > #teamBets > #bets_header > #teamBets_close:hover {
-        background-image: url("~/Images/close_red.png"); }
+        background-image: url("/Images/close_menuColor.png"); }
     #teamBets_container > #teamBets > #bets_users {
       display: block;
       position: relative;
-      width: 90%;
+      width: 80%;
       height: auto;
-      overflow: scroll;
-      padding: 0 5%; }
-      #teamBets_container > #teamBets > #bets_users > .user {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 10%; }
+      #teamBets_container > #teamBets > #bets_users > form > .user {
+        float: left;
         display: block;
-        width: 100%; }
-        #teamBets_container > #teamBets > #bets_users > .user > .bet_img {
-          float: left; }
-          #teamBets_container > #teamBets > #bets_users > .user > .bet_img > img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 5px solid rgba(255, 255, 255, 0.3); }
-        #teamBets_container > #teamBets > #bets_users > .user > .link {
+        width: 100%;
+        cursor: pointer; }
+        #teamBets_container > #teamBets > #bets_users > form > .user > img {
           float: left;
           display: block;
-          height: 100%;
-          width: auto;
-          background: no-repeat center url("~/Images/ext_link.png");
+          position: relative;
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          border: 5px solid rgba(255, 255, 255, 0.3);
+          margin: 15px 0; }
+        #teamBets_container > #teamBets > #bets_users > form > .user > .link {
+          float: left;
+          position: relative;
+          display: block;
+          height: 24px;
+          width: 24px;
+          background: no-repeat center url("/Images/ext_link.png");
           background-size: 26px;
           display: none; }
-        #teamBets_container > #teamBets > #bets_users > .user > h2 {
+        #teamBets_container > #teamBets > #bets_users > form > .user > h2 {
           float: left;
+          position: relative;
           display: block;
           font: italic 900 30px Lato, Arial, sans-serif;
-          color: #626262; }
-      #teamBets_container > #teamBets > #bets_users > .user:hover > h2 {
+          color: #626262;
+          margin: 0 15px 0 25px;
+          max-width: calc(100% - 154px);
+          white-space: nowrap;
+          text-transform: uppercase;
+          overflow: hidden; }
+      #teamBets_container > #teamBets > #bets_users > form > .user:hover > h2 {
         color: #eeeeee; }
-      #teamBets_container > #teamBets > #bets_users > .user:hover > .link {
+      #teamBets_container > #teamBets > #bets_users > form > .user:hover > .link {
         display: block; }
+
+@media screen and (max-height: 800px) {
+  #teamBets {
+    height: 100% !important; } }
+
+.day {
+  background-color: transparent;
+  padding: 25px 0 10px; }
+  .day > h2 {
+    color: #f16651;
+    text-transform: uppercase; }
+
+#showNextDay {
+  float: right;
+  width: auto;
+  background-color: transparent;
+  margin: 10px 0;
+  padding: 30px 30px;
+  cursor: pointer; }
+  #showNextDay > h2 {
+    float: left;
+    text-transform: uppercase; }
+  #showNextDay > div {
+    float: left;
+    display: block;
+    position: relative;
+    height: 26px;
+    width: 16px;
+    background: no-repeat center url("/Images/plus.png");
+    background-size: 16px;
+    margin: 0 10px;
+    opacity: 0; }
+
+#showNextDay:hover {
+  background-color: #232323; }
+  #showNextDay:hover > h2 {
+    color: #f16651;
+    text-transform: uppercase; }
+  #showNextDay:hover > div {
+    opacity: 1; }
 

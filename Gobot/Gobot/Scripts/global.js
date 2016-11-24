@@ -12,7 +12,6 @@ function readyResize() {
     setPopUp();
 }
 
-// Error message
 function setErrorMessage() {
     if ($("#error_overlay").length > 0) {
         var y = $(window).height() / 2 - $("#error_overlay > div").height() / 2;

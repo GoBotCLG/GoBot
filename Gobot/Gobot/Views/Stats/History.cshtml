@@ -94,8 +94,8 @@
                         </div>
                     </div>
                 </div>
-                                    }
-                                }
+            }
+        }
     }
 </div>
 
@@ -110,15 +110,8 @@
         });
 
         function onResize() {
-            h_align_window($(".info_container"));
             h_align_window($("#getCredits"));
-
-            $(".info > div").each(function () {
-                if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
-                    v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
-                else
-                    v_align($(this).children(), $(this), getHeightOfChilds($(this)))
-            });
         }
     </script>
 }
+@Scripts.Render("~/Scripts/bets.js")
