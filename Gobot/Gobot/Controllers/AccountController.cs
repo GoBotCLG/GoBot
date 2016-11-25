@@ -23,6 +23,7 @@ namespace Gobot.Controllers
             if (string.IsNullOrEmpty(Username))
             {
                 User user = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                user.SessionUser = true;
                 Session["User"] = user;
                 Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
                 Session["limitBetRefreshDate"] = DateTime.Now;
@@ -31,6 +32,7 @@ namespace Gobot.Controllers
             else
             {
                 User user = Bd.GetUserFromDB(Username);
+                user.SessionUser = false;
                 return View(user);
             }
         }

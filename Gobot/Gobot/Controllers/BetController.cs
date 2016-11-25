@@ -339,14 +339,30 @@ namespace Gobot.Controllers
 
         public JsonResult GetBetUsers(int TeamId, int MatchId)
         {
-            // Get users who have bet on the match and team in parameters
-            return Json("", JsonRequestBehavior.AllowGet);
+            if ((User)Session["User"] == null)
+                return Json(new { users = new string[] { } }, JsonRequestBehavior.AllowGet);
+
+            DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new OdbcParameter(":IdTeam", TeamId), new OdbcParameter(":IdMatch", MatchId));
+            
+            if (users != null && users.Rows.Count > 0)
+            {
+                List<object> usersString = new List<object>();
+                foreach (DataRow row in users.Rows)
+                    usersString.Add(new { username = row["User_Username"], img = row["Image"] });
+
+                object users_obj = new { users = usersString.ToArray() };
+                return Json(users_obj, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(new { users = new string[] { } }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetBetUser(string Username)
         {
+            if ((User)Session["User"] == null)
+                return RedirectToAction("Index", "Bet");
+
             string username = Request.Form["Username"];
-            // Redirect to view with user info of Username
             return RedirectToAction("Index", "Account", new { Username = username });
         }
 

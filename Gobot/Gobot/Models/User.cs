@@ -17,6 +17,7 @@ namespace Gobot.Models
         public int TotalCredits { get; set; }
         public int EXP { get; set; }
         public int Level { get; set; }
+        public bool SessionUser { get; set; }
 
         public static int xpLvl = 1500;
     }

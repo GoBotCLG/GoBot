@@ -36,7 +36,7 @@
             for (int i = 0; i < Model.Count; i++)
             {
                 <div class="info">
-                    <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute</h3></div>
+                    <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute.ToString("00")</h3></div>
 
                     <div class="team team1">
                         <div class="img" style="background-image: url(/Images/@(Model[i].Teams[0].ImagePath));"></div>

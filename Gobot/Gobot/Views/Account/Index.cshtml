@@ -9,25 +9,28 @@
 @Styles.Render("~/Content/Account.min.css")
 
 @{
-    if (TempData["error"] != null)
+    if (Model.SessionUser)
     {
-        <div id="error_overlay">
-            <div>
-                <div id="error_overlay_image"></div>
-                <h1>@TempData["error"]</h1>
-                <button id="close_errorOverlay">Fermer</button>
+        if (TempData["error"] != null)
+        {
+            <div id="error_overlay">
+                <div>
+                    <div id="error_overlay_image"></div>
+                    <h1>@TempData["error"]</h1>
+                    <button id="close_errorOverlay">Fermer</button>
+                </div>
             </div>
-        </div>
-    }
-    else if (TempData["success"] != null)
-    {
-        <div id="error_overlay">
-            <div>
-                <div id="success_overlay_image"></div>
-                <h1>@TempData["success"]</h1>
-                <button id="close_errorOverlay">Fermer</button>
+        }
+        else if (TempData["success"] != null)
+        {
+            <div id="error_overlay">
+                <div>
+                    <div id="success_overlay_image"></div>
+                    <h1>@TempData["success"]</h1>
+                    <button id="close_errorOverlay">Fermer</button>
+                </div>
             </div>
-        </div>
+        }
     }
 }
 
@@ -39,21 +42,33 @@
         <div id="userInfo">
             <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
             @{
-                if (Model.SteamID.Length > 0)
+                if (Model.SessionUser)
                 {
-                    <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a><h4 id="modSteamLink" class="grey">Modifier</h4>
+                    if (Model.SteamID.Length > 0)
+                    {
+                        <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a><h4 id="modSteamLink" class="grey">Modifier</h4>
+                    }
+                    else
+                    {
+                        <h4 id="addSteamLink" class="grey">Ajouter un lien vers mon compte Steam.</h4>
+                    }
                 }
-                else
+                else if (Model.SteamID.Length > 0)
                 {
-                    <h4 id="addSteamLink" class="grey">Ajouter un lien vers mon compte Steam.</h4>
+                    <a href="http://www.steamcommunity.com/id/@Model.SteamID" target="_blank"><h4 class="grey">Visiter le profil steam.</h4></a>
                 }
             }
         </div>
-        <div id="userOptions">
-            <img id="openOption" src="~/Images/settings.png" />
-            <h3>Options</h3>
-            <img id="closeOption" src="~/Images/close.png" />
-        </div>
+        @{
+            if (Model.SessionUser)
+            {
+                <div id="userOptions">
+                    <img id="openOption" src="~/Images/settings.png" />
+                    <h3>Options</h3>
+                    <img id="closeOption" src="~/Images/close.png" />
+                </div>
+            }
+        }
     </div>
 
     <div class="info">
@@ -81,15 +96,20 @@
             <h1>@Html.DisplayFor(model => model.Credits)<b> GOBOT CREDITS</b></h1>
             @*<h4 class="grey">1 Gobot credit = 0.01$</h4>*@
         </div>
-        <div>
-            <a href="@Url.Action("Ad", "Bet")" id="trade">
-                <h2>REGARDER UNE</h2>
-                <h3 class="grey">ANNONCE</h3>
-            </a>
-        </div>
-        <div>
-            <a class="whiteLink" href="@Url.Action("Ad", "Bet")" id="buy"><h2>ACHETER</h2></a>
-        </div>
+        @{
+            if (Model.SessionUser)
+            {
+                <div>
+                    <a href="@Url.Action("Ad", "Bet")" id="trade">
+                        <h2>REGARDER UNE</h2>
+                        <h3 class="grey">ANNONCE</h3>
+                    </a>
+                </div>
+                <div>
+                    <a class="whiteLink" href="@Url.Action("Ad", "Bet")" id="buy"><h2>ACHETER</h2></a>
+                </div>
+            }
+        }
     </div>
 
     <div class="info" id="bets">
@@ -120,12 +140,15 @@
         @*<div>
                 <h1>0<grey> ACHETÉS</grey></h1>
             </div>*@
-        <div>
-            <a href="@Url.Action("Ad", "Bet")" class="darkBG">
-                <h2>ACHETER DES CRÉDITS</h2>
-                <h3 class="grey">DE GOBOTTER</h3>
-            </a>
-        </div>
+        @if (Model.SessionUser)
+        {
+            <div>
+                <a href="@Url.Action("Ad", "Bet")" class="darkBG">
+                    <h2>ACHETER DES CRÉDITS</h2>
+                    <h3 class="grey">DE GOBOTTER</h3>
+                </a>
+            </div>
+        }
     </div>
 
     @*<div class="info" id="transactions">
@@ -154,7 +177,10 @@
             <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
         </div>
     </div>
-    <div class="info" id="removeAccount"><h4>Supprimer le compte</h4></div>
+    @if (Model.SessionUser)
+    {
+        <div class="info" id="removeAccount"><h4>Supprimer le compte</h4></div>
+    }
 </div>
 
 @section Scripts {
@@ -200,7 +226,7 @@
                 $("#confirmPrompt").prop('disabled', false);
             }
         });
-        
+
         $(document).on("click", "#modSteamLink", function() {
             var link = $("#userInfo > a").attr("href");
             link = link.substring(link.lastIndexOf("/") + 1);
@@ -212,7 +238,7 @@
 
         function createSteamPopUp(link) {
             var baseLink = "http://www.steamcommunity.com/id/";
-            var text = '<h1>MODIFIER MON LIEN STEAM</h1><span>Le lien vers votre compte steam permet de partager votre profil steam avec les autres utilisateurs du site.</span><div id="steamLink"><span>' 
+            var text = '<h1>MODIFIER MON LIEN STEAM</h1><span>Le lien vers votre compte steam permet de partager votre profil steam avec les autres utilisateurs du site.</span><div id="steamLink"><span>'
                 + baseLink + '</span><input name="newSteamLink" type="text" placeholder="' + (link == undefined ? 'monUrlSteam' : link) + '"></div>';
 
             popUp("", true, text, false, ["Envoyer", "Annuler"]);

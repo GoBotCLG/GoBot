@@ -39,15 +39,16 @@ $(document).on("click", ":not(#teamBets)", function (e) {
 $(document).on("click", ".team", function () {
     var team = $(this).find("> input").val();
     var match = $(this).closest(".info").find("> input").val();
+    var teamName = $(this).find("> .text > h1").text();
 
     if (team != undefined && team != "" && match != undefined && match != "") {
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: "/Bet/GetBetUsers",
             data: JSON.stringify({ TeamId: team, MatchId: match }),
             dataType: "json",
             success: function (data) {
-                createTeamBets(data);
+                createTeamBets(data, teamName);
             },
             contentType: "application/json"
         });
@@ -87,7 +88,7 @@ $(document).on("click", "#showNextDay", function () {
     }
 });
 
-function createTeamBets(data) {
+function createTeamBets(data, teamName) {
     if ($("#teamBets").length > 0)
         $("#teamBets_container").remove();
 
@@ -95,7 +96,7 @@ function createTeamBets(data) {
         '<div id="teamBets_container">\
                 <div id="teamBets">\
                     <div id="bets_header">\
-                        <h1>' + data.teamName + '</h1>\
+                        <h1>' + teamName + '</h1>\
                         <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>\
                         <div id="teamBets_close"></div>\
                     </div>\
@@ -103,13 +104,13 @@ function createTeamBets(data) {
                 </div>\
             </div>';
 
-    $(text).prepend("body");
+    $("body").prepend(text);
 
     data.users.each(function (i, user) {
         var userDiv =
             '<div class="user" id="' + user.username + '">\
                     <div class="bet_img"><img src="' + user.img + '"/></div>\
-                    <h2>' + user.name + '</h2><div class="link"></div>\
+                    <h2>' + user.username + '</h2><div class="link"></div>\
                 </div>';
         $("#bets_users").append(userDiv);
     });
