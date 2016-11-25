@@ -23,6 +23,10 @@ namespace Gobot.Controllers
             if (string.IsNullOrEmpty(Username))
             {
                 User user = Bd.GetUserFromDB(((User)Session["User"]).Username);
+
+                if (user == null)
+                    return RedirectToAction("Index", "Home");
+
                 user.SessionUser = true;
                 Session["User"] = user;
                 Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
@@ -356,7 +360,6 @@ namespace Gobot.Controllers
             if (DeleteResult == 1)
             {
                 Logout();
-                TempData["success"] = "Votre compte à été supprimé.";
                 return RedirectToAction("Index", "Home");
             }
             else

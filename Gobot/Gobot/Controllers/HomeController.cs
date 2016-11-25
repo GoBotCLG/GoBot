@@ -13,9 +13,9 @@ namespace Gobot.Controllers
     {
         public ActionResult Index()
         {
-            if(Session["User"] != null)
+            if (Session["User"] != null)
             {
-                return RedirectToAction("Index", "Watch");
+                return RedirectToAction("Index", "Account");
             }
 
             //MySQLWrapper Bd = new MySQLWrapper();
@@ -48,6 +48,7 @@ namespace Gobot.Controllers
 
             //    ViewBag.LiveStats = Teams;
             //}
+
             return View();
         }
 
