@@ -333,7 +333,7 @@ namespace Gobot.Models
             }
         }
 
-        public List<Match> GetMatches(bool future)
+        public List<Match> GetMatches(bool future, int matchId = -1, int period = 1)
         {
             if (connection.State == ConnectionState.Open)
             {
@@ -342,7 +342,12 @@ namespace Gobot.Models
 
                 DataTable MatchResult = null;
                 if (future)
-                    MatchResult = Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
+                {
+                    if (matchId != -1)
+                        MatchResult = Procedure("GetMatchAfterMatch", new OdbcParameter(":matchId", matchId), new OdbcParameter(":period", period));
+                    else
+                        MatchResult = Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
+                }
                 else
                     MatchResult = Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
 

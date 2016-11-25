@@ -119,13 +119,12 @@ namespace Gobot.Controllers
         
         private int betExists(int MatchId, int TeamId)
         {
-            MySQLWrapper Bd = new MySQLWrapper();
             List<OdbcParameter> conditions = new List<OdbcParameter>() {
                 new OdbcParameter(":Username", ((User)Session["User"]).Username),
                 new OdbcParameter(":TeamId", TeamId),
                 new OdbcParameter(":MatchId", MatchId)
             };
-            DataTable result = Bd.Select("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions, "Mise");
+            DataTable result = new MySQLWrapper().Select("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions, "Mise");
 
             if (result.Rows.Count == 0)
                 return 0;
@@ -325,7 +324,7 @@ namespace Gobot.Controllers
             }
             catch (Exception)
             {
-                return Json("");
+                return Json("", JsonRequestBehavior.DenyGet);
             }
         }
 
@@ -340,7 +339,7 @@ namespace Gobot.Controllers
         public JsonResult GetBetUsers(int TeamId, int MatchId)
         {
             if ((User)Session["User"] == null)
-                return Json(new { users = new string[] { } }, JsonRequestBehavior.AllowGet);
+                return Json("", JsonRequestBehavior.DenyGet);
 
             DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new OdbcParameter(":IdTeam", TeamId), new OdbcParameter(":IdMatch", MatchId));
             
@@ -368,7 +367,82 @@ namespace Gobot.Controllers
 
         public JsonResult GetNextDay(int lastMatchId)
         {
-            // Get bets that are one day after lastMatchId
+            if ((User)Session["User"] == null)
+                return Json("", JsonRequestBehavior.DenyGet);
+
+            MySQLWrapper Bd = new MySQLWrapper();
+            List<Match> FutureMatches = Bd.GetMatches(true, lastMatchId);
+            List<Match> Matches = new List<Match>();
+
+            if (FutureMatches.Count() > 0)
+            {
+                int date = FutureMatches[0].Date.DayOfYear;
+                foreach (Match m in FutureMatches)
+                {
+                    if (m.Id == lastMatchId)
+                    {
+                        date = m.Date.DayOfYear;
+                        break;
+                    }
+                }
+
+                foreach (Match m in FutureMatches)
+                {
+                    if (m.Date.DayOfYear == date)
+                        Matches.Add(m);
+                }
+            }
+
+            List<Bet> Bets = new List<Bet>();
+            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+            
+            foreach (DataRow row in BetResult.Rows)
+            {
+                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+            }
+
+            foreach (Bet bet in Bets)
+            {
+                foreach (Match match in Matches)
+                {
+                    if (bet.MatchId == match.Id)
+                    {
+                        match.CurrentUserBet = true;
+                        match.CurrentUserAmount = bet.Amount;
+                        if (bet.TeamId == match.Teams[0].Id)
+                        {
+                            match.TeamNumberBet = 1;
+                        }
+                        else
+                        {
+                            match.TeamNumberBet = 2;
+                        }
+                    }
+                }
+            }
+
+            Bets.Clear();
+
+            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+
+            foreach (DataRow row in BetResult.Rows)
+            {
+                foreach (Match match in Matches)
+                {
+                    if ((int)row["Match_IdMatch"] == match.Id)
+                    {
+                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        {
+                            match.Team1TotalBet += (int)row["Mise"];
+                        }
+                        else
+                        {
+                            match.Team2TotalBet += (int)row["Mise"];
+                        }
+                    }
+                }
+            }
+
             return Json("", JsonRequestBehavior.AllowGet);
         }
     }
