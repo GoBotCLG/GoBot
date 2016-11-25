@@ -183,3 +183,11 @@ function input_error_hide(input) {
     if (input.next().hasClass("inputError"))
         input.next().remove();
 }
+
+function loading_create() {
+
+}
+
+function loading_remove() {
+
+}

@@ -8,14 +8,7 @@ $(window).resize(function () {
 
 function onBetResize() {
     h_align_window($(".info_container"));
-
-    if ($("#teamBets").length > 0) {
-        h_align_window($("#teamBets"));
-        v_align_window($("#teamBets"));
-        v_align($(".link"), $(".user"), $(".link").height());
-        v_align($(".user > h2"), $(".user"), $(".user > h2").height());
-        $("#bets_users").css("height", $("#teamBets").height() - $("#bets_header").outerHeight());
-    }
+    posTeamBets();
 
     $(".info > div").each(function () {
         if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
@@ -23,6 +16,16 @@ function onBetResize() {
         else
             v_align($(this).children(), $(this), getHeightOfChilds($(this)))
     });
+}
+
+function posTeamBets() {
+    if ($("#teamBets").length > 0) {
+        h_align_window($("#teamBets"));
+        v_align_window($("#teamBets"));
+        v_align($(".link"), $(".user"), $(".link").height());
+        v_align($(".user > h2"), $(".user"), $(".user > h2").height());
+        $("#bets_users").css("height", $("#teamBets").height() - $("#bets_header").outerHeight());
+    }
 }
 
 $(document).on("click", "#teamBets_close", function () {
@@ -100,20 +103,22 @@ function createTeamBets(data, teamName) {
                         <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>\
                         <div id="teamBets_close"></div>\
                     </div>\
-                    <div id="bets_users"></div>\
+                    <div id="bets_users"><form action="/Bet/GetBetUser" method="post"></form></div>\
                 </div>\
             </div>';
 
     $("body").prepend(text);
 
-    data.users.each(function (i, user) {
+    $.each(data.users, function (i, user) {
         var userDiv =
             '<div class="user" id="' + user.username + '">\
-                    <div class="bet_img"><img src="' + user.img + '"/></div>\
+                    <img src="' + user.img + '"/>\
                     <h2>' + user.username + '</h2><div class="link"></div>\
                 </div>';
-        $("#bets_users").append(userDiv);
+        $("#bets_users > form").append(userDiv);
     });
+
+    posTeamBets();
 }
 
 function appendNextDayBets(data) {
