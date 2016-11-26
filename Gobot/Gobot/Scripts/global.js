@@ -185,9 +185,17 @@ function input_error_hide(input) {
 }
 
 function loading_create() {
+    if ($("#loading").length > 0)
+        $("#loading").remove();
 
+    $("body").prepend('<div id="loading"><div></div></div>');
 }
 
-function loading_remove() {
-
+function loading_remove(success) {
+    if ($("#loading").length > 0) {
+        $("#loading").addClass(success ? "success" : "error").removeClass("loading");
+        setTimeout(function () {
+            $("#loading").remove();
+        }, 500);
+    }
 }
