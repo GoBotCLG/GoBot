@@ -407,6 +407,45 @@ img {
     .prompt > span {
       font-size: 16px !important; } }
 
+#loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 899; }
+  #loading .load, #loading > .loading, #loading > .success, #loading > .error {
+    position: relative;
+    display: block;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto; }
+    #loading .load > div, #loading > .loading > div, #loading > .success > div, #loading > .error > div {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      display: none; }
+  #loading > .loading {
+    background: no-repeat center url("/Images/load.gif"); }
+  #loading > .success {
+    border: 6px solid #51c24b;
+    border-radius: 50%;
+    width: 58px;
+    height: 58px; }
+    #loading > .success > div {
+      display: block;
+      background: no-repeat center url(/Images/check.png);
+      background-size: 40px; }
+  #loading > .error {
+    border: 6px solid #963434;
+    border-radius: 50%;
+    width: 58px;
+    height: 58px; }
+    #loading > .error > div {
+      display: block;
+      background: no-repeat center url(/Images/close_white.png);
+      background-size: 40px; }
+
 body {
   overflow: hidden; }
 

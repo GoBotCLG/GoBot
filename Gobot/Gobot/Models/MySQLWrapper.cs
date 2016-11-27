@@ -349,7 +349,12 @@ namespace Gobot.Models
                         MatchResult = Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
                 }
                 else
-                    MatchResult = Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
+                {
+                    if (matchId != -1)
+                        MatchResult = Procedure("GetMatchBeforeMatch", new OdbcParameter(":matchId", matchId), new OdbcParameter(":period", period));
+                    else
+                        MatchResult = Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
+                }
 
                 foreach (DataRow row in MatchResult.Rows)
                 {

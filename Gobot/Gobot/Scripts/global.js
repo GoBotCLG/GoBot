@@ -5,6 +5,9 @@ $(function () {
 
 $(window).resize(function () {
     readyResize();
+
+    if ($("#loading").length > 0)
+        v_align($(".loading"), $("#loading"), $(".loading").height());
 });
 
 function readyResize() {
@@ -182,4 +185,29 @@ function input_error_show(input, text, onTop) {
 function input_error_hide(input) {
     if (input.next().hasClass("inputError"))
         input.next().remove();
+}
+
+function loading_create() {
+    if ($("#loading").length > 0)
+        $("#loading").remove();
+
+    $("body").prepend('<div id="loading"><div class="loading"><div></div></div></div>');
+    v_align($(".loading"), $("#loading"), $(".loading").height());
+}
+
+function loading_remove(success) {
+    if ($("#loading").length > 0) {
+        $(".loading").addClass(success ? "success" : "error").removeClass("loading");
+        $("." + (success ? "success" : "error") + " > div").animate({
+            "background-size": 20,
+        }, 100, function () {
+            $("." + (success ? "success" : "error") + " > div").animate({
+                "background-size": 26,
+            }, 50);
+        });
+
+        setTimeout(function () {
+            $("#loading").remove();
+        }, 600);
+    }
 }
