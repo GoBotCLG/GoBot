@@ -67,7 +67,7 @@ namespace Liaison_BD___CSGO
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon +maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
-            Thread.Sleep(20000);
+            Thread.Sleep(40000);
             ConnectionServeur = new SourceRcon.SourceRcon();
             while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
             ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));

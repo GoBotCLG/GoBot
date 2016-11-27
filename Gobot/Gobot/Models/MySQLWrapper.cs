@@ -25,9 +25,9 @@ namespace Gobot.Models
             connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
             //connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             try { connection.Open(); }
-            catch (Exception)
+            catch (Exception e)
             {
-                int i = 0;
+                string ex = e.Message;
             }
         }
 
