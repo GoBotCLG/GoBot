@@ -159,7 +159,7 @@ $betH: 300px;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 995 !important;
+            z-index: 880 !important;
             opacity: 0;
             color: white;
             background-color: rgba(0,0,0,0.85);
@@ -183,7 +183,7 @@ $betH: 300px;
             width: 4px;
             left: calc(50% - 2px);
             background-color: $darkerGrey;
-            z-index: 801;
+            z-index: 885;
 
         > div {
             $boxH: 50px;
@@ -191,6 +191,7 @@ $betH: 300px;
             height: $boxH;
             width: $boxH;
             background-color: $darkerGrey;
+            top: calc(50% - 25px);
             left: -($boxH / 2 - 1px);
             @include rotate(45deg);
         }

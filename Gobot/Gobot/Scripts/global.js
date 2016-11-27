@@ -5,6 +5,9 @@ $(function () {
 
 $(window).resize(function () {
     readyResize();
+
+    if ($("#loading").length > 0)
+        v_align($(".loading"), $("#loading"), $(".loading").height());
 });
 
 function readyResize() {
@@ -205,6 +208,6 @@ function loading_remove(success) {
 
         setTimeout(function () {
             $("#loading").remove();
-        }, 750);
+        }, 600);
     }
 }

@@ -45,13 +45,18 @@ $(document).on("click", ".team", function () {
     var teamName = $(this).find("> .text > h1").text();
 
     if (team != undefined && team != "" && match != undefined && match != "") {
+        loading_create();
         $.ajax({
             type: "POST",
             url: "/Bet/GetBetUsers",
             data: JSON.stringify({ TeamId: team, MatchId: match }),
             dataType: "json",
             success: function (data) {
+                loading_remove(true);
                 createTeamBets(data, teamName);
+            },
+            error: function() {
+                loading_remove(false);
             },
             contentType: "application/json"
         });
@@ -72,16 +77,19 @@ $(document).on("click", "#showNextDay", function () {
         var matchId = $(".team").last().closest(".info").find("> input").val();
 
         if (matchId != undefined && matchId != "") {
+            loading_create();
             $.ajax({
                 type: "POST",
                 url: "/Bet/GetNextDay",
                 data: JSON.stringify({ lastMatchId: matchId }),
                 dataType: "json",
                 success: function (data) {
+                    loading_remove(true);
                     appendNextDayBets(data);
                 },
                 error: function (data) {
                     $("#showNextDay").remove();
+                    loading_remove(false);
                 },
                 contentType: "application/json"
             });
@@ -125,12 +133,13 @@ function appendNextDayBets(data) {
     var days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
     var date = new Date(data.date); // data.date == milliseconds
     var day = '<div class="info day"><h2>' + days[date.getDay()] + '<grey>' + zeros(date.getDate()) + '-' + zeros(date.getMonth()) + '-' + zeros(date.getFullYear()) + '</grey></h2></div>';
+    $(day).insertBefore("#showNextDay");
 
-    data.matches.each(function (i, match) {
+    $.each(data.matches, function (i, match) {
         var mDate = new Date(match.date); // match.date == milliseconds
 
         var start = '<div class="info">';
-        var time = '<div class="time sqr"><h3>' + mDate.getHours() + ':' + zeros(mDate.getMinutes()) + '</h3></div></div>';
+        var time = '<div class="time sqr"><h3>' + mDate.getHours() + ':' + zeros(mDate.getMinutes()) + '</h3></div>';
         var team1 = getTeamText(match.teams[0]);
         var vs = '<div class="vs"><h1>VS</h1></div>';
         var manage = getManageText(match);
@@ -164,15 +173,15 @@ function getManageText(match) {
 }
 
 function getTeamText(team) {
-    var start = '<div class="team team' + team.num + '"><div class="img" style="background-image: url(' + team.img + ');"></div><div class="text">';
+    var start = '<div class="team team' + team.num + '"><div class="img" style="background-image: url(/Images/' + team.img + ');"></div><div class="text">';
     var text;
     if (team.bet.user != undefined && team.bet.user != "") {
-        text = '<h1><green>' + team.name.toUpper() + '</green></h1>\
+        text = '<h1><green>' + team.name.toString().toUpperCase() + '</green></h1>\
                 <h4 class="grey">Mise Totale<green> ' + team.bet.total + '</green>GC</h4>\
                 <h4 class="grey">Votre mise<green> ' + team.bet.user + '</green>GC</h4>';
     }
     else {
-        text = '<h1>' + team.name.toUpper() + '</h1>\
+        text = '<h1>' + team.name.toString().toUpperCase() + '</h1>\
                 <h4 class="grey">Mise Totale<offw> ' + team.bet.total + '</offw>GC</h4>';
     }
     var end = '</div><input type="hidden" name="teamId" value="' + team.id + '" /></div>';
