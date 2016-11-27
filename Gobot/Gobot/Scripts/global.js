@@ -188,14 +188,23 @@ function loading_create() {
     if ($("#loading").length > 0)
         $("#loading").remove();
 
-    $("body").prepend('<div id="loading"><div></div></div>');
+    $("body").prepend('<div id="loading"><div class="loading"><div></div></div></div>');
+    v_align($(".loading"), $("#loading"), $(".loading").height());
 }
 
 function loading_remove(success) {
     if ($("#loading").length > 0) {
-        $("#loading").addClass(success ? "success" : "error").removeClass("loading");
+        $(".loading").addClass(success ? "success" : "error").removeClass("loading");
+        $("." + (success ? "success" : "error") + " > div").animate({
+            "background-size": 20,
+        }, 100, function () {
+            $("." + (success ? "success" : "error") + " > div").animate({
+                "background-size": 26,
+            }, 50);
+        });
+
         setTimeout(function () {
             $("#loading").remove();
-        }, 500);
+        }, 750);
     }
 }

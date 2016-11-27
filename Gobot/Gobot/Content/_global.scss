@@ -406,30 +406,47 @@ img                         { border: 0; }
     position: fixed;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.75);
     z-index: 899;
 
-    .loading {
+    .load {
         position: relative;
         display: block;
         width: 70px;
         height: 70px;
         margin: 0 auto;
+        
+        > div {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            
+            display: none;
+        }
     }
     > .loading {
-        @extend .loading;
-        background: no-repeat center url('/Images/load.png');
+        @extend .load;
+        background: no-repeat center url('/Images/load.gif');
     }
 
     > .success {
-        @extend .loading;
-        border: 6px solid $menuColor;
+        @extend .load;
+        border: 6px solid $green;
         border-radius: 50%;
+        width: 58px;
+        height: 58px;
+
+        > div { display: block; background: no-repeat center url(/Images/check.png); background-size: 40px; }
     }
 
     > .error {
-        @extend .loading;
-        border: 6px solid $green;
+        @extend .load;
+        border: 6px solid $red;
         border-radius: 50%;
+        width: 58px;
+        height: 58px;
+
+        > div { display: block; background: no-repeat center url(/Images/close_white.png); background-size: 40px; }
     }
 }
