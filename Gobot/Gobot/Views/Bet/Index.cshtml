@@ -9,65 +9,27 @@
 @Styles.Render("~/Content/Bet.min.css")
 
 @{
-    if (ViewBag.Error != null && ViewBag.Error != "")
+    if (TempData["error"] != null)
     {
         <div id="error_overlay">
             <div>
                 <div id="error_overlay_image"></div>
-                <h1>@ViewBag.Error</h1>
+                <h1>@TempData["error"]</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+    else if (TempData["success"] != null)
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="success_overlay_image"></div>
+                <h1>@TempData["success"]</h1>
                 <button id="close_errorOverlay">Fermer</button>
             </div>
         </div>
     }
 }
-
-@*<div id="teamBets_container">
-    <div id="teamBets">
-        <div id="bets_header">
-            <div id="teamBets_close"></div>
-            <h1>Pirates in pyjamas</h1>
-            <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>
-        </div>
-        <div id="bets_users">
-            @using (Html.BeginForm("GetBetUser", "Bet"))
-            {
-                <div class="user" id="maxime">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="maxime2">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <div class="user" id="antoine3990">
-                    <img />
-                    <h2>JEU BRISE</h2><div class="link"></div>
-                </div>
-                <input type="hidden" name="username" value=""/>
-            }
-        </div>
-    </div>
-</div>*@
 
 <div class="info_container">
     @{
@@ -100,7 +62,7 @@
             {
                 if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
                 {
-                    <div class="info day"><h2>@(Model[i].Date.DayOfYear == secondDay ? "DEMAIN" : Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                    <div class="info day"><h2>@(Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
                 }
 
                 <div class="info">

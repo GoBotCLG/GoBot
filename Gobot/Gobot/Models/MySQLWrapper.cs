@@ -360,7 +360,7 @@ namespace Gobot.Models
                 {
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = (DateTime)row["Date"];
+                    m.Date = ((DateTime)row["Date"]);
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
@@ -391,11 +391,11 @@ namespace Gobot.Models
                 return null;
         }
 
-        public Match GetLiveMatch()
+        public Match GetLiveMatch(double timeOffset)
         {
             if (connection.State == ConnectionState.Open)
             {
-                DataTable matchBd = Procedure("IsMatchCurrent");
+                DataTable matchBd = Procedure("IsMatchCurrent", new OdbcParameter(":offset", timeOffset));
 
                 if (matchBd.Rows.Count > 0)
                 {

@@ -374,7 +374,7 @@ namespace Gobot.Controllers
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                List<Match> Matches = Bd.GetMatches(true, lastMatchId);
+                List<Match> Matches = Bd.GetMatches(true);
 
                 if (Matches.Count() > 0)
                 {

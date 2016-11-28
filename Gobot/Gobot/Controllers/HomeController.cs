@@ -73,7 +73,18 @@ namespace Gobot.Controllers
                     if (UserResult.Rows.Count > 0)
                     {
                         Session["User"] = Bd.GetUserFromDB("", UserResult);
-                        double offset = GetTimeOffset(Request.Form["clientTime"]);
+                        double offset;
+                        try
+                        {
+                            offset = GetTimeOffset(Request.Form["clientTime"]);
+
+                            if (offset > 25 || offset < -25)
+                                offset = 0;
+                        }
+                        catch (Exception)
+                        {
+                            offset = 0;
+                        }
                         Session["timeOffset"] = offset;
                         return RedirectToAction("Index", "Account");
                     }
@@ -92,7 +103,7 @@ namespace Gobot.Controllers
             try
             {
                 DateTime clientTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddMilliseconds(long.Parse(time));
-                double offset = (bdTime - clientTime).TotalMinutes / 60;
+                double offset = (clientTime - bdTime).TotalMinutes / 60;
                 return (double)(Math.Round(2 * (offset))) / 2;
             }
             catch (Exception)

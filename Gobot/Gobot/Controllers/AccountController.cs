@@ -342,7 +342,16 @@ namespace Gobot.Controllers
 
                 Session["User"] = Bd.GetUserFromDB(user.Username);
 
-                double offset = HomeController.GetTimeOffset(Request.Form["clientTime"]);
+                double offset;
+                try
+                {
+                    offset = HomeController.GetTimeOffset(Request.Form["clientTime"]);
+                }
+                catch (Exception)
+                {
+                    offset = 0;
+                }
+
                 Session["timeOffset"] = offset;
 
                 TempData["success"] = "Votre compte a été créé. Vous vous trouvez actuellement sur votre page de gestion de compte où vous pouvez voir tout vos activités sur Gobot.";
