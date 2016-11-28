@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Data.Odbc;
 using System.Text;
 using System.Data;
 using System.ComponentModel;
+using MySql.Data.MySqlClient;
 
 namespace Gobot.Models
 {
     public class MySQLWrapper
     {
-        private OdbcConnection connection;
+        private MySqlConnection connection;
 
         public MySQLWrapper()
         {
@@ -22,8 +22,9 @@ namespace Gobot.Models
 
         public void Connect()
         {
-            connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
-            //connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
+            connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+            //connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+            //connection = new MySqlConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             try { connection.Open(); }
             catch (Exception e)
             {
@@ -39,7 +40,7 @@ namespace Gobot.Models
         /// <param name="condition">Collection of OdbcParameter (In the same order as in "where" condition</param>
         /// <param name="columnnames">Names of the needed columns</param>
         /// <returns>2D list of data returned by the query</returns>
-        public DataTable Select(string tablename, string where, List<OdbcParameter> conditions, params string[] columnnames)
+        public DataTable Select(string tablename, string where, List<MySqlParameter> conditions, params string[] columnnames)
         {
             if (connection.State == ConnectionState.Open && connection != null && columnnames.Length > 0 && tablename != "")
             {
@@ -59,17 +60,17 @@ namespace Gobot.Models
 
                 }
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
                 if (conditions.Count > 0)
                 {
-                    foreach (OdbcParameter param in conditions)
+                    foreach (MySqlParameter param in conditions)
                     {
                         command.Parameters.Add(param);
                     }
                 }
 
-                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
 
                 DataTable result = new DataTable();
 
@@ -91,7 +92,7 @@ namespace Gobot.Models
         /// <param name="columnNames">List of column names to insert</param>
         /// <param name="values">List of parameters for values to insert</param>
         /// <returns>Number of rows inserted (1 if inserted or 0 if error)</returns>
-        public int Insert(string tablename, List<string> columnNames, List<OdbcParameter> values)
+        public int Insert(string tablename, List<string> columnNames, List<MySqlParameter> values)
         {
             if (connection.State == ConnectionState.Open && connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
@@ -104,16 +105,16 @@ namespace Gobot.Models
                 sql.Remove(sql.Length - 1, 1);
                 sql.Append(") values(");
 
-                foreach (OdbcParameter val in values)
+                foreach (MySqlParameter val in values)
                 {
                     sql.Append("?,");
                 }
                 sql.Remove(sql.Length - 1, 1);
                 sql.Append(")");
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
-                foreach (OdbcParameter param in values)
+                foreach (MySqlParameter param in values)
                 {
                     command.Parameters.Add(param);
                 }
@@ -133,9 +134,9 @@ namespace Gobot.Models
         /// <param name="columnNames">List of column names to update</param>
         /// <param name="values">List of values to put in the table</param>
         /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Firstname = ?</param>
-        /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
+        /// <param name="conditions">Collection of MySqlParameter (In the same order as in "where" condition</param>
         /// <returns>Number of rows updated</returns>
-        public int Update(string tablename, List<string> columnNames, List<OdbcParameter> values, string where, List<OdbcParameter> conditions)
+        public int Update(string tablename, List<string> columnNames, List<MySqlParameter> values, string where, List<MySqlParameter> conditions)
         {
             if (connection.State == ConnectionState.Open && connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
@@ -152,16 +153,16 @@ namespace Gobot.Models
                     sql.Append(" where " + where);
                 }
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
-                foreach (OdbcParameter val in values)
+                foreach (MySqlParameter val in values)
                 {
                     command.Parameters.Add(val);
                 }
 
                 if (conditions.Count > 0 && where != "")
                 {
-                    foreach (OdbcParameter param in conditions)
+                    foreach (MySqlParameter param in conditions)
                     {
                         command.Parameters.Add(param);
                     }
@@ -180,9 +181,9 @@ namespace Gobot.Models
         /// </summary>
         /// <param name="tablename">Name of the table</param>
         /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR FirstName = ?</param>
-        /// <param name="conditions">Collection of OdbcParameter (In the same order as in "where" condition</param>
+        /// <param name="conditions">Collection of MySqlParameter (In the same order as in "where" condition</param>
         /// <returns></returns>
-        public int Delete(string tablename, string where, List<OdbcParameter> conditions)
+        public int Delete(string tablename, string where, List<MySqlParameter> conditions)
         {
             if (connection.State == ConnectionState.Open && connection != null && tablename != "")
             {
@@ -193,11 +194,11 @@ namespace Gobot.Models
                     sql.Append(" where " + where);
                 }
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
                 if (conditions.Count > 0)
                 {
-                    foreach (OdbcParameter param in conditions)
+                    foreach (MySqlParameter param in conditions)
                     {
                         command.Parameters.Add(param);
                     }
@@ -216,7 +217,7 @@ namespace Gobot.Models
         /// </summary>
         /// <param name="procedurename">Name of the procedure</param>
         /// <param name="args">All the parameters for the procedure</param>
-        public DataTable Procedure(string procedurename, params OdbcParameter[] args)
+        public DataTable Procedure(string procedurename, params MySqlParameter[] args)
         {
             if (connection.State == ConnectionState.Open && connection != null && procedurename != "")
             {
@@ -224,7 +225,7 @@ namespace Gobot.Models
 
                 if (args.Length > 0)
                 {
-                    foreach (OdbcParameter arg in args)
+                    foreach (MySqlParameter arg in args)
                     {
                         sql.Append("?,");
                     }
@@ -232,18 +233,18 @@ namespace Gobot.Models
                 }
                 sql.Append(")");
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
-                foreach (OdbcParameter arg in args)
+                foreach (MySqlParameter arg in args)
                 {
                     command.Parameters.Add(arg);
                 }
                 DataTable result = new DataTable();
-                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
                 adapt.Fill(result);
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
-                foreach (OdbcParameter param in args)
+                foreach (MySqlParameter param in args)
                 {
                     sb.Append(param.Value + ",");
                 }
@@ -259,7 +260,7 @@ namespace Gobot.Models
             }
         }
 
-        public DataTable Function(string functionname, params OdbcParameter[] args)
+        public DataTable Function(string functionname, params MySqlParameter[] args)
         {
             if (connection.State == ConnectionState.Open && connection != null && functionname != "")
             {
@@ -267,7 +268,7 @@ namespace Gobot.Models
 
                 if (args.Length > 0)
                 {
-                    foreach (OdbcParameter arg in args)
+                    foreach (MySqlParameter arg in args)
                         sql.Append("?,");
 
                     sql.Remove(sql.Length - 1, 1);
@@ -275,20 +276,20 @@ namespace Gobot.Models
 
                 sql.Append(")");
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
 
-                foreach (OdbcParameter arg in args)
+                foreach (MySqlParameter arg in args)
                 {
                     command.Parameters.Add(arg);
                 }
 
-                OdbcDataAdapter adapt = new OdbcDataAdapter(command);
+                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
                 DataTable result = new DataTable();
 
                 adapt.Fill(result);
                 StringBuilder sb = new StringBuilder();
                 sb.Append(functionname + "(");
-                foreach (OdbcParameter param in args)
+                foreach (MySqlParameter param in args)
                 {
                     sb.Append(param.Value + ",");
                 }
@@ -308,7 +309,7 @@ namespace Gobot.Models
             if (connection.State != ConnectionState.Open || connection == null)
                 return null;
 
-            DataTable UserResult = username != "" ? Procedure("GetUser", new OdbcParameter(":Username", username)) : user;
+            DataTable UserResult = username != "" ? Procedure("GetUser", new MySqlParameter(":Username", username)) : user;
 
             if (UserResult.Rows.Count > 0)
             {
@@ -344,16 +345,16 @@ namespace Gobot.Models
                 if (future)
                 {
                     if (matchId != -1)
-                        MatchResult = Procedure("GetMatchAfterMatch", new OdbcParameter(":matchId", matchId), new OdbcParameter(":period", period));
+                        MatchResult = Procedure("GetMatchAfterMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchAfter", new OdbcParameter(":date", DateTime.Now));
+                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now));
                 }
                 else
                 {
                     if (matchId != -1)
-                        MatchResult = Procedure("GetMatchBeforeMatch", new OdbcParameter(":matchId", matchId), new OdbcParameter(":period", period));
+                        MatchResult = Procedure("GetMatchBeforeMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchBefore", new OdbcParameter(":date", DateTime.Now));
+                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now));
                 }
 
                 foreach (DataRow row in MatchResult.Rows)
@@ -395,7 +396,7 @@ namespace Gobot.Models
         {
             if (connection.State == ConnectionState.Open)
             {
-                DataTable matchBd = Procedure("IsMatchCurrent", new OdbcParameter(":offset", timeOffset));
+                DataTable matchBd = Procedure("IsMatchCurrent", new MySqlParameter(":offset", timeOffset));
 
                 if (matchBd.Rows.Count > 0)
                 {
@@ -428,7 +429,7 @@ namespace Gobot.Models
                 if (all)
                     AllTeams = Procedure("GetAllTeam");
                 else
-                    AllTeams = Select("team", "IdTeam = ?", new List<OdbcParameter>() { new OdbcParameter(":IdTeam", id) }, "*");
+                    AllTeams = Select("team", "IdTeam = ?", new List<MySqlParameter>() { new MySqlParameter(":IdTeam", id) }, "*");
 
                 foreach (DataRow row in AllTeams.Rows)
                 {
@@ -439,7 +440,7 @@ namespace Gobot.Models
                     t.Games = (int)row["Game"];
                     t.ImagePath = row["ImageTeam"].ToString();
 
-                    DataTable BotsFromTeam = Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
+                    DataTable BotsFromTeam = Procedure("BotFromTeam", new MySqlParameter(":IdTeam", row["IdTeam"]));
                     for (int i = 0; i < 5; i++)
                     {
                         t.TeamComp[i] = new Bot(
@@ -464,7 +465,7 @@ namespace Gobot.Models
             {
                 try
                 {
-                    OdbcDataAdapter adapt = new OdbcDataAdapter(new OdbcCommand("select now();", connection));
+                    MySqlDataAdapter adapt = new MySqlDataAdapter(new MySqlCommand("select now();", connection));
 
                     DataTable result = new DataTable();
                     adapt.Fill(result);

@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using Gobot.Models;
-using System.Data.Odbc;
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
@@ -9,6 +8,7 @@ using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using MySql.Data.MySqlClient;
 
 namespace Gobot.Controllers
 {
@@ -53,8 +53,8 @@ namespace Gobot.Controllers
             }
 
             int update = new MySQLWrapper().Update("user", 
-                new List<string>() { "SteamProfile" }, new List<OdbcParameter>() { new OdbcParameter(":SteamProfile", newLink) }, 
-                "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+                new List<string>() { "SteamProfile" }, new List<MySqlParameter>() { new MySqlParameter(":SteamProfile", newLink) }, 
+                "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) });
 
             if (update > 0)
                 TempData["success"] = "Le lien vers votre compte Steam à été modifié avec succès.";
@@ -82,16 +82,16 @@ namespace Gobot.Controllers
                 try
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
-                    DataTable userDB = Bd.Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) }, "Password");
+                    DataTable userDB = Bd.Select("user", "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) }, "Password");
                     string oldPasswordDB = userDB != null && userDB.Rows.Count > 0 ? userDB.Rows[0]["Password"].ToString() : "";
-                    DataTable user = Bd.Procedure("Connect", new OdbcParameter(":username", ((User)Session["User"]).Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(oldPassword, oldPasswordDB.Substring(0, 64))));
+                    DataTable user = Bd.Procedure("Connect", new MySqlParameter(":username", ((User)Session["User"]).Username), new MySqlParameter(":password", PasswordEncrypter.EncryptPassword(oldPassword, oldPasswordDB.Substring(0, 64))));
 
                     if (user != null && user.Rows.Count > 0)
                     {
                         int result = Bd.Update("user",
                             new List<string>() { "Password" },
-                            new List<OdbcParameter>() { new OdbcParameter(":Password", PasswordEncrypter.EncryptPassword(newPassword)) },
-                            "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+                            new List<MySqlParameter>() { new MySqlParameter(":Password", PasswordEncrypter.EncryptPassword(newPassword)) },
+                            "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) });
 
                         if (result == 1)
                             TempData["success"] = "Votre mot de passe a été modifié avec succès.";
@@ -191,7 +191,7 @@ namespace Gobot.Controllers
 
         private string getImagePathFromDb(string user)
         {
-            DataTable userImg = new MySQLWrapper().Select("user", "Username = ?", new List<OdbcParameter>() { new OdbcParameter("", user) }, "Image");
+            DataTable userImg = new MySQLWrapper().Select("user", "Username = ?", new List<MySqlParameter>() { new MySqlParameter("", user) }, "Image");
             return userImg == null || userImg.Rows.Count == 0 ? null : userImg.Rows[0]["Image"].ToString();
         }
 
@@ -199,8 +199,8 @@ namespace Gobot.Controllers
         {
             return new MySQLWrapper().Update("user",
                         new List<string>() { "Image" },
-                        new List<OdbcParameter>() { new OdbcParameter(":Image", PasswordEncrypter.EncryptPassword(fileName)) },
-                        "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", user) });
+                        new List<MySqlParameter>() { new MySqlParameter(":Image", PasswordEncrypter.EncryptPassword(fileName)) },
+                        "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", user) });
         }
 
         private string getFileName(string basePath, string ext)
@@ -244,8 +244,8 @@ namespace Gobot.Controllers
                 {
                     int result = new MySQLWrapper().Update("user",
                         new List<string>() { "Email" },
-                        new List<OdbcParameter>() { new OdbcParameter(":Email", confirmEmail) },
-                        "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) });
+                        new List<MySqlParameter>() { new MySqlParameter(":Email", confirmEmail) },
+                        "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) });
 
                     if (result == 1)
                         TempData["success"] = "Votre adresse courriel a été modifiée avec succès.";
@@ -288,9 +288,14 @@ namespace Gobot.Controllers
 
             MySQLWrapper Bd = new MySQLWrapper();
 
-            DataTable isUser = Bd.Procedure("IsUser", new OdbcParameter(":username", user.Username));
+            DataTable isUser = Bd.Procedure("IsUser", new MySqlParameter(":username", user.Username));
             
-            if (Convert.ToInt32(isUser.Rows[0][0]) != 0)
+            if (isUser == null || isUser.Rows.Count == 0)
+            {
+                TempData["error"] = "Une erreur s'est produite lors de l'inscription. Veuillez réessayer.";
+                Erreur = true;
+            }
+            else if (Convert.ToInt32(isUser.Rows[0][0]) != 0)
             {
                 TempData["error"] = "Le nom d'utilisateur est déja utilisé.";
                 Erreur = true;
@@ -338,7 +343,7 @@ namespace Gobot.Controllers
             else
             {
                 string encPassword = PasswordEncrypter.EncryptPassword(user.Password);
-                Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
+                Bd.Procedure("AddUser", new MySqlParameter(":username", user.Username), new MySqlParameter(":Email", user.Email), new MySqlParameter(":steamprofile", ""), new MySqlParameter(":password", encPassword));
 
                 Session["User"] = Bd.GetUserFromDB(user.Username);
 
@@ -367,7 +372,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+            List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
 
             int DeleteResult = Bd.Delete("user", "Username = ?", user);
             if (DeleteResult == 1)
