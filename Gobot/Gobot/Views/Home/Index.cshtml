@@ -90,6 +90,7 @@
                         <div id="signIn_border"><p></p></div>
                     </div>
                 </div>
+                <input type="hidden" name="clientTime" value=""/>
             }
         </div>
     </div>
@@ -195,6 +196,14 @@
         $(document).on('click', '#login > button', function () {
             addPopOutLogin();
         });
+
+        $(document).on('click', '#signIn_circle, #signIn_rect, #popOut_login input[type="submit"]', function () {
+            setClientTime();
+        });
+
+        function setClientTime() {
+            $("input[name=clientTime]").val(Date.now());
+        }
 
         //#region animation
 
@@ -320,7 +329,7 @@
                 var formHTML = $('<div/>').html(originalForm).contents();
                 var user = formHTML.find("#username").html();
                 var pwd = formHTML.find("#password").html();
-                var popOutLogin = '<div id="popOut_login"><form action="/" method="post">' + user + pwd + '<input type="submit" value="Connexion"/><div class="close"></div></form></div>';
+                var popOutLogin = '<div id="popOut_login"><form action="/" method="post">' + user + pwd + '<input type="submit" value="Connexion"/><div class="close"></div><input type="hidden" name="clientTime" value=""/></form></div>';
                 $("body").prepend(popOutLogin);
 
                 setPopOutLogin();

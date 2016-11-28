@@ -18,7 +18,7 @@ namespace Gobot.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            Match m = new MySQLWrapper().GetLiveMatch();
+            Match m = new MySQLWrapper().GetLiveMatch((double)Session["timeOffset"]);
 
             if (m != null)
                 return View(m);
@@ -42,7 +42,7 @@ namespace Gobot.Controllers
                 try
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
-                    Match currentMatch = Bd.GetLiveMatch();
+                    Match currentMatch = Bd.GetLiveMatch((double)Session["timeOffset"]);
 
                     if (currentMatch != null && currentMatch.TeamVictoire != 0)
                     {

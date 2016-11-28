@@ -360,7 +360,7 @@ namespace Gobot.Models
                 {
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = (DateTime)row["Date"];
+                    m.Date = ((DateTime)row["Date"]);
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
@@ -391,11 +391,11 @@ namespace Gobot.Models
                 return null;
         }
 
-        public Match GetLiveMatch()
+        public Match GetLiveMatch(double timeOffset)
         {
             if (connection.State == ConnectionState.Open)
             {
-                DataTable matchBd = Procedure("IsMatchCurrent");
+                DataTable matchBd = Procedure("IsMatchCurrent", new OdbcParameter(":offset", timeOffset));
 
                 if (matchBd.Rows.Count > 0)
                 {
@@ -456,6 +456,33 @@ namespace Gobot.Models
             }
             else
                 return null;
+        }
+
+        public DateTime GetBDTime()
+        {
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                try
+                {
+                    OdbcDataAdapter adapt = new OdbcDataAdapter(new OdbcCommand("select now();", connection));
+
+                    DataTable result = new DataTable();
+                    adapt.Fill(result);
+
+                    string dbDate = result.Rows[0].ItemArray[0].ToString();
+                    DateTime dt = DateTime.ParseExact(dbDate, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                    return dt;
+                }
+                catch (Exception)
+                {
+                    return DateTime.Now;
+                }
+            }
+            else
+            {
+                return DateTime.Now;
+            }
         }
     }
 

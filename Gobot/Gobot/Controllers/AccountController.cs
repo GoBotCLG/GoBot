@@ -341,6 +341,19 @@ namespace Gobot.Controllers
                 Bd.Procedure("AddUser", new OdbcParameter(":username", user.Username), new OdbcParameter(":Email", user.Email), new OdbcParameter(":steamprofile", ""), new OdbcParameter(":password", encPassword));
 
                 Session["User"] = Bd.GetUserFromDB(user.Username);
+
+                double offset;
+                try
+                {
+                    offset = HomeController.GetTimeOffset(Request.Form["clientTime"]);
+                }
+                catch (Exception)
+                {
+                    offset = 0;
+                }
+
+                Session["timeOffset"] = offset;
+
                 TempData["success"] = "Votre compte a été créé. Vous vous trouvez actuellement sur votre page de gestion de compte où vous pouvez voir tout vos activités sur Gobot.";
 
                 return RedirectToAction("Index", "Account");

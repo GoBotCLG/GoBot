@@ -10,6 +10,10 @@ function onBetResize() {
     h_align_window($(".info_container"));
     posTeamBets();
 
+    alignDivsElem();
+}
+
+function alignDivsElem() {
     $(".info > div").each(function () {
         if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
             v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
@@ -132,7 +136,7 @@ function createTeamBets(data, teamName) {
 function appendNextDayBets(data) {
     var days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
     var date = new Date(data.date); // data.date == milliseconds
-    var day = '<div class="info day"><h2>' + days[date.getDay()] + '<grey>' + zeros(date.getDate()) + '-' + zeros(date.getMonth()) + '-' + zeros(date.getFullYear()) + '</grey></h2></div>';
+    var day = '<div class="info day"><h2>' + days[date.getDay()] + '<grey>&nbsp;' + zeros(date.getDate()) + '-' + zeros(date.getMonth()) + '-' + date.getFullYear() + '</grey></h2></div>';
     $(day).insertBefore("#showNextDay");
 
     $.each(data.matches, function (i, match) {
@@ -148,6 +152,14 @@ function appendNextDayBets(data) {
         var end = '</div>';
 
         $(start + time + team1 + vs + manage + team2 + matchId + end).insertBefore("#showNextDay");
+    });
+
+    var divs = $(".day").last().nextAll().not("#showNextDay");
+    $.each(divs, function () {
+        if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
+            v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
+        else
+            v_align($(this).children(), $(this), getHeightOfChilds($(this)))
     });
 }
 
