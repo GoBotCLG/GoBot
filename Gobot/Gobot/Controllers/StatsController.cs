@@ -1,8 +1,8 @@
 ﻿using Gobot.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Odbc;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -27,7 +27,7 @@ namespace Gobot.Controllers
             List<Match> Matches = Bd.GetMatches(false);
             List<Bet> Bets = new List<Bet>();
 
-            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
             foreach (DataRow row in BetResult.Rows)
             {
@@ -56,7 +56,7 @@ namespace Gobot.Controllers
 
             Bets.Clear();
 
-            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
 
             foreach (DataRow row in BetResult.Rows)
             {
@@ -88,7 +88,7 @@ namespace Gobot.Controllers
             List<Match> Matches = Bd.GetMatches(true);
             List<Bet> Bets = new List<Bet>();
 
-            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
             foreach (DataRow row in BetResult.Rows)
             {
@@ -117,7 +117,7 @@ namespace Gobot.Controllers
 
             Bets.Clear();
 
-            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
 
             foreach (DataRow row in BetResult.Rows)
             {

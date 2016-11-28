@@ -1,9 +1,9 @@
 ﻿using Gobot.Models;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Odbc;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -46,7 +46,7 @@ namespace Gobot.Controllers
 
                     if (currentMatch != null && currentMatch.TeamVictoire != 0)
                     {
-                        DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", currentMatch.Id));
+                        DataTable bets = Bd.Procedure("GetBetsFromMatch", new MySqlParameter(":Id", currentMatch.Id));
                         DataRow[] userBet = bets.Select(string.Format("User_Username = '{0}'", ((User)Session["User"]).Username));
 
                         if (userBet != null && userBet.Length > 0)

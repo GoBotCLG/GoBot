@@ -2,12 +2,12 @@
 using System.Web.Mvc;
 using Gobot.Models;
 using System.Collections.Generic;
-using System.Data.Odbc;
 using System.Data;
 using System.ComponentModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Globalization;
+using MySql.Data.MySqlClient;
 
 namespace Gobot.Controllers
 {
@@ -37,13 +37,13 @@ namespace Gobot.Controllers
             //        Teams[0] = new JObject();
             //        Teams[1] = new JObject();
             //    }
-            //    List<OdbcParameter> idTeam = new List<OdbcParameter>();
-            //    idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            //    List<MySqlParameter> idTeam = new List<MySqlParameter>();
+            //    idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
             //    DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
             //    Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
             //    Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
             //    idTeam.Clear();
-            //    idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            //    idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
             //    DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
             //    Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
             //    Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
@@ -61,14 +61,14 @@ namespace Gobot.Controllers
             {
                 MySQLWrapper Bd = new MySQLWrapper();
 
-                OdbcParameter username = new OdbcParameter(":Username", user.Username);
-                List<OdbcParameter> parameters = new List<OdbcParameter>();
+                MySqlParameter username = new MySqlParameter(":Username", user.Username);
+                List<MySqlParameter> parameters = new List<MySqlParameter>();
                 parameters.Add(username);
                 DataTable pass = Bd.Select("user", "Username = ?", parameters, "Password");
                 
                 if (pass != null && pass.Rows.Count > 0)
                 {
-                    DataTable UserResult = Bd.Procedure("Connect", new OdbcParameter(":username", user.Username), new OdbcParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
+                    DataTable UserResult = Bd.Procedure("Connect", new MySqlParameter(":username", user.Username), new MySqlParameter(":password", PasswordEncrypter.EncryptPassword(user.Password, pass.Rows[0]["Password"].ToString().Substring(0, 64))));
 
                     if (UserResult.Rows.Count > 0)
                     {
@@ -132,13 +132,13 @@ namespace Gobot.Controllers
                 Teams[0] = new JObject();
                 Teams[1] = new JObject();
             }
-            List<OdbcParameter> idTeam = new List<OdbcParameter>();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
+            List<MySqlParameter> idTeam = new List<MySqlParameter>();
+            idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
             DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
             Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
             Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
             idTeam.Clear();
-            idTeam.Add(new OdbcParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
+            idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
             DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
             Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
             Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);

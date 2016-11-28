@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using Gobot.Models;
 using System.Data;
-using System.Data.Odbc;
 using System.ComponentModel;
 using System.Net;
+using MySql.Data.MySqlClient;
 
 namespace Gobot.Controllers
 {
@@ -41,7 +41,7 @@ namespace Gobot.Controllers
 
             List<Bet> Bets = new List<Bet>();
 
-            DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
             foreach (DataRow row in BetResult.Rows)
             {
@@ -70,7 +70,7 @@ namespace Gobot.Controllers
 
             Bets.Clear();
 
-            BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
 
             foreach (DataRow row in BetResult.Rows)
             {
@@ -100,7 +100,7 @@ namespace Gobot.Controllers
             else
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                DataTable UserResult = Bd.Procedure("GetUser", new OdbcParameter(":username", ((User)Session["User"]).Username));
+                DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
                 Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
                 int oldAmount = betExists(MatchId, TeamId);
 
@@ -120,10 +120,10 @@ namespace Gobot.Controllers
         
         private int betExists(int MatchId, int TeamId)
         {
-            List<OdbcParameter> conditions = new List<OdbcParameter>() {
-                new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                new OdbcParameter(":TeamId", TeamId),
-                new OdbcParameter(":MatchId", MatchId)
+            List<MySqlParameter> conditions = new List<MySqlParameter>() {
+                new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                new MySqlParameter(":TeamId", TeamId),
+                new MySqlParameter(":MatchId", MatchId)
             };
             DataTable result = new MySQLWrapper().Select("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions, "Mise");
 
@@ -143,19 +143,19 @@ namespace Gobot.Controllers
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
                     List<string> col = new List<string>() { "Mise" };
-                    List<OdbcParameter> parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", newAmount) };
-                    List<OdbcParameter> conditions = new List<OdbcParameter>() {
-                        new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                        new OdbcParameter(":TeamId", TeamId),
-                        new OdbcParameter(":MatchId", MatchId)
+                    List<MySqlParameter> parameters = new List<MySqlParameter>() { new MySqlParameter(":Mise", newAmount) };
+                    List<MySqlParameter> conditions = new List<MySqlParameter>() {
+                        new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                        new MySqlParameter(":TeamId", TeamId),
+                        new MySqlParameter(":MatchId", MatchId)
                     };
                     int result = Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
 
                     if (result > 0)
                     {
                         List<string> columns = new List<string>() { "Credit" };
-                        List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount) };
-                        List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                        List<MySqlParameter> values = new List<MySqlParameter>() { new MySqlParameter(":Credit", ((User)Session["User"]).Credits - newAmount + oldAmount) };
+                        List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
                         int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                         if (updateresult == 1)
                         {
@@ -163,7 +163,7 @@ namespace Gobot.Controllers
                         }
                         else
                         {
-                            parameters = new List<OdbcParameter>() { new OdbcParameter(":Mise", oldAmount) };
+                            parameters = new List<MySqlParameter>() { new MySqlParameter(":Mise", oldAmount) };
                             Bd.Update("bet", col, parameters, "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
                             throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La nouvelle mise n'a pas été enregistrée.");
                         }
@@ -187,12 +187,12 @@ namespace Gobot.Controllers
                 MySQLWrapper Bd = new MySQLWrapper();
                 List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
                 
-                List<OdbcParameter> parameters = new List<OdbcParameter>() {
-                    new OdbcParameter(":Mise", Amount),
-                    new OdbcParameter(":Profit", 0.ToString()),
-                    new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                    new OdbcParameter(":Team", TeamId),
-                    new OdbcParameter(":Match", MatchId)
+                List<MySqlParameter> parameters = new List<MySqlParameter>() {
+                    new MySqlParameter(":Mise", Amount),
+                    new MySqlParameter(":Profit", 0.ToString()),
+                    new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                    new MySqlParameter(":Team", TeamId),
+                    new MySqlParameter(":Match", MatchId)
                 };
                 int result = Bd.Insert("bet", col, parameters);
 
@@ -206,8 +206,8 @@ namespace Gobot.Controllers
                         lvl += 1;
                     }
                     List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
-                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits - Amount), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
-                    List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                    List<MySqlParameter> values = new List<MySqlParameter>() { new MySqlParameter(":Credit", ((User)Session["User"]).Credits - Amount), new MySqlParameter(":EXP", xp), new MySqlParameter(":LVL", lvl) };
+                    List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
                     int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                     if (updateresult == 1)
                     {
@@ -215,10 +215,10 @@ namespace Gobot.Controllers
                     }
                     else
                     {
-                        List<OdbcParameter> conditions = new List<OdbcParameter>() {
-                            new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                            new OdbcParameter(":TeamId", TeamId),
-                            new OdbcParameter(":MatchId", MatchId)
+                        List<MySqlParameter> conditions = new List<MySqlParameter>() {
+                            new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                            new MySqlParameter(":TeamId", TeamId),
+                            new MySqlParameter(":MatchId", MatchId)
                         };
                         Bd.Delete("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
                         throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La mise n'a pas été enregistrée.");
@@ -246,10 +246,10 @@ namespace Gobot.Controllers
                     MySQLWrapper Bd = new MySQLWrapper();
                     Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
 
-                    List<OdbcParameter> Bet = new List<OdbcParameter>() {
-                        new OdbcParameter(":TeamId", tId),
-                        new OdbcParameter(":MatchId", mId),
-                        new OdbcParameter(":Username", ((User)Session["User"]).Username)
+                    List<MySqlParameter> Bet = new List<MySqlParameter>() {
+                        new MySqlParameter(":TeamId", tId),
+                        new MySqlParameter(":MatchId", mId),
+                        new MySqlParameter(":Username", ((User)Session["User"]).Username)
                     };
 
                     DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
@@ -259,10 +259,10 @@ namespace Gobot.Controllers
                         if ((int)resultBet.Rows[0]["Profit"] != 0)
                             throw new Exception("Une erreur est survenue lors de la supression du pari.");
 
-                        Bet = new List<OdbcParameter>() {
-                            new OdbcParameter(":TeamId", tId),
-                            new OdbcParameter(":MatchId", mId),
-                            new OdbcParameter(":Username", ((User)Session["User"]).Username)
+                        Bet = new List<MySqlParameter>() {
+                            new MySqlParameter(":TeamId", tId),
+                            new MySqlParameter(":MatchId", mId),
+                            new MySqlParameter(":Username", ((User)Session["User"]).Username)
                         };
 
                         int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
@@ -276,8 +276,8 @@ namespace Gobot.Controllers
                                 lvl -= 1;
                             }
                             List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
-                            List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", ((User)Session["User"]).Credits + Amount), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
-                            List<OdbcParameter> user = new List<OdbcParameter>() { new OdbcParameter(":Username", ((User)Session["User"]).Username) };
+                            List<MySqlParameter> values = new List<MySqlParameter>() { new MySqlParameter(":Credit", ((User)Session["User"]).Credits + Amount), new MySqlParameter(":EXP", xp), new MySqlParameter(":LVL", lvl) };
+                            List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
                             int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
                             if (updateresult == 1)
                             {
@@ -287,12 +287,12 @@ namespace Gobot.Controllers
                             {
                                 List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
 
-                                List<OdbcParameter> parameters = new List<OdbcParameter>() {
-                                    new OdbcParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
-                                    new OdbcParameter(":Profit", 0),
-                                    new OdbcParameter(":Username", ((User)Session["User"]).Username),
-                                    new OdbcParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
-                                    new OdbcParameter(":Match", (int)resultBet.Rows[0]["Match_IdMatch"])
+                                List<MySqlParameter> parameters = new List<MySqlParameter>() {
+                                    new MySqlParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
+                                    new MySqlParameter(":Profit", 0),
+                                    new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                                    new MySqlParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
+                                    new MySqlParameter(":Match", (int)resultBet.Rows[0]["Match_IdMatch"])
                                 };
                                 Bd.Insert("bet", col, parameters);
                                 throw new Exception("Une erreur est survenue lors de la supression du pari.");
@@ -342,7 +342,7 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null)
                 return Json("", JsonRequestBehavior.DenyGet);
 
-            DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new OdbcParameter(":IdTeam", TeamId), new OdbcParameter(":IdMatch", MatchId));
+            DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new MySqlParameter(":IdTeam", TeamId), new MySqlParameter(":IdMatch", MatchId));
             
             if (users != null && users.Rows.Count > 0)
             {
@@ -379,7 +379,7 @@ namespace Gobot.Controllers
                 if (Matches.Count() > 0)
                 {
                     List<Bet> Bets = new List<Bet>();
-                    DataTable BetResult = Bd.Procedure("GetBetUser", new OdbcParameter(":Username", ((User)Session["User"]).Username));
+                    DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
                     foreach (DataRow row in BetResult.Rows)
                     {
@@ -408,7 +408,7 @@ namespace Gobot.Controllers
 
                     Bets.Clear();
 
-                    BetResult = Bd.Select("bet", "", new List<OdbcParameter>(), "*");
+                    BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
 
                     foreach (DataRow row in BetResult.Rows)
                     {
