@@ -13,13 +13,18 @@ namespace Liaison_BD___CSGO
     public class MySQLWrapper
     {
         private OdbcConnection connection;
-        static public Mutex mutex;
 
         public MySQLWrapper()
         {
             connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
             //connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
-            mutex = new Mutex();
+            connection.Open();
+        }
+
+        ~MySQLWrapper()
+        {
+            connection.Close();
+            connection.Dispose();
         }
 
         /// <summary>
@@ -49,7 +54,6 @@ namespace Liaison_BD___CSGO
                     sql.Append(" where " + where);
 
                 }
-
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
                 if(conditions.Count > 0)
@@ -63,11 +67,15 @@ namespace Liaison_BD___CSGO
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
 
                 DataTable result = new DataTable();
-                while (connection.State != ConnectionState.Open)
+                Monitor.Enter(connection);
+                try
                 {
-                    Thread.Sleep(1);
+                    adapt.Fill(result);
                 }
-                adapt.Fill(result);
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
                 result.TableName = tablename;
                 adapt.Dispose();
                 return result;
@@ -105,13 +113,22 @@ namespace Liaison_BD___CSGO
                 sql.Remove(sql.Length - 1, 1);
                 sql.Append(")");
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
-
-                foreach (OdbcParameter param in values)
+                Monitor.Enter(connection);
+                try
                 {
-                    command.Parameters.Add(param);
+                    OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+
+                    foreach (OdbcParameter param in values)
+                    {
+                        command.Parameters.Add(param);
+                    }
+                    return command.ExecuteNonQuery();
                 }
-                return command.ExecuteNonQuery();
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
+                
             }
             else
             {
@@ -144,22 +161,30 @@ namespace Liaison_BD___CSGO
                 {
                     sql.Append(" where " + where);
                 }
-                
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                foreach(OdbcParameter val in values)
+                Monitor.Enter(connection);
+                try
                 {
-                    command.Parameters.Add(val);
-                }
+                    OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
-                if(conditions.Count > 0 && where != "")
-                {
-                    foreach (OdbcParameter param in conditions)
+                    foreach (OdbcParameter val in values)
                     {
-                        command.Parameters.Add(param);
+                        command.Parameters.Add(val);
                     }
+
+                    if (conditions.Count > 0 && where != "")
+                    {
+                        foreach (OdbcParameter param in conditions)
+                        {
+                            command.Parameters.Add(param);
+                        }
+                    }
+                    return command.ExecuteNonQuery();
                 }
-                return command.ExecuteNonQuery();
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
             }
             else
             {
@@ -185,16 +210,24 @@ namespace Liaison_BD___CSGO
                     sql.Append(" where " + where);
                 }
 
-                OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
-
-                if(conditions.Count > 0)
+                Monitor.Enter(connection);
+                try
                 {
-                    foreach(OdbcParameter param in conditions)
+                    OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
+
+                    if(conditions.Count > 0)
                     {
-                        command.Parameters.Add(param);
+                        foreach(OdbcParameter param in conditions)
+                        {
+                            command.Parameters.Add(param);
+                        }
                     }
+                    return command.ExecuteNonQuery();
                 }
-                return command.ExecuteNonQuery();
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
             }
             else
             {
@@ -222,7 +255,6 @@ namespace Liaison_BD___CSGO
                     sql.Remove(sql.Length - 1, 1);
                 }
                 sql.Append(")}");
-
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
                 foreach (OdbcParameter arg in args)
@@ -231,17 +263,7 @@ namespace Liaison_BD___CSGO
                 }
                 DataTable result = new DataTable();
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
-                Monitor.Enter(connection);
-                try
-                {
-                    connection.Open();
-                    adapt.Fill(result);
-                    connection.Close();
-                }
-                finally
-                {
-                    Monitor.Exit(connection);
-                }
+                adapt.Fill(result);
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (OdbcParameter param in args)
@@ -275,7 +297,7 @@ namespace Liaison_BD___CSGO
                 }
 
                 sql.Append(")");
-
+                
                 OdbcCommand command = new OdbcCommand(sql.ToString(), connection);
 
                 foreach (OdbcParameter arg in args)
@@ -286,7 +308,15 @@ namespace Liaison_BD___CSGO
                 OdbcDataAdapter adapt = new OdbcDataAdapter(command);
                 DataTable result = new DataTable();
 
-                adapt.Fill(result);
+                Monitor.Enter(connection);
+                try
+                {
+                    adapt.Fill(result);
+                }
+                finally
+                {
+                    Monitor.Exit(connection);
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append(functionname + "(");
                 foreach(OdbcParameter param in args)

@@ -30,7 +30,6 @@ namespace Liaison_BD___CSGO
         private static bool Team1CTNextMatch;
         private static bool Team1CTCurrentMatch;
         private static Process Serveur;
-        private static MySQLWrapper BD;
         private static SourceRcon.SourceRcon ConnectionServeur;
 
         static void Main(string[] args)
@@ -40,7 +39,6 @@ namespace Liaison_BD___CSGO
             work.ProgressChanged += new ProgressChangedEventHandler(NewEvent);
             work.WorkerSupportsCancellation = true;
             work.WorkerReportsProgress = true;
-            BD = new MySQLWrapper();
 
             InitializeServer();
 
@@ -67,7 +65,7 @@ namespace Liaison_BD___CSGO
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon +maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
-            Thread.Sleep(40000);
+            Thread.Sleep(20000);
             ConnectionServeur = new SourceRcon.SourceRcon();
             while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
             ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));
@@ -86,10 +84,10 @@ namespace Liaison_BD___CSGO
                 File.Delete(f);
             }
 
-            CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["idMatch"];
+            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["idMatch"];
 
             //Changer tout ce qui suit pour PrepareNextMatch() à l'implémentation finale
-            DataTable CurrentMatch = BD.Procedure("IsMatchCurrent");
+            DataTable CurrentMatch = new MySQLWrapper().Procedure("IsMatchCurrent");
 
             NextMap = CurrentMatch.Rows[0]["Map"].ToString();
 
@@ -109,14 +107,14 @@ namespace Liaison_BD___CSGO
             if (TeamCT == 0)
             {
                 Team1CTNextMatch = true;
-                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam1"])));
-                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam2"])));
+                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam1"])));
+                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam2"])));
             }
             else
             {
                 Team1CTNextMatch = false;
-                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
-                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
+                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
+                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
             }
 
 
@@ -126,7 +124,7 @@ namespace Liaison_BD___CSGO
                 OutFile.Write("bot_add t \"" + BotsT.Rows[i]["NomBot"].ToString() + "\"; ");
             }
 
-            DataTable Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatch.Rows[0]["IdMatch"]));
+            DataTable Teams = new MySQLWrapper().Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatch.Rows[0]["IdMatch"]));
             string Team1Name;
             string Team2Name;
 
@@ -166,7 +164,7 @@ namespace Liaison_BD___CSGO
 
         private static void PrepareNextMatch()
         {
-            DataTable NextMatch = BD.Procedure("NextMatch");
+            DataTable NextMatch = new MySQLWrapper().Procedure("NextMatch");
 
             NextMap = NextMatch.Rows[0]["Map"].ToString();
 
@@ -186,14 +184,14 @@ namespace Liaison_BD___CSGO
             if (TeamCT == 0)
             {
                 Team1CTNextMatch = true;
-                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
-                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
+                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
             }
             else
             {
                 Team1CTNextMatch = false;
-                BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam1"]));
-                BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam2"]));
+                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam1"]));
+                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)NextMatch.Rows[0]["Team_IdTeam2"]));
             }
 
 
@@ -203,7 +201,7 @@ namespace Liaison_BD___CSGO
                 OutFile.Write("bot_add t \"" + BotsT.Rows[i]["NomBot"].ToString() + "\"; ");
             }
 
-            DataTable Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", NextMatch.Rows[0]["IdMatch"]));
+            DataTable Teams = new MySQLWrapper().Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", NextMatch.Rows[0]["IdMatch"]));
             string Team1Name;
             string Team2Name;
 
@@ -259,11 +257,11 @@ namespace Liaison_BD___CSGO
             Dictionary<string, int> DeathsBots = new Dictionary<string, int>();
             Dictionary<string, int> IdBots = new Dictionary<string, int>();
 
-            DataTable Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatchId));
+            DataTable Teams = new MySQLWrapper().Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatchId));
 
             foreach(DataRow row in Teams.Rows)
             {
-                DataTable Bots = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
+                DataTable Bots = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", row["IdTeam"]));
                 foreach(DataRow bot in Bots.Rows)
                 {
                     IdBots.Add(bot["NomBot"].ToString(), (int)bot["IdBot"]);
@@ -289,7 +287,7 @@ namespace Liaison_BD___CSGO
 
             foreach(KeyValuePair<string, int> bot in IdBots)
             {
-                BD.Procedure("SetKDA", new OdbcParameter(":KDA", KillsBots[bot.Key].ToString() + "/" + DeathsBots[bot.Key].ToString() + "/" + AssistsBots[bot.Key].ToString()), new OdbcParameter(":IdBot", bot.Value));
+                new MySQLWrapper().Procedure("SetKDA", new OdbcParameter(":KDA", KillsBots[bot.Key].ToString() + "/" + DeathsBots[bot.Key].ToString() + "/" + AssistsBots[bot.Key].ToString()), new OdbcParameter(":IdBot", bot.Value));
             }
 
             CurrentTeam1Score = 0;
@@ -301,7 +299,7 @@ namespace Liaison_BD___CSGO
 
         private static void NewEvent(object sender, ProgressChangedEventArgs e)
         {
-            DataTable teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
+            DataTable teams = new MySQLWrapper().Procedure("TeamFromMatch", new OdbcParameter(":MatchId", CurrentMatchId));
             if (e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
                 if (CurrentTeam1Score > CurrentTeam2Score)
@@ -326,7 +324,6 @@ namespace Liaison_BD___CSGO
                 }
                 else
                 {
-                    CurrentRoundNumber = 2;
                     EndKnifeRound();
                 }
 
@@ -349,9 +346,7 @@ namespace Liaison_BD___CSGO
             {
                 Console.WriteLine("Un knife round est lancé pour déterminer l'équipe gagnante!");
                 ConnectionServeur.ServerCommand("mp_give_player_c4 0");
-                ConnectionServeur.ServerCommand("mp_restartgame 1");
                 ConnectionServeur.ServerCommand("bot_knives_only");
-                ConnectionServeur.ServerCommand("mp_warmup_end");
             }
         }
 
@@ -400,16 +395,16 @@ namespace Liaison_BD___CSGO
 
             if(Team1CTCurrentMatch)
             {
-                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam1Score = TotalCT;
-                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam2Score = TotalT;
             }
             else
             {
-                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam1Score = TotalT;
-                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam2Score = TotalCT;
             }
             
@@ -443,16 +438,16 @@ namespace Liaison_BD___CSGO
 
             if (Team1CTCurrentMatch)
             {
-                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam1Score = TotalCT;
-                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam2Score = TotalT;
             }
             else
             {
-                BD.Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam1", new OdbcParameter(":NbRound", TotalT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam1Score = TotalT;
-                BD.Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
+                new MySQLWrapper().Procedure("SetRoundTeam2", new OdbcParameter(":NbRound", TotalCT), new OdbcParameter(":IdMatch", CurrentMatchId));
                 CurrentTeam2Score = TotalCT;
             }
 
@@ -475,7 +470,7 @@ namespace Liaison_BD___CSGO
 
 
             Team1CTCurrentMatch = Team1CTNextMatch;
-            CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
+            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
@@ -495,7 +490,7 @@ namespace Liaison_BD___CSGO
                 {
                     break;
                 }
-                if(Round == 0 && CurrentMatchId != (int)BD.Procedure("IsMatchCurrent").Rows[0]["IdMatch"])
+                if(Round == 0 && CurrentMatchId != (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"])
                 {
                     Round = 1;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_NEXT_MATCH);
@@ -506,13 +501,12 @@ namespace Liaison_BD___CSGO
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
                 }
 
-                Thread.Sleep(500);
+                Thread.Sleep(10000);
 
                 if(Round == 11 || CurrentTeam1Score == 6 || CurrentTeam2Score == 6)
                 {
-                    if(Round == 11 && CurrentTeam1Score == 5 && CurrentTeam2Score == 5)
+                    if(Round == 11 && CurrentTeam1Score < 6 && CurrentTeam2Score < 6)
                     {
-                        Round = 1;
                         ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_KNIFE_ROUND);
                         while(!File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + Round.ToString("00") + ".txt"))
                         {
@@ -540,12 +534,11 @@ namespace Liaison_BD___CSGO
             int xpLvl = 1500;
             try
             {
-                MySQLWrapper Bd = new MySQLWrapper();
-                DataTable bets = Bd.Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
-                DataTable users = Bd.Select("user", "", new List<OdbcParameter>(), "Username", "Credit", "EXP", "LVL");
+                DataTable bets = new MySQLWrapper().Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
+                DataTable users = new MySQLWrapper().Select("user", "", new List<OdbcParameter>(), "Username", "Credit", "EXP", "LVL");
                 var totalBets = getTotalBets(ref bets, WinnerID);
 
-                Bd.Update("matchs", 
+                new MySQLWrapper().Update("matchs", 
                     new List<string>() { "Team_Victoire" }, new List<OdbcParameter>() { new OdbcParameter(":Team_Victoire", WinnerID) }, 
                     "IdMatch = ?", new List<OdbcParameter>() { new OdbcParameter(":IdMatch", CurrentMatchId) });
 
@@ -578,16 +571,22 @@ namespace Liaison_BD___CSGO
 
                                     List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
                                     List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
-                                    Bd.Update("user", new List<string>() { "Credit", "EXP", "LVL" }, values, "Username = ?", cond);
+                                    new MySQLWrapper().Update("user", new List<string>() { "Credit", "EXP", "LVL" }, values, "Username = ?", cond);
                                 }
                             }
                         }
-                        catch (Exception) { }
+                        catch (Exception e)
+                        {
+                            string ex = e.Message;
+                        }
                     }
                     updateBetsAdmin((int)Math.Floor(totalBets["admin"] + remains));
                 }
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                string ex = e.Message;
+            }
         }
 
         private static Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
@@ -626,7 +625,25 @@ namespace Liaison_BD___CSGO
                     new List<string>() { "Credit" }, new List<OdbcParameter>() { new OdbcParameter(":Amount", amount) },
                     "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", "admin") });
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                string ex = e.Message;
+            }
+        }
+
+        public static double GetTimeOffset(string time)
+        {
+            DateTime bdTime = new MySQLWrapper().GetBDTime();
+            try
+            {
+                DateTime clientTime = DateTime.Now;
+                double offset = (clientTime - bdTime).TotalMinutes / 60;
+                return (double)(Math.Round(2 * (offset))) / 2;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
     }
 }
