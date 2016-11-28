@@ -16,14 +16,10 @@ namespace Gobot
     }
 }
 
-// TODO: Fix image links and storage to correctly display images.
-// TODO: Find a way to store image files directly in folder (have the windows rights to do so).
 // TODO: Find how to count the number of videos watched + favorite team of user. (/Account/Index + /Watch/Index)
-// TODO: Implement the number of GC gained and lost on betting for the user. (/Account/Index)
 // TODO: Add xp when user watches a game.
 // TODO: Code /Support/Contact with a form to send an email to us.
-// TODO: Create a method (json) to get portion of bets to reduce load on refresh in [/bet/index, /stats/schedule, /stats/history] (load first day on refresh and click button to load the next 20).
-// TODO: Add an header to show which day is currently shown in [/bet/index, /stats/schedule, /stats/history] before the matches of the said day.
-// TODO: Reduce match length for the next week to be able to test EOM bet's handling...
+// TODO: Create a method (json) to get portion of bets to reduce load on refresh in [/stats/schedule, /stats/history] (load first 2 days on refresh and click button to load the next 20).
+// TODO: Add an header to show which day is currently shown in [/stats/schedule, /stats/history] before the matches of the said day.
 // TODO: Create (modify???) a method (json) to get current match information in /Home/Index.
 // TODO: Create a 404 and a 403 page
