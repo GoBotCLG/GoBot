@@ -149,7 +149,7 @@ namespace Liaison_BD___CSGO
         {
             if (connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
-                StringBuilder sql = new StringBuilder("update " + tablename);
+                StringBuilder sql = new StringBuilder("update " + tablename + " set ");
 
                 foreach(string col in columnNames)
                 {
@@ -333,6 +333,34 @@ namespace Liaison_BD___CSGO
                 return null;
             }
         }
+
+        public DateTime GetBDTime()
+        {
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                try
+                {
+                    OdbcDataAdapter adapt = new OdbcDataAdapter(new OdbcCommand("select now();", connection));
+
+                    DataTable result = new DataTable();
+                    adapt.Fill(result);
+
+                    string dbDate = result.Rows[0].ItemArray[0].ToString();
+                    DateTime dt = DateTime.ParseExact(dbDate, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                    return dt;
+                }
+                catch (Exception)
+                {
+                    return DateTime.Now;
+                }
+            }
+            else
+            {
+                return DateTime.Now;
+            }
+        }
+
         /*
         public User GetUserFromDB(string username)
         {

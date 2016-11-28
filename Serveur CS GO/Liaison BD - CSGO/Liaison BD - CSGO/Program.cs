@@ -84,10 +84,10 @@ namespace Liaison_BD___CSGO
                 File.Delete(f);
             }
 
-            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["idMatch"];
+            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["idMatch"];
 
             //Changer tout ce qui suit pour PrepareNextMatch() à l'implémentation finale
-            DataTable CurrentMatch = new MySQLWrapper().Procedure("IsMatchCurrent");
+            DataTable CurrentMatch = new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset("")));
 
             NextMap = CurrentMatch.Rows[0]["Map"].ToString();
 
@@ -234,7 +234,7 @@ namespace Liaison_BD___CSGO
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_restartgame 0; mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 0; mp_defuser_allocation 1; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -318,13 +318,11 @@ namespace Liaison_BD___CSGO
             else if(e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
             {
                 CurrentRoundNumber++;
-                if(CurrentRoundNumber < 12)
+                UploadScores();
+                if (CurrentRoundNumber >= 12)
                 {
-                    UploadScores();
-                }
-                else
-                {
-                    EndKnifeRound();
+                    ConnectionServeur.ServerCommand("mp_give_player_c4 1");
+                    ConnectionServeur.ServerCommand("bot_all_weapons");
                 }
 
                 if(CurrentTeam1Score > CurrentTeam2Score)
@@ -470,7 +468,7 @@ namespace Liaison_BD___CSGO
 
 
             Team1CTCurrentMatch = Team1CTNextMatch;
-            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
+            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["IdMatch"];
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
@@ -490,7 +488,7 @@ namespace Liaison_BD___CSGO
                 {
                     break;
                 }
-                if(Round == 0 && CurrentMatchId != (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"])
+                if(Round == 0 && CurrentMatchId != (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["IdMatch"])
                 {
                     Round = 1;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_NEXT_MATCH);
