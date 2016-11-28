@@ -195,7 +195,7 @@ function loading_create() {
     v_align($(".loading"), $("#loading"), $(".loading").height());
 }
 
-function loading_remove(success) {
+function loading_remove(success, redirect) {
     if ($("#loading").length > 0) {
         $(".loading").addClass(success ? "success" : "error").removeClass("loading");
         $("." + (success ? "success" : "error") + " > div").animate({
@@ -208,6 +208,9 @@ function loading_remove(success) {
 
         setTimeout(function () {
             $("#loading").remove();
+
+            if (redirect !== undefined)
+                window.location.href = redirect;
         }, 600);
     }
 }

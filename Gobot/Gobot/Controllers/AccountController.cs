@@ -111,82 +111,83 @@ namespace Gobot.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateImage(FormCollection data)
+        public ActionResult UpdateImage(FormCollection data)
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json(0, JsonRequestBehavior.DenyGet);
 
-            if (Request.Files["file"] != null)
+            if (Request.Files["ImageUploader"] != null)
             {
-                using (var binaryReader = new BinaryReader(Request.Files["file"].InputStream))
+                using (var binaryReader = new BinaryReader(Request.Files["ImageUploader"].InputStream))
                 {
                     try
                     {
                         Image img;
-                        byte[] Imagefile = binaryReader.ReadBytes(Request.Files["file"].ContentLength);
+                        byte[] Imagefile = binaryReader.ReadBytes(Request.Files["ImageUploader"].ContentLength);
                         using (var ms = new MemoryStream(Imagefile))
                         {
                             img = Image.FromStream(ms);
 
-                            downloadImage(ref img);
+                            ImageFormat format = img.RawFormat;
+                            Bitmap bmp = new Bitmap(img);
+                            if (format.Equals(ImageFormat.Jpeg) || format.Equals(ImageFormat.Png))
+                            {
+                                try
+                                {
+                                    string dir = AppDomain.CurrentDomain.BaseDirectory;
+                                    string basePath = Path.Combine(dir, @"Images\profiles\");
+                                    //string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\");
+
+                                    if (!Directory.Exists(basePath))
+                                        Directory.CreateDirectory(basePath);
+
+                                    string fileName = format.Equals(ImageFormat.Jpeg) ? getFileName(basePath, "jpg") : getFileName(basePath, "png");
+
+                                    try
+                                    {
+                                        string oldPath = Path.Combine(dir, getImagePathFromDb(((User)Session["User"]).Username).Replace("/", "\\"));
+                                        if (oldPath != null && oldPath.IndexOf("anonymous") == -1)
+                                        {
+                                            if (System.IO.File.Exists(oldPath))
+                                                System.IO.File.Delete(oldPath);
+                                        }
+                                    }
+                                    catch (Exception) { }
+
+                                    string toSave = Path.Combine(basePath, fileName);
+                                    if (format.Equals(ImageFormat.Jpeg))
+                                        bmp.Save(toSave, ImageFormat.Jpeg);
+                                    else
+                                        bmp.Save(toSave, ImageFormat.Png);
+
+                                    int upload = setImagePathToDb(((User)Session["User"]).Username, "/Images/profiles/" + fileName);
+                                    if (upload > 0)
+                                        TempData["success"] = "Votre image de profil a été modifiée avec succès.";
+                                    else
+                                        TempData["error"] = "Une erreur s'est produite lors du téléversement de l'image.";
+                                }
+                                catch (Exception)
+                                {
+                                    TempData["error"] = "Une erreur s'est produite lors du téléversement de l'image.";
+                                }
+                            }
+                            else
+                            {
+                                TempData["error"] = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
+                            }
+                            bmp.Dispose();
                         }
                     }
                     catch (ArgumentException)
                     {
-                        TempData["error"] = "Échec du téléversement de l'image.";
+                        TempData["error"] = "Une erreur s'est produite lors du téléversement de l'image.";
                     }
-                }
-            }
-            return Json((User)Session["User"], JsonRequestBehavior.AllowGet);
-        }
-
-        private void downloadImage(ref Image img)
-        {
-            ImageFormat format = img.RawFormat;
-            Bitmap bmp = new Bitmap(img);
-            if (format.Equals(ImageFormat.Jpeg) || format.Equals(ImageFormat.Png))
-            {
-                try
-                {
-                    // AppDomain.CurrentDomain.BaseDirectory ???
-                    string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\");
-
-                    if (!Directory.Exists(basePath))
-                        Directory.CreateDirectory(basePath);
-
-                    string fileName;
-                    if (format.Equals(ImageFormat.Jpeg))
-                    {
-                        fileName = getFileName(basePath, "jpg");
-                        bmp.Save(fileName, ImageFormat.Jpeg);
-                    }
-                    else
-                    {
-                        fileName = getFileName(basePath, "png");
-                        bmp.Save(fileName, ImageFormat.Png);
-                    }
-                    
-                    try {
-                        string oldPath = getImagePathFromDb(((User)Session["User"]).Username);
-                        if (oldPath != null && oldPath.IndexOf("anonymous") == -1)
-                            System.IO.File.Delete(oldPath);
-                    }
-                    catch (Exception) { }
-
-                    if (setImagePathToDb(((User)Session["User"]).Username, fileName) == 1)
-                        TempData["success"] = "Votre image de profil a été modifiée avec succès.";
-                    else
-                        TempData["error"] = "Erreur lors du téléversement de l'image.";
-                }
-                catch (Exception)
-                {
-                    TempData["error"] = "Erreur lors du téléversement de l'image.";
                 }
             }
             else
-            {
-                TempData["error"] = "Le type de l'image téléversée est invalide. Les types valides sont: .jpeg et .png.";
-            }
+                TempData["error"] = "Une erreur s'est produite lors du téléversement de l'image.";
+
+            return RedirectToAction("Index", "Account");
         }
 
         private string getImagePathFromDb(string user)
@@ -199,20 +200,22 @@ namespace Gobot.Controllers
         {
             return new MySQLWrapper().Update("user",
                         new List<string>() { "Image" },
-                        new List<MySqlParameter>() { new MySqlParameter(":Image", PasswordEncrypter.EncryptPassword(fileName)) },
+                        new List<MySqlParameter>() { new MySqlParameter(":Image", fileName) },
                         "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", user) });
         }
 
         private string getFileName(string basePath, string ext)
         {
-            string path = basePath += @"{0}." + ext;
-            string file;
+            string path = basePath += @"{0}";
+            string fileName;
 
             do
-                file = String.Format(path, getRandomString());
-            while (System.IO.File.Exists(file));
+            {
+                fileName = getRandomString() + "." + ext;
+            }
+            while (System.IO.File.Exists(String.Format(path, fileName)));
 
-            return file;
+            return fileName;
         }
 
         private string getRandomString()

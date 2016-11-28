@@ -188,13 +188,13 @@ html, body {
 
 #options {
   height: auto; }
-  #options > div {
+  #options > div:not(#uploadForm) {
     height: 250px !important;
     width: 33.3%;
     padding: 50px 0 !important;
     cursor: pointer;
     background-size: auto 140px; }
-    #options > div > h2 {
+    #options > div:not(#uploadForm) > h2 {
       display: block;
       position: relative;
       text-transform: uppercase;
@@ -217,10 +217,11 @@ html, body {
 #changePwd {
   background: url("/Images/lock.png") no-repeat center 50px; }
 
-#options > form {
-  height: 500px;
-  width: 100%; }
-  #options > form > div {
+#options > #uploadForm {
+  padding: 0 !important;
+  height: 500px !important;
+  width: 100% !important; }
+  #options > #uploadForm > div {
     height: 100%; }
 
 #optionForm {

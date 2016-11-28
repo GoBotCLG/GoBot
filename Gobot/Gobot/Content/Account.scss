@@ -178,7 +178,7 @@ html, body { min-height: 100%; }
 #options {
     height: auto;
 
-    > div { 
+    > div:not(#uploadForm) { 
         height: 250px !important;
         width: 33.3%; 
         padding: 50px 0 !important;
@@ -205,9 +205,10 @@ html, body { min-height: 100%; }
     #changeEmail { background: url("/Images/mail.png") no-repeat center 75px; background-size: 150px auto !important; }
     #changePwd { background: url("/Images/lock.png") no-repeat center 50px; }
 
-    #options > form {
-        height: 500px;
-        width: 100%;
+    #options > #uploadForm {
+        padding: 0 !important;
+        height: 500px !important;
+        width: 100% !important;
 
         > div { height: 100%; }
     }
