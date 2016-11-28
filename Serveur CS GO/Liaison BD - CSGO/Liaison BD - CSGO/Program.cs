@@ -157,7 +157,7 @@ namespace Liaison_BD___CSGO
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_restartgame 1;mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 1; mp_defuser_allocation 1; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -234,7 +234,7 @@ namespace Liaison_BD___CSGO
 
             OutFile.Write("mp_teamname_1 \"" + Team1Name + "\"; mp_teamname_2 \"" + Team2Name + "\"; ");
 
-            OutFile.Write("mp_restartgame 0; mp_defuser_allocation 1; mp_warmup_end; log on;");
+            OutFile.Write("mp_restartgame 1; mp_defuser_allocation 1; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
         }
@@ -524,21 +524,19 @@ namespace Liaison_BD___CSGO
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CurrentMatchId">Match ID</param>
+        /// <param name="currentMatchId">Match ID</param>
         /// <param name="VictoryTeam">Winner's team ID</param>
-        private static void SetVictoryBets(int CurrentMatchId, int WinnerID)
+        private static void SetVictoryBets(int currentMatchId, int WinnerID)
         {
             int xpWin = 100; // Amount of xp a user gain when winning bet.
             int xpLvl = 1500;
             try
             {
-                DataTable bets = new MySQLWrapper().Procedure("GetBetsFromMatch", new OdbcParameter(":Id", CurrentMatchId));
+                DataTable bets = new MySQLWrapper().Procedure("GetBetsFromMatch", new OdbcParameter(":Id", currentMatchId));
                 DataTable users = new MySQLWrapper().Select("user", "", new List<OdbcParameter>(), "Username", "Credit", "EXP", "LVL");
                 var totalBets = getTotalBets(ref bets, WinnerID);
 
-                new MySQLWrapper().Update("matchs", 
-                    new List<string>() { "Team_Victoire" }, new List<OdbcParameter>() { new OdbcParameter(":Team_Victoire", WinnerID) }, 
-                    "IdMatch = ?", new List<OdbcParameter>() { new OdbcParameter(":IdMatch", CurrentMatchId) });
+                new MySQLWrapper().Procedure("SetVictoire", new OdbcParameter(":IdMatch", currentMatchId), new OdbcParameter("IdTeam", WinnerID));
 
                 if (bets != null && bets.Rows.Count > 0)
                 {
@@ -566,10 +564,9 @@ namespace Liaison_BD___CSGO
                                         xp -= xpLvl;
                                         lvl += 1;
                                     }
-
-                                    List<OdbcParameter> values = new List<OdbcParameter>() { new OdbcParameter(":Credit", userCredit + toAdd), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl) };
-                                    List<OdbcParameter> cond = new List<OdbcParameter>() { new OdbcParameter(":Username", bet["User_Username"]) };
-                                    new MySQLWrapper().Update("user", new List<string>() { "Credit", "EXP", "LVL" }, values, "Username = ?", cond);
+                                    
+                                    new MySQLWrapper().Procedure("AddEXP", new OdbcParameter(":Username", bet["User_Username"]), new OdbcParameter(":EXP", xp), new OdbcParameter(":LVL", lvl));
+                                    new MySQLWrapper().Procedure("AddFunds", new OdbcParameter(":Credit", userCredit + toAdd));
                                 }
                             }
                         }
@@ -619,9 +616,7 @@ namespace Liaison_BD___CSGO
         {
             try
             {
-                int update = new MySQLWrapper().Update("user",
-                    new List<string>() { "Credit" }, new List<OdbcParameter>() { new OdbcParameter(":Amount", amount) },
-                    "Username = ?", new List<OdbcParameter>() { new OdbcParameter(":Username", "admin") });
+                new MySQLWrapper().Procedure("AddFunds", new OdbcParameter(":Username", "admin"), new OdbcParameter(":Argent", amount));
             }
             catch (Exception e)
             {
