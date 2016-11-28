@@ -76,6 +76,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="clientTime" value=""/>
     }
 
     <script>
@@ -147,6 +148,10 @@
         }).on("blur", "form > input", function () {
             $(this).css("border-color", "#323232");
             $(this).prev().css("color", "#626262");
+        });
+
+        $(document).on('click', 'input[type="submit"]', function () {
+            $("input[name=clientTime]").val(Date.now());
         });
     </script>
 

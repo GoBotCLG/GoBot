@@ -457,6 +457,33 @@ namespace Gobot.Models
             else
                 return null;
         }
+
+        public DateTime GetBDTime()
+        {
+            if (connection != null && connection.State == ConnectionState.Open)
+            {
+                try
+                {
+                    OdbcDataAdapter adapt = new OdbcDataAdapter(new OdbcCommand("select now();", connection));
+
+                    DataTable result = new DataTable();
+                    adapt.Fill(result);
+
+                    string dbDate = result.Rows[0].ItemArray[0].ToString();
+                    DateTime dt = DateTime.ParseExact(dbDate, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+
+                    return dt;
+                }
+                catch (Exception)
+                {
+                    return DateTime.Now;
+                }
+            }
+            else
+            {
+                return DateTime.Now;
+            }
+        }
     }
 
 }
