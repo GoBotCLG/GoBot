@@ -25,6 +25,7 @@ namespace Liaison_BD___CSGO
         public static int CurrentMatchId;
         public static int CurrentTeam1Score;
         public static int CurrentTeam2Score;
+        public static MySQLWrapper BD;
 
         private static string NextMap;
         private static bool Team1CTNextMatch;
@@ -39,6 +40,8 @@ namespace Liaison_BD___CSGO
             work.ProgressChanged += new ProgressChangedEventHandler(NewEvent);
             work.WorkerSupportsCancellation = true;
             work.WorkerReportsProgress = true;
+
+            BD = new MySQLWrapper();
 
             InitializeServer();
 
@@ -83,12 +86,31 @@ namespace Liaison_BD___CSGO
             {
                 File.Delete(f);
             }
-
-            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["idMatch"];
+            
+            Monitor.Enter(BD);
+            try
+            {
+                CurrentMatchId = (int)BD.Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["idMatch"];
+            }
+            finally
+            {
+                Monitor.Exit(BD);
+            }
 
             //Changer tout ce qui suit pour PrepareNextMatch() à l'implémentation finale
-            DataTable CurrentMatch = new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset("")));
-
+            DataTable CurrentMatch = new DataTable();
+            if (!Monitor.IsEntered(BD))
+            {
+                try
+                {
+                    CurrentMatch = BD.Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset("")));
+                }
+                finally
+                {
+                    Monitor.Exit(BD);
+                }
+            }
+            
             NextMap = CurrentMatch.Rows[0]["Map"].ToString();
 
             RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
@@ -104,17 +126,25 @@ namespace Liaison_BD___CSGO
             DataTable BotsCT;
             DataTable BotsT;
 
-            if (TeamCT == 0)
+            Monitor.Enter(BD);
+            try
             {
-                Team1CTNextMatch = true;
-                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam1"])));
-                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam2"])));
+                if (TeamCT == 0)
+                {
+                    Team1CTNextMatch = true;
+                    BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam1"])));
+                    BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam2"])));
+                }
+                else
+                {
+                    Team1CTNextMatch = false;
+                    BotsT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
+                    BotsCT = BD.Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
+                }
             }
-            else
+            finally
             {
-                Team1CTNextMatch = false;
-                BotsT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
-                BotsCT = new MySQLWrapper().Procedure("BotFromTeam", new OdbcParameter(":IdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
+                Monitor.Exit(BD);
             }
 
 
@@ -124,7 +154,18 @@ namespace Liaison_BD___CSGO
                 OutFile.Write("bot_add t \"" + BotsT.Rows[i]["NomBot"].ToString() + "\"; ");
             }
 
-            DataTable Teams = new MySQLWrapper().Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatch.Rows[0]["IdMatch"]));
+            DataTable Teams = new DataTable();
+
+            Monitor.Enter(BD);
+            try
+            {
+                Teams = BD.Procedure("TeamFromMatch", new OdbcParameter(":IdMatch", CurrentMatch.Rows[0]["IdMatch"]));
+            }
+            finally
+            {
+                Monitor.Exit(BD);
+            }
+
             string Team1Name;
             string Team2Name;
 
@@ -164,7 +205,16 @@ namespace Liaison_BD___CSGO
 
         private static void PrepareNextMatch()
         {
-            DataTable NextMatch = new MySQLWrapper().Procedure("NextMatch");
+            DataTable NextMatch = new DataTable();
+            Monitor.Enter(BD);
+            try
+            {
+                NextMatch = BD.Procedure("NextMatch");
+            }
+            finally
+            {
+                Monitor.Exit(BD);
+            }
 
             NextMap = NextMatch.Rows[0]["Map"].ToString();
 

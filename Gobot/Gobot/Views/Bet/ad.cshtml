@@ -13,7 +13,42 @@
     </div>
 
     <div id="video">
+        <link href="http://vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet" />
+        <link href="~/Content/videojs.ads.css" rel="stylesheet" />
+        <link href="~/Content/videojs.ima.css" rel="stylesheet" />
+        <!-- If you'd like to support IE8 -->
+        <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <div id="testdiv"></div>
+        <video id="my-video" class="video-js" controls preload="auto" width="1280" height="720" poster="MY_VIDEO_POSTER.jpg" data-setup="{}">
+            <!-- TODO Rajouter VideoPoster -->
+            <source src="http://googleads.g.doubleclick.net/pagead/ads?ad_type=video&client=ca-video-pub-4968145218643279&videoad_start_delay=0&description_url=http%3A%2F%2Fwww.google.com&max_ad_duration=40000&adtest=on" type='video/mp4'>
+            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
+        <script src="http://vjs.zencdn.net/5.8.8/video.js"></script>
+        <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+        <script src="~/Scripts/videojs.ads.js"></script>
+        <script src="~/Scripts/videojs.ima.js"></script>
+        <script>
+            var player = videojs('my-video');
 
+            var options = {
+                id: 'my-video',
+                adTagUrl: 'http://googleads.g.doubleclick.net/pagead/ads?ad_type=video&client=ca-video-pub-4968145218643279&videoad_start_delay=0&description_url=http%3A%2F%2Fwww.google.com&max_ad_duration=40000&adtest=on'
+            };
+
+            // This must be called before player.play() below.
+            player.ima(options);
+            player.ima.requestAds();
+            // On mobile devices, you must call initializeAdDisplayContainer as the result
+            // of a user action (e.g. button click). If you do not make this call, the SDK
+            // will make it for you, but not as the result of a user action. For more info
+            // see our examples, all of which are set up to work on mobile devices.
+            // player.ima.initializeAdDisplayContainer();
+
+            // This must be called after player.ima(...) above.
+            player.play();
+        </script>
     </div>
 </div>
 
