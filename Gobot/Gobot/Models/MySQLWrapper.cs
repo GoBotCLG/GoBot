@@ -347,21 +347,21 @@ namespace Gobot.Models
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchAfterMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", timeOffset));
+                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", -timeOffset));
                 }
                 else
                 {
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchBeforeMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", timeOffset));
+                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", -timeOffset));
                 }
 
                 foreach (DataRow row in MatchResult.Rows)
                 {
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = ((DateTime)row["Date"]);
+                    m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
