@@ -90,7 +90,7 @@ namespace Liaison_BD___CSGO
             Monitor.Enter(BD);
             try
             {
-                CurrentMatchId = (int)BD.Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["idMatch"];
+                CurrentMatchId = (int)BD.Procedure("IsMatchCurrent").Rows[0]["idMatch"];
             }
             finally
             {
@@ -103,7 +103,7 @@ namespace Liaison_BD___CSGO
             {
                 try
                 {
-                    CurrentMatch = BD.Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset("")));
+                    CurrentMatch = BD.Procedure("IsMatchCurrent");
                 }
                 finally
                 {
@@ -518,7 +518,7 @@ namespace Liaison_BD___CSGO
 
 
             Team1CTCurrentMatch = Team1CTNextMatch;
-            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["IdMatch"];
+            CurrentMatchId = (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"];
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
@@ -538,7 +538,7 @@ namespace Liaison_BD___CSGO
                 {
                     break;
                 }
-                if(Round == 0 && CurrentMatchId != (int)new MySQLWrapper().Procedure("IsMatchCurrent", new OdbcParameter(":TimeOffset", GetTimeOffset(""))).Rows[0]["IdMatch"])
+                if(Round == 0 && CurrentMatchId != (int)new MySQLWrapper().Procedure("IsMatchCurrent").Rows[0]["IdMatch"])
                 {
                     Round = 1;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.START_NEXT_MATCH);
