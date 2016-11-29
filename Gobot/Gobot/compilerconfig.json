@@ -50,5 +50,9 @@
   {
     "outputFile": "Content/GetCredits.css",
     "inputFile": "Content/GetCredits.scss"
+  },
+  {
+    "outputFile": "Errors/error.css",
+    "inputFile": "Errors/error.scss"
   }
 ]

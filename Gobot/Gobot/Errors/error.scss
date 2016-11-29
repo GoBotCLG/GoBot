@@ -1,0 +1,45 @@
+﻿@import '../Content/_utils.scss';
+
+html, body {
+	position: absolute;
+    width: 100%;
+	top: 0;
+	left: 0;
+    margin: 0;
+    padding: 0;
+	height: auto;
+	background-color: $darkGrey;
+    overflow-x: hidden;
+}
+
+h1, span {
+    display: block;
+    position: relative;
+    left: 0;
+    height: auto;
+    text-align: center;
+    margin: 0;
+    margin-top: 100px;
+}
+    h1 {
+        font: italic 900 134px $font;
+        width: 100%;
+        color: $menuColor;
+    }
+    span {
+        font: 400 24px $font;
+        width: 30%;
+        margin: 25px 35%;
+        color: $grey;
+
+        > a {
+            color: $grey;
+        }
+            > a:hover { color: $off-white; }
+    }
+    
+@media screen and (min-width: 1800px) { span { width: 20%; margin: 25px 40%; } }
+@media screen and (max-width: 1140px) { span { width: 40%; margin: 25px 30%; } }
+@media screen and (max-width: 950px) { span { width: 50%; margin: 25px 25%; } }
+@media screen and (max-width: 550px) { span { width: 70%; margin: 25px 15%; } }
+@media screen and (max-width: 380px) { span { width: 80%; margin: 25px 10%; font-size: 20px !important; } }

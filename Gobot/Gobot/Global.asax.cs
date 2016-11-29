@@ -22,4 +22,3 @@ namespace Gobot
 // TODO: Create a method (json) to get portion of bets to reduce load on refresh in [/stats/schedule, /stats/history] (load first 2 days on refresh and click button to load the next 20).
 // TODO: Add an header to show which day is currently shown in [/stats/schedule, /stats/history] before the matches of the said day.
 // TODO: Create (modify???) a method (json) to get current match information in /Home/Index.
-// TODO: Create a 404 and a 403 page

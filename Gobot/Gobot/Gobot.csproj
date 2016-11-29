@@ -263,12 +263,20 @@
     <Content Include="Content\Watch.min.css">
       <DependentUpon>Watch.css</DependentUpon>
     </Content>
-    <Content Include="Errors\403.aspx" />
+    <Content Include="Errors\401.html" />
     <Content Include="Errors\403.html" />
-    <Content Include="Errors\404.aspx" />
     <Content Include="Errors\404.html" />
-    <Content Include="Errors\503.html" />
-    <Content Include="Errors\error.html" />
+    <Content Include="Errors\405.html" />
+    <Content Include="Errors\406.html" />
+    <Content Include="Errors\412.html" />
+    <Content Include="Errors\500.html" />
+    <Content Include="Errors\501.html" />
+    <Content Include="Errors\error.css">
+      <DependentUpon>error.scss</DependentUpon>
+    </Content>
+    <Content Include="Errors\error.min.css">
+      <DependentUpon>error.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -342,6 +350,7 @@
     <Content Include="Content\Watch.scss" />
     <Content Include="Content\_utils.scss" />
     <Content Include="Content\GetCredits.scss" />
+    <Content Include="Errors\error.scss" />
     <None Include="Properties\PublishProfiles\GoBot.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
