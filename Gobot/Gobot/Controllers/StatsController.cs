@@ -24,7 +24,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetMatches(false);
+            List<Match> Matches = Bd.GetMatches(false, (double)Session["timeOffset"]);
             List<Bet> Bets = new List<Bet>();
 
             DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
@@ -85,7 +85,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetMatches(true);
+            List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"]);
             List<Bet> Bets = new List<Bet>();
 
             DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));

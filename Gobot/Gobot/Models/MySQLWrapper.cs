@@ -334,7 +334,7 @@ namespace Gobot.Models
             }
         }
 
-        public List<Match> GetMatches(bool future, int matchId = -1, int period = 1)
+        public List<Match> GetMatches(bool future, double timeOffset, int matchId = -1, int period = 1)
         {
             if (connection.State == ConnectionState.Open)
             {
@@ -347,14 +347,14 @@ namespace Gobot.Models
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchAfterMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now));
+                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", timeOffset));
                 }
                 else
                 {
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchBeforeMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now));
+                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", timeOffset));
                 }
 
                 foreach (DataRow row in MatchResult.Rows)

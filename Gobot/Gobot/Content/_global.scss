@@ -31,6 +31,8 @@ img                         { border: 0; }
 .white, white   { color: white; }
 .orange, orange { color: $orange; }
 .offw, offw     { color: $off-white; }
+.menuColor, 
+menuColor       { color: $orange !important; }
 
 #header {
     background-color: $darkGrey;

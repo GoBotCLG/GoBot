@@ -20,7 +20,7 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> FutureMatches = Bd.GetMatches(true);
+            List<Match> FutureMatches = Bd.GetMatches(true, (double)Session["timeOffset"]);
             List<Match> Matches = new List<Match>();
 
             if (FutureMatches.Count() > 0)
@@ -368,13 +368,14 @@ namespace Gobot.Controllers
 
         public ActionResult GetNextDay(int lastMatchId)
         {
+            // TODO: get the correct amount of matches for the day and send it with the correct time.
             if ((User)Session["User"] == null)
                 return Json("", JsonRequestBehavior.DenyGet);
 
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                List<Match> Matches = Bd.GetMatches(true);
+                List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"]);
 
                 if (Matches.Count() > 0)
                 {

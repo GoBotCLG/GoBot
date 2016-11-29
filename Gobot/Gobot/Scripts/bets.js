@@ -143,7 +143,7 @@ function appendNextDayBets(data) {
         var mDate = new Date(match.date); // match.date == milliseconds
 
         var start = '<div class="info">';
-        var time = '<div class="time sqr"><h3>' + mDate.getHours() + ':' + zeros(mDate.getMinutes()) + '</h3></div>';
+        var time = '<div class="time sqr"><h3 ' + (getTeamBet(match) != undefined ? 'class="menuColor"' : '') + '>' + mDate.getHours() + ':' + zeros(mDate.getMinutes()) + '</h3></div>';
         var team1 = getTeamText(match.teams[0]);
         var vs = '<div class="vs"><h1>VS</h1></div>';
         var manage = getManageText(match);
@@ -167,14 +167,19 @@ function zeros(n) {
     return n > 9 ? "" + n: "0" + n;
 }
 
-function getManageText(match) {
-    var start = '<div class="manageBet">';
-
+function getTeamBet(match) {
     var bet;
     if (match.teams[0].bet.user != undefined && match.teams[0].bet.user != "")
         bet = 0;
     else if (match.teams[1].bet.user != undefined && match.teams[1].bet.user != "")
         bet = 1;
+
+    return bet;
+}
+
+function getManageText(match) {
+    var start = '<div class="manageBet">';
+    var bet = getTeamBet(match);
 
     if (bet != undefined) {
         return start + '<div class="remove sqr"><a href="/Bet/Remove?tId=' + match.teams[bet].id + '&mId=' + match.id + '"></a><div><h2>Retirer</h2></div></div>\

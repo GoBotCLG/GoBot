@@ -66,6 +66,10 @@ img {
 .offw, offw {
   color: #eeeeee; }
 
+.menuColor,
+menuColor {
+  color: #ffbf5c !important; }
+
 #header {
   background-color: #323232; }
   #header h6 {
