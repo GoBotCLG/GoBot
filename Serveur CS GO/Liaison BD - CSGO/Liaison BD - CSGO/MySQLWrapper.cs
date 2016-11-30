@@ -7,21 +7,146 @@ using System.Text;
 using System.Data;
 using System.ComponentModel;
 using System.Threading;
+using MySql.Data.MySqlClient;
 
 namespace Liaison_BD___CSGO
 {
     public class MySQLWrapper
     {
-        private OdbcConnection connection;
+        private MySqlConnection connection;
 
         public MySQLWrapper()
+        {
+            Connect();
+        }
+
+        ~MySQLWrapper() { try { connection.Close(); } catch (Exception) { } }
+
+        public void Connect()
+        {
+            connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+            //connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+            //connection = new MySqlConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
+            try { connection.Open(); }
+            catch (Exception e)
+            {
+                string ex = e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Select columns from a table with where condition
+        /// </summary>
+        /// <param name="tablename">Name of the table</param>
+        /// <param name="where">Condition (ex. Alias = ? AND Name = ? OR Surname = ?</param>
+        /// <param name="condition">Collection of OdbcParameter (In the same order as in "where" condition</param>
+        /// <param name="columnnames">Names of the needed columns</param>
+        /// <returns>2D list of data returned by the query</returns>
+        public DataTable Select(string tablename, string where, List<MySqlParameter> conditions, params string[] columnnames)
+        {
+            if (connection.State == ConnectionState.Open && connection != null && columnnames.Length > 0 && tablename != "")
+            {
+                StringBuilder sql = new StringBuilder("select ");
+
+                foreach (string col in columnnames)
+                {
+                    sql.Append(col + ',');
+                }
+                sql.Remove(sql.Length - 1, 1);
+
+                sql.Append(" from " + tablename);
+
+                if (where != "")
+                {
+                    sql.Append(" where " + where);
+
+                }
+
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
+
+                if (conditions.Count > 0)
+                {
+                    foreach (MySqlParameter param in conditions)
+                    {
+                        command.Parameters.Add(param);
+                    }
+                }
+
+                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
+
+                DataTable result = new DataTable();
+
+                adapt.Fill(result);
+                result.TableName = tablename;
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Executes a stored procedure
+        /// </summary>
+        /// <param name="procedurename">Name of the procedure</param>
+        /// <param name="args">All the parameters for the procedure</param>
+        public DataTable Procedure(string procedurename, params MySqlParameter[] args)
+        {
+            if (connection.State == ConnectionState.Open && connection != null && procedurename != "")
+            {
+                StringBuilder sql = new StringBuilder("call " + procedurename + "(");
+
+                if (args.Length > 0)
+                {
+                    foreach (MySqlParameter arg in args)
+                    {
+                        sql.Append("?,");
+                    }
+                    sql.Remove(sql.Length - 1, 1);
+                }
+                sql.Append(");");
+
+                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
+
+                foreach (MySqlParameter arg in args)
+                {
+                    command.Parameters.Add(arg);
+                }
+                DataTable result = new DataTable();
+                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
+                adapt.Fill(result);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(procedurename + "(");
+                foreach (MySqlParameter param in args)
+                {
+                    sb.Append(param.Value + ",");
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append(")");
+                result.TableName = sb.ToString();
+
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+        public class MySQLWrapperODBC
+    {
+        private OdbcConnection connection;
+
+        public MySQLWrapperODBC()
         {
             connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
             //connection = new OdbcConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             connection.Open();
         }
 
-        ~MySQLWrapper()
+        ~MySQLWrapperODBC()
         {
             connection.Close();
             connection.Dispose();
