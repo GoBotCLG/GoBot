@@ -407,6 +407,7 @@
     <Content Include="Scripts\vjs-lang\uk.js" />
     <Content Include="Scripts\vjs-lang\zh.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Videos\video_dark.mp4" />
     <Content Include="Videos\video_dog.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
