@@ -687,7 +687,9 @@ body {
       margin-left: 5px;
       margin-right: 10px;
       height: 24px;
-      top: 2px; }
+      top: -2px; }
+    .side > h2 > img:first-of-type {
+      margin-left: 10px !important; }
 
 .team {
   position: relative;
@@ -758,6 +760,7 @@ body {
     margin-top: 60px;
     color: #51c24b;
     cursor: pointer;
+    font-style: normal;
     text-transform: uppercase; }
   #popOut_login > form > input[type=submit]:hover {
     background-color: #51c24b;

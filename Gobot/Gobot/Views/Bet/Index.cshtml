@@ -30,7 +30,8 @@
         </div>
     }
 }
-
+<h1><script>Date.now()</script></h1>
+<h1 style="display: none;">@Session["timeOffset"]</h1>
 <div class="info_container">
     @{
         if (Model.Count() > 0)
@@ -200,10 +201,9 @@
                 i++;
             });
 
-
-            createBetForm($(this).closest(".info"), teamId, matchId, teamNum, imagePath);
-
             var toAdd = $(this).closest(".info").find(".team" + teamNum + " > .text > h4:last-of-type > green").text();
+            createBetForm($(this).closest(".info"), teamId, matchId, teamNum, imagePath, toAdd);
+
             changeBetValue($(".betSelector > .add"), parseInt(toAdd));
             onResize();
         });
@@ -265,7 +265,7 @@
             changeCoinsValue();
         }
 
-        function createBetForm(e, teamId, matchId, pos, imagePath) {
+        function createBetForm(e, teamId, matchId, pos, imagePath, toAdd) {
             $("#bet_placeBet").remove();
             $('<div class="info" id="bet_placeBet"></div>').insertAfter(e);
             $("#bet_chooseTeam").remove();
@@ -275,10 +275,11 @@
                 $("#bet_placeBet").append('<div class="separator left"><div class="square"></div></div>');
             }
 
+            var baseGC = (parseInt(@(((Gobot.Models.User)Session["User"]).Credits)) + parseInt(toAdd == undefined ? 0 : toAdd));
             $("#bet_placeBet").append('<form action="@(Url.Action("Add", "Bet"))" method="post"></form>');
             $('#bet_placeBet > form').append('<input type="hidden" name="teamId" value="' + teamId + '"/>');
             $('#bet_placeBet > form').append('<input type="hidden" name="matchId" value="' + matchId + '"/>');
-            $("#bet_placeBet > form").append('<div><h2>Crédits disponibles</h2><h2><white class="baseGC">' + @(((Gobot.Models.User)Session["User"]).Credits) + '</white> <orange>GC</orange></h2></div>'); // Available credits
+            $("#bet_placeBet > form").append('<div><h2>Crédits disponibles</h2><h2><white class="baseGC">' + baseGC + '</white> <orange>GC</orange></h2></div>'); // Available credits
             $("#bet_placeBet > form").append('<div><h2>-</h2><h2><red class="deductGC">0</red> <orange style="visibility: hidden;">GC</orange></h2></div>'); // Deducted credits
             $("#bet_placeBet > form").append('<div><h2>=</h2><h2><white class="remainGC">0</white> <orange>GC</orange></h2></div>'); // Remaining credits
             $("#bet_placeBet > form").append('<div class="betSelector"></div>');

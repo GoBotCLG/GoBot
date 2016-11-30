@@ -259,7 +259,8 @@ body { overflow: hidden; }
             margin: 0 auto;
             color: #4c4c4c;
 
-            > img { position: relative; margin-left: 5px; margin-right: 10px; height: 24px; top: 2px; }
+            > img { position: relative; margin-left: 5px; margin-right: 10px; height: 24px; top: -2px; }
+            > img:first-of-type { margin-left: 10px !important; }
         }
 }
 
@@ -344,6 +345,7 @@ body { overflow: hidden; }
             margin-top: 60px;
             color: $green;
             cursor: pointer;
+            font-style: normal;
             text-transform: uppercase;
         }
             > input[type=submit]:hover {

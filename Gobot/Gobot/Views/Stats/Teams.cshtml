@@ -92,7 +92,7 @@
                         var gun = team.players[i].gun.toString().toLowerCase().replace(" ", "");
                         $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
                         $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + gun + '.png\')"></div><h2 class="grey">' + team.players[i].gun + '</h2></div>');
-                        $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">' + team.players[i].kd + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">K: ' + team.players[i].k + '</h2><h2 class="grey">D: ' + team.players[i].d + '</h2><h2 class="grey">K/D: ' + team.players[i].kd + '</h2></div>');
                     }
                     onResize();
                 }

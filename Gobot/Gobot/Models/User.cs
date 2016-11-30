@@ -18,6 +18,7 @@ namespace Gobot.Models
         public int EXP { get; set; }
         public int Level { get; set; }
         public bool SessionUser { get; set; }
+        public string favoriteTeam { get; set; }
 
         public static int xpLvl = 1500;
     }

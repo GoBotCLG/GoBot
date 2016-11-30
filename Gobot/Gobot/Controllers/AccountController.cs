@@ -27,6 +27,9 @@ namespace Gobot.Controllers
                 if (user == null)
                     return RedirectToAction("Index", "Home");
 
+                DataTable favTeamBd = Bd.Procedure("GetFavoriteTeam", new MySqlParameter(":Username", user.Username));
+                user.favoriteTeam = (favTeamBd == null || favTeamBd.Rows.Count == 0) ? null : favTeamBd.Rows[0][0].ToString();
+
                 user.SessionUser = true;
                 Session["User"] = user;
                 Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
@@ -36,6 +39,10 @@ namespace Gobot.Controllers
             else
             {
                 User user = Bd.GetUserFromDB(Username);
+
+                DataTable favTeamBd = Bd.Procedure("GetFavoriteTeam", new MySqlParameter(":Username", user.Username));
+                user.favoriteTeam = (favTeamBd == null || favTeamBd.Rows.Count == 0) ? null : favTeamBd.Rows[0][0].ToString();
+
                 user.SessionUser = false;
                 return View(user);
             }

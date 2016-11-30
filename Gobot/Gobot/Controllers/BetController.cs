@@ -104,15 +104,26 @@ namespace Gobot.Controllers
                 Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
                 int oldAmount = betExists(MatchId, TeamId);
 
-                if (((User)Session["User"]).Credits < Amount)
+                if (oldAmount > 0)
                 {
-                    ViewBag.Error = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
-                    return Json(0);
+                    if (((User)Session["User"]).Credits + oldAmount < Amount)
+                    {
+                        TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
+                        return RedirectToAction("Index", "Bet");
+                    }
+                    else
+                        editBetDb(MatchId, TeamId, oldAmount, Amount);
                 }
-                else if (oldAmount > 0)
-                    editBetDb(MatchId, TeamId, oldAmount, Amount);
                 else
-                    addBetDb(MatchId, TeamId, Amount);
+                {
+                    if (((User)Session["User"]).Credits < Amount)
+                    {
+                        TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
+                        return RedirectToAction("Index", "Bet");
+                    }
+                    else
+                        addBetDb(MatchId, TeamId, Amount);
+                }
 
                 return RedirectToAction("Index", "Bet");
             }
@@ -170,12 +181,12 @@ namespace Gobot.Controllers
                     }
                     else
                     {
-                        throw new Exception("Une erreur est survenue lors du placement du pari. Veuillez réessayer.");
+                        throw new Exception("Une erreur est survenue lors de la modification du pari. Veuillez réessayer.");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    ViewBag.Error = ex.Message;
+                    TempData["error"] = "Une erreur s'est produite lors de la modification du pari.";
                 }
             }
         }
@@ -229,9 +240,9 @@ namespace Gobot.Controllers
                     throw new Exception("Une erreur est survenue lors du placement du pari. Veuillez réessayer.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ViewBag.Error = ex.Message;
+                TempData["error"] = "Une erreur s'est produite lors du placement du pari.";
             }
         }
 

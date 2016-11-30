@@ -15,15 +15,23 @@ namespace Gobot.Models
 
         public MySQLWrapper()
         {
-            Connect();
         }
 
-        ~MySQLWrapper() { try { connection.Close(); } catch (Exception) { } }
+        ~MySQLWrapper() { Disconnect(); }
 
         public void Connect()
         {
             connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
             try { connection.Open(); }
+            catch (Exception e)
+            {
+                string ex = e.Message;
+            }
+        }
+
+        public void Disconnect()
+        {
+            try { connection.Close(); connection.Dispose(); }
             catch (Exception e)
             {
                 string ex = e.Message;
@@ -40,6 +48,7 @@ namespace Gobot.Models
         /// <returns>2D list of data returned by the query</returns>
         public DataTable Select(string tablename, string where, List<MySqlParameter> conditions, params string[] columnnames)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && columnnames.Length > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("select ");
@@ -75,10 +84,12 @@ namespace Gobot.Models
                 adapt.Fill(result);
                 result.TableName = tablename;
 
+                Disconnect();
                 return result;
             }
             else
             {
+                Disconnect();
                 return null;
             }
         }
@@ -92,6 +103,7 @@ namespace Gobot.Models
         /// <returns>Number of rows inserted (1 if inserted or 0 if error)</returns>
         public int Insert(string tablename, List<string> columnNames, List<MySqlParameter> values)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("insert into " + tablename + "(");
@@ -121,6 +133,7 @@ namespace Gobot.Models
             }
             else
             {
+                Disconnect();
                 return 0;
             }
         }
@@ -136,6 +149,7 @@ namespace Gobot.Models
         /// <returns>Number of rows updated</returns>
         public int Update(string tablename, List<string> columnNames, List<MySqlParameter> values, string where, List<MySqlParameter> conditions)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && columnNames.Count > 0 && values.Count > 0 && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("update " + tablename + " set ");
@@ -170,6 +184,7 @@ namespace Gobot.Models
             }
             else
             {
+                Disconnect();
                 return 0;
             }
         }
@@ -183,6 +198,7 @@ namespace Gobot.Models
         /// <returns></returns>
         public int Delete(string tablename, string where, List<MySqlParameter> conditions)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && tablename != "")
             {
                 StringBuilder sql = new StringBuilder("delete from " + tablename);
@@ -206,6 +222,7 @@ namespace Gobot.Models
             }
             else
             {
+                Disconnect();
                 return 0;
             }
         }
@@ -217,6 +234,7 @@ namespace Gobot.Models
         /// <param name="args">All the parameters for the procedure</param>
         public DataTable Procedure(string procedurename, params MySqlParameter[] args)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && procedurename != "")
             {
                 StringBuilder sql = new StringBuilder("call " + procedurename + "(");
@@ -250,16 +268,19 @@ namespace Gobot.Models
                 sb.Append(")");
                 result.TableName = sb.ToString();
 
+                Disconnect();
                 return result;
             }
             else
             {
+                Disconnect();
                 return null;
             }
         }
 
         public DataTable Function(string functionname, params MySqlParameter[] args)
         {
+            Connect();
             if (connection.State == ConnectionState.Open && connection != null && functionname != "")
             {
                 StringBuilder sql = new StringBuilder("select " + functionname + "(");
@@ -294,22 +315,29 @@ namespace Gobot.Models
                 sb.Remove(sb.Length - 1, 1);
                 sb.Append(")");
                 result.TableName = sb.ToString();
+
+                Disconnect();
                 return result;
             }
             else
             {
+                Disconnect();
                 return null;
             }
         }
 
         public User GetUserFromDB(string username, DataTable user = null)
         {
+            Connect();
             if (connection.State != ConnectionState.Open || connection == null)
+            {
+                Disconnect();
                 return null;
+            }
 
             DataTable UserResult = username != "" ? Procedure("GetUser", new MySqlParameter(":Username", username)) : user;
 
-            if (UserResult.Rows.Count > 0)
+            if (UserResult != null && UserResult.Rows.Count > 0)
             {
                 User sessionuser = new User();
 
@@ -324,16 +352,19 @@ namespace Gobot.Models
                 sessionuser.EXP             = UserResult.Rows[0]["EXP"].GetType()           != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
                 sessionuser.Level           = UserResult.Rows[0]["LVL"].GetType()           != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
 
+                Disconnect();
                 return sessionuser;
             }
             else
             {
+                Disconnect();
                 return null;
             }
         }
 
         public List<Match> GetMatches(bool future, double timeOffset, int matchId = -1, int period = 1)
         {
+            Connect();
             if (connection.State == ConnectionState.Open)
             {
                 List<Match> matches = new List<Match>();
@@ -354,44 +385,52 @@ namespace Gobot.Models
                     else
                         MatchResult = Procedure("GetMatchBefore");
                 }
+                Disconnect();
 
-                foreach (DataRow row in MatchResult.Rows)
+                if (MatchResult != null)
                 {
-                    Match m = new Match();
-                    m.Id = (int)row["IdMatch"];
-                    m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
-                    m.Teams[0] = null;
-                    m.Teams[1] = null;
-                    m.Map = row["Map"].ToString();
-                    m.TeamVictoire = (int)row["Team_Victoire"];
-
-                    foreach (Team t in teams)
+                    foreach (DataRow row in MatchResult.Rows)
                     {
-                        if ((int)row["Team_IdTeam1"] == t.Id)
-                        {
-                            m.Teams[0] = t;
-                        }
-                        if ((int)row["Team_IdTeam2"] == t.Id)
-                        {
-                            m.Teams[1] = t;
-                        }
-                        if (m.Teams[0] != null && m.Teams[1] != null)
-                        {
-                            break;
-                        }
-                    }
+                        Match m = new Match();
+                        m.Id = (int)row["IdMatch"];
+                        m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                        m.Teams[0] = null;
+                        m.Teams[1] = null;
+                        m.Map = row["Map"].ToString();
+                        m.TeamVictoire = (int)row["Team_Victoire"];
 
-                    matches.Add(m);
+                        foreach (Team t in teams)
+                        {
+                            if ((int)row["Team_IdTeam1"] == t.Id)
+                            {
+                                m.Teams[0] = t;
+                            }
+                            if ((int)row["Team_IdTeam2"] == t.Id)
+                            {
+                                m.Teams[1] = t;
+                            }
+                            if (m.Teams[0] != null && m.Teams[1] != null)
+                            {
+                                break;
+                            }
+                        }
+
+                        matches.Add(m);
+                    }
                 }
 
                 return matches;
             }
             else
+            {
+                Disconnect();
                 return null;
+            }
         }
 
         public Match GetLiveMatch(double timeOffset)
         {
+            Connect();
             if (connection.State == ConnectionState.Open)
             {
                 DataTable matchBd = Procedure("IsMatchCurrent");
@@ -408,17 +447,27 @@ namespace Gobot.Models
                     m.Team2Rounds = (int)row["RoundTeam2"];
                     m.Map = row["Map"].ToString();
                     m.TeamVictoire = (int)row["Team_Victoire"];
+
+                    Disconnect();
                     return m;
                 }
                 else
+                {
+
+                    Disconnect();
                     return null;
+                }
             }
             else
+            {
+                Disconnect();
                 return null;
+            }
         }
 
         public List<Team> GetTeam(bool all, int id=0)
         {
+            Connect();
             if (connection.State == ConnectionState.Open)
             {
                 List<Team> teams = new List<Team>();
@@ -429,36 +478,47 @@ namespace Gobot.Models
                 else
                     AllTeams = Select("team", "IdTeam = ?", new List<MySqlParameter>() { new MySqlParameter(":IdTeam", id) }, "*");
 
-                foreach (DataRow row in AllTeams.Rows)
+                Disconnect();
+                if (AllTeams != null)
                 {
-                    Team t = new Team();
-                    t.Id = (int)row["IdTeam"];
-                    t.Name = row["Name"].ToString();
-                    t.Wins = (int)row["Win"];
-                    t.Games = (int)row["Game"];
-                    t.ImagePath = row["ImageTeam"].ToString();
-
-                    DataTable BotsFromTeam = Procedure("BotFromTeam", new MySqlParameter(":IdTeam", row["IdTeam"]));
-                    for (int i = 0; i < 5; i++)
+                    foreach (DataRow row in AllTeams.Rows)
                     {
-                        t.TeamComp[i] = new Bot(
-                            (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
-                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
-                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
-                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2])
-                        );
+                        Team t = new Team();
+                        t.Id = (int)row["IdTeam"];
+                        t.Name = row["Name"].ToString();
+                        t.Wins = (int)row["Win"];
+                        t.Games = (int)row["Game"];
+                        t.ImagePath = row["ImageTeam"].ToString();
+
+                        DataTable BotsFromTeam = Procedure("BotFromTeam", new MySqlParameter(":IdTeam", row["IdTeam"]));
+                        for (int i = 0; i < 5; i++)
+                        {
+                            t.TeamComp[i] = new Bot(
+                                (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
+                                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
+                                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
+                                Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2])
+                            );
+                        }
+
+                        teams.Add(t);
                     }
 
-                    teams.Add(t);
+                    return teams;
                 }
-                return teams;
+                else
+                    return null;
             }
             else
+            {
+                Disconnect();
                 return null;
+            }
         }
 
         public DateTime GetBDTime()
         {
+            Connect();
             if (connection != null && connection.State == ConnectionState.Open)
             {
                 try
@@ -471,15 +531,19 @@ namespace Gobot.Models
                     string dbDate = result.Rows[0].ItemArray[0].ToString();
                     DateTime dt = DateTime.ParseExact(dbDate, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
+
+                    Disconnect();
                     return dt;
                 }
                 catch (Exception)
                 {
+                    Disconnect();
                     return DateTime.Now;
                 }
             }
             else
             {
+                Disconnect();
                 return DateTime.Now;
             }
         }

@@ -170,9 +170,14 @@
         <div>
             <h1>0<grey> PARTIES REGARDÉES</grey></h1>
         </div>
-        <div>
-            <h1>CLOUD6<grey> ÉQUIPE FAVORITE</grey></h1>
-        </div>
+        @{
+            if (Model.favoriteTeam != null)
+            {
+                <div>
+                    <h1>@Model.favoriteTeam<grey> ÉQUIPE FAVORITE</grey></h1>
+                </div>
+            }
+        }
         <div>
             <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
         </div>
@@ -408,7 +413,7 @@
 
         function submitImg() {
             loading_create();
-            
+
             $.ajax({
                 type: "POST",
                 url: "/Account/UpdateImage",
