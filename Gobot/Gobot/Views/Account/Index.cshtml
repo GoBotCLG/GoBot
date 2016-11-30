@@ -442,6 +442,7 @@
                 confirmEmail: $("#confirmEmail").val()
             };
             submitForm(data, "UpdateEmail");
+            window.location.href = "/Account/Index";
         }
 
         function submitPwd() {
@@ -451,6 +452,7 @@
                 confirmPassword: $("#confirmPwd").val()
             };
             submitForm(data, "UpdatePassword");
+            window.location.href = "/Account/Index";
         }
 
         function submitForm(data, link) {
