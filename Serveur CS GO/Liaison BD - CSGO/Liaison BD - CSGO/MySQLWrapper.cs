@@ -72,8 +72,14 @@ namespace Liaison_BD___CSGO
                     }
                 }
 
-                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
-
+                MySqlDataAdapter adapt = new MySqlDataAdapter(sql.ToString(), "Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+                if (conditions.Count > 0)
+                {
+                    foreach (MySqlParameter param in conditions)
+                    {
+                        adapt.SelectCommand.Parameters.Add(param);
+                    }
+                }
                 DataTable result = new DataTable();
 
                 adapt.Fill(result);
@@ -94,28 +100,33 @@ namespace Liaison_BD___CSGO
         /// <param name="args">All the parameters for the procedure</param>
         public DataTable Procedure(string procedurename, params MySqlParameter[] args)
         {
-            if (connection.State == ConnectionState.Open && connection != null && procedurename != "")
+            if (connection != null && connection.State == ConnectionState.Open && procedurename != "")
             {
-                StringBuilder sql = new StringBuilder("call " + procedurename + "(");
+                //StringBuilder sql = new StringBuilder("call " + procedurename + "(");
 
-                if (args.Length > 0)
-                {
-                    foreach (MySqlParameter arg in args)
-                    {
-                        sql.Append("?,");
-                    }
-                    sql.Remove(sql.Length - 1, 1);
-                }
-                sql.Append(");");
+                //if (args.Length > 0)
+                //{
+                //    foreach (MySqlParameter arg in args)
+                //    {
+                //        sql.Append("?,");
+                //    }
+                //    sql.Remove(sql.Length - 1, 1);
+                //}
+                //sql.Append(");");
 
-                MySqlCommand command = new MySqlCommand(sql.ToString(), connection);
-
+                MySqlCommand command = new MySqlCommand(procedurename, connection);
+                command.CommandType = CommandType.StoredProcedure;
                 foreach (MySqlParameter arg in args)
                 {
                     command.Parameters.Add(arg);
                 }
                 DataTable result = new DataTable();
-                MySqlDataAdapter adapt = new MySqlDataAdapter(command);
+                MySqlDataAdapter adapt = new MySqlDataAdapter(procedurename, "Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
+                adapt.SelectCommand.CommandType = CommandType.StoredProcedure;
+                foreach (MySqlParameter arg in args)
+                {
+                    adapt.SelectCommand.Parameters.Add(arg);
+                }
                 adapt.Fill(result);
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
