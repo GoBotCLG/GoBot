@@ -74,7 +74,6 @@ namespace Gobot.Models
 
                 using (MySqlConnection conn = new MySqlConnection(connString))
                 {
-                    //conn.Open(); // ????
                     using (MySqlCommand command = new MySqlCommand(sql.ToString(), conn))
                     {
                         try
