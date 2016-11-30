@@ -130,6 +130,7 @@ function createTeamBets(data, teamName) {
         $("#bets_users > form").append(userDiv);
     });
 
+    $("#bets_users > form").append('<input type="hidden" name="username" value=""/>');
     posTeamBets();
 }
 
