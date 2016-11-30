@@ -115,7 +115,7 @@ function createTeamBets(data, teamName) {
                         <h3 class="grey">JOUEURS AYANT MISÉ SUR CETTE ÉQUIPE:</h3>\
                         <div id="teamBets_close"></div>\
                     </div>\
-                    <div id="bets_users"><form action="/Bet/GetBetUser" method="post"></form></div>\
+                    <div id="bets_users"><form action="/Account/Index" method="post"></form></div>\
                 </div>\
             </div>';
 
