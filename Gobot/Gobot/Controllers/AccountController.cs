@@ -28,7 +28,11 @@ namespace Gobot.Controllers
                     return RedirectToAction("Index", "Home");
 
                 DataTable favTeamBd = Bd.Procedure("GetFavoriteTeam", new MySqlParameter(":Username", user.Username));
+                DataTable totalBetsWon = Bd.Procedure("GetTotalBetWon", new MySqlParameter(":Username", user.Username));
+                DataTable totalBetsLost = Bd.Procedure("GetTotalBetLost", new MySqlParameter(":Username", user.Username));
                 user.favoriteTeam = (favTeamBd == null || favTeamBd.Rows.Count == 0) ? null : favTeamBd.Rows[0][0].ToString();
+                user.totalWon = (totalBetsWon == null || totalBetsWon.Rows.Count == 0) ? 0 : int.Parse(totalBetsWon.Rows[0][0].ToString());
+                user.totalLoss = (totalBetsLost == null || totalBetsLost.Rows.Count == 0) ? 0 : int.Parse(totalBetsLost.Rows[0][0].ToString());
 
                 user.SessionUser = true;
                 Session["User"] = user;
@@ -41,7 +45,11 @@ namespace Gobot.Controllers
                 User user = Bd.GetUserFromDB(Username);
 
                 DataTable favTeamBd = Bd.Procedure("GetFavoriteTeam", new MySqlParameter(":Username", user.Username));
+                DataTable totalBetsWon = Bd.Procedure("GetTotalBetWon", new MySqlParameter(":Username", user.Username));
+                DataTable totalBetsLost = Bd.Procedure("GetTotalBetLost", new MySqlParameter(":Username", user.Username));
                 user.favoriteTeam = (favTeamBd == null || favTeamBd.Rows.Count == 0) ? null : favTeamBd.Rows[0][0].ToString();
+                user.totalWon = (totalBetsWon == null || totalBetsWon.Rows.Count == 0) ? 0 : (int)totalBetsWon.Rows[0][0];
+                user.totalLoss = (totalBetsLost == null || totalBetsLost.Rows.Count == 0) ? 0 : (int)totalBetsLost.Rows[0][0];
 
                 user.SessionUser = false;
                 return View(user);

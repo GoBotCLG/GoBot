@@ -427,7 +427,6 @@ namespace Gobot.Models
                 sessionuser.Credits = UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Credit"] : 0;
                 sessionuser.Wins = UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Win"] : 0;
                 sessionuser.Games = UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Game"] : 0;
-                sessionuser.TotalCredits = UserResult.Rows[0]["TotalCredit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["TotalCredit"] : 0;
                 sessionuser.EXP = UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
                 sessionuser.Level = UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
 
