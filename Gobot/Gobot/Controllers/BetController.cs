@@ -483,5 +483,26 @@ namespace Gobot.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "An error as occured");
             }
         }
+
+        public JsonResult WatchedAd()
+        {
+            if ((User)Session["User"] == null)
+                return Json("", JsonRequestBehavior.DenyGet);
+            else
+            {
+                try
+                {
+                    MySQLWrapper bd = new MySQLWrapper();
+                    User user = bd.GetUserFromDB(((User)Session["User"]).Username);
+                    DataTable update = new MySQLWrapper().Procedure("AddFunds", new MySqlParameter(":Username", user.Username), new MySqlParameter(":Credits", user.Credits + 50));
+                    TempData["success"] = "Votre compte a ete credite 50 credits.";
+                }
+                catch (Exception)
+                {
+                    TempData["error"] = "Une erreur est survenue lors de l'attribution de vos credits.";
+                }
+            }
+            return Json("", JsonRequestBehavior.AllowGet);
+        }
     }
 }
