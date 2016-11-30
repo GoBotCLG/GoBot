@@ -464,7 +464,9 @@ namespace Gobot.Models
                 {
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+
+                    //m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                    m.Date = ((DateTime)row["Date"]).AddHours(3);
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
@@ -502,7 +504,8 @@ namespace Gobot.Models
                 DataRow row = matchBd.Rows[0];
                 Match m = new Match();
                 m.Id = (int)row["IdMatch"];
-                m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                //m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                m.Date = ((DateTime)row["Date"]).AddHours(3);
                 m.Teams[0] = GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
                 m.Teams[1] = GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
                 m.Team1Rounds = (int)row["RoundTeam1"];
