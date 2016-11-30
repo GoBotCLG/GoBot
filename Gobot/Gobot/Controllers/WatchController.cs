@@ -60,7 +60,7 @@ namespace Gobot.Controllers
                                 DataRow row = nextMatchBD.Rows[0];
                                 nextMatch = new Match();
                                 nextMatch.Id = (int)row["IdMatch"];
-                                nextMatch.Date = (DateTime)row["Date"];
+                                nextMatch.Date = ((DateTime)row["Date"]).AddHours((double)Session["timeOffset"]);
                                 nextMatch.Teams[0] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
                                 nextMatch.Teams[1] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
                                 nextMatch.Team1Rounds = (int)row["RoundTeam1"];

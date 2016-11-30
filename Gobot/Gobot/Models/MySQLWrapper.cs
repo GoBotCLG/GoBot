@@ -23,8 +23,6 @@ namespace Gobot.Models
         public void Connect()
         {
             connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
-            //connection = new MySqlConnection("Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
-            //connection = new MySqlConnection("DRIVER={MySQL ODBC 5.3 Unicode Driver};SERVER=70.54.173.42;PORT=3306;DATABASE=gobot;USER=User;PASSWORD=yolo;OPTION=3;");
             try { connection.Open(); }
             catch (Exception e)
             {
@@ -347,14 +345,14 @@ namespace Gobot.Models
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchAfterMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchAfter", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", -timeOffset));
+                        MatchResult = Procedure("GetMatchAfter");
                 }
                 else
                 {
                     if (matchId != -1)
                         MatchResult = Procedure("GetMatchBeforeMatch", new MySqlParameter(":matchId", matchId), new MySqlParameter(":period", period));
                     else
-                        MatchResult = Procedure("GetMatchBefore", new MySqlParameter(":date", DateTime.Now), new MySqlParameter(":offset", -timeOffset));
+                        MatchResult = Procedure("GetMatchBefore");
                 }
 
                 foreach (DataRow row in MatchResult.Rows)
@@ -396,14 +394,14 @@ namespace Gobot.Models
         {
             if (connection.State == ConnectionState.Open)
             {
-                DataTable matchBd = Procedure("IsMatchCurrent", new MySqlParameter(":offset", timeOffset));
+                DataTable matchBd = Procedure("IsMatchCurrent");
 
                 if (matchBd.Rows.Count > 0)
                 {
                     DataRow row = matchBd.Rows[0];
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = (DateTime)row["Date"];
+                    m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
                     m.Teams[0] = GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
                     m.Teams[1] = GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
                     m.Team1Rounds = (int)row["RoundTeam1"];
