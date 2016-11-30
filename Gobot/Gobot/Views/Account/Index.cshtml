@@ -37,7 +37,7 @@
 <div class="info_container">
     <div class="info" id="accountInfo">
         <div>
-            <img id="img" src="@(Session["User_img"])" />
+            <img id="img" src="@(Model.ProfilPic)" />
         </div>
         <div id="userInfo">
             <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
