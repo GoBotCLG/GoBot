@@ -66,7 +66,7 @@ namespace Liaison_BD___CSGO
         private static void InitializeServer()
         {
             Serveur = new Process();
-            Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
+            Serveur.StartInfo.FileName = "C:\\SteamCMD\\csgoserver\\srcds.exe";
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon +maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
@@ -317,7 +317,7 @@ namespace Liaison_BD___CSGO
             for (int i = 1; i <= 11; i++)
                 File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
 
-            StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
+            StreamReader InLog = new StreamReader(Directory.GetFiles(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\logs")[0]);
             Dictionary<string, int> KillsBots = new Dictionary<string, int>();
             Dictionary<string, int> AssistsBots = new Dictionary<string, int>();
             Dictionary<string, int> DeathsBots = new Dictionary<string, int>();
@@ -631,8 +631,8 @@ namespace Liaison_BD___CSGO
                     Round++;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
                 }
-                
 
+                Thread.Sleep(2000);
                 if (Round == 11 || CurrentTeam1Score == 6 || CurrentTeam2Score == 6)
                 {
                     if (Round == 11 && CurrentTeam1Score < 6 && CurrentTeam2Score < 6)

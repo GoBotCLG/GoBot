@@ -120,6 +120,7 @@ namespace Liaison_BD___CSGO
                 {
                     command.Parameters.Add(arg);
                 }
+                
                 DataTable result = new DataTable();
                 MySqlDataAdapter adapt = new MySqlDataAdapter(procedurename, "Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234");
                 adapt.SelectCommand.CommandType = CommandType.StoredProcedure;
