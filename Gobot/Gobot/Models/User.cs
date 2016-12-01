@@ -14,10 +14,12 @@ namespace Gobot.Models
         public string SteamID { get; set; }
         public int Wins { get; set; }
         public int Games { get; set; }
-        public int TotalCredits { get; set; }
         public int EXP { get; set; }
         public int Level { get; set; }
         public bool SessionUser { get; set; }
+        public string favoriteTeam { get; set; }
+        public int totalWon { get; set; }
+        public int totalLoss { get; set; }
 
         public static int xpLvl = 1500;
     }

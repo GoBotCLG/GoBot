@@ -42,7 +42,7 @@ namespace Gobot.Controllers
                 try
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
-                    Match currentMatch = Bd.GetLiveMatch((double)Session["timeOffset"]);
+                    Match currentMatch = new MySQLWrapper().GetLiveMatch((double)Session["timeOffset"]);
 
                     if (currentMatch != null && currentMatch.TeamVictoire != 0)
                     {
@@ -117,6 +117,28 @@ namespace Gobot.Controllers
                             {
                                 long time = msUntilDate((DateTime)nextMatchBD.Rows[0]["Date"]);
                                 Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMilliseconds(time));
+
+                                DataRow row = nextMatchBD.Rows[0];
+                                Match nextMatch = new Match();
+                                nextMatch.Id = (int)row["IdMatch"];
+                                nextMatch.Date = ((DateTime)row["Date"]).AddHours((double)Session["timeOffset"]);
+                                nextMatch.Teams[0] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
+                                nextMatch.Teams[1] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
+                                nextMatch.Team1Rounds = (int)row["RoundTeam1"];
+                                nextMatch.Team2Rounds = (int)row["RoundTeam2"];
+                                nextMatch.Map = row["Map"].ToString();
+                                
+
+                                object next_obj = new
+                                {
+                                    teams = new object[] {
+                                    new { name = nextMatch.Teams[0].Name, img = nextMatch.Teams[0].ImagePath },
+                                    new { name = nextMatch.Teams[1].Name, img = nextMatch.Teams[1].ImagePath }
+                                },
+                                    map = nextMatch.Map,
+                                    time = time
+                                };
+
                                 return Json(new { bet = "noBet", next = new { time = time } }, JsonRequestBehavior.AllowGet);
                             }
                             else
@@ -139,7 +161,7 @@ namespace Gobot.Controllers
                 }
             }
             else
-                return Json("", JsonRequestBehavior.AllowGet);
+                return Json("Exceeded limit of demands.", JsonRequestBehavior.AllowGet);
         }
 
         private Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)

@@ -37,7 +37,7 @@
 <div class="info_container">
     <div class="info" id="accountInfo">
         <div>
-            <img id="img" src="@(Session["User_img"])" />
+            <img id="img" src="@(Model.ProfilPic)" />
         </div>
         <div id="userInfo">
             <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
@@ -135,7 +135,7 @@
     <div class="info" id="creditStats">
         <div class="info_logo"></div>
         <div>
-            <h1 id="wonLoss"><green>850</green>/<red>400</red> GAGNÉS/PERDUS</h1>
+            <h1 id="wonLoss"><green>@Model.totalWon</green>/<red>@Model.totalLoss</red> GAGNÉS/PERDUS</h1>
         </div>
         @*<div>
                 <h1>0<grey> ACHETÉS</grey></h1>
@@ -170,9 +170,14 @@
         <div>
             <h1>0<grey> PARTIES REGARDÉES</grey></h1>
         </div>
-        <div>
-            <h1>CLOUD6<grey> ÉQUIPE FAVORITE</grey></h1>
-        </div>
+        @{
+            if (Model.favoriteTeam != null)
+            {
+                <div>
+                    <h1>@Model.favoriteTeam.ToUpper()<grey> ÉQUIPE FAVORITE</grey></h1>
+                </div>
+            }
+        }
         <div>
             <a href="@Url.Action("Teams", "Stats")"><h3 class="grey">VOIR LES</h3><h2>ÉQUIPES</h2></a>
         </div>
@@ -406,37 +411,13 @@
             h_align($(".optionHeader"), $("#optionForm"), $(".optionHeader").width());
         }
 
-        function submitImg() {
-            loading_create();
-            
-            $.ajax({
-                type: "POST",
-                url: "/Account/UpdateImage",
-                data: JSON.stringify(new { file: document.getElementById('ImageUploader').files[0] }),
-                success: function(){
-                    loading_remove(true, window.location.href);
-                },
-                error: function() {
-                    loading_remove(false, window.location.href);
-                },
-                dataType: "json",
-                contentType : "application/json"
-            });
-
-            //var file = document.getElementById('ImageUploader').files[0];
-            //var fd = new FormData();
-            //fd.append("file", file);
-            //var xhr = new XMLHttpRequest();
-            //xhr.open("POST", "/Account/UpdateImage", false);
-            //xhr.send(fd);
-        }
-
         function submitEmail() {
             var data = {
                 newEmail: $("#newEmail").val(),
                 confirmEmail: $("#confirmEmail").val()
             };
             submitForm(data, "UpdateEmail");
+            window.location.href = "/Account/Index";
         }
 
         function submitPwd() {
@@ -446,6 +427,7 @@
                 confirmPassword: $("#confirmPwd").val()
             };
             submitForm(data, "UpdatePassword");
+            window.location.href = "/Account/Index";
         }
 
         function submitForm(data, link) {

@@ -40,9 +40,9 @@
         <a id="FAQ" class="small" href="@(Url.Action("faq", "Support"))">
             <div style="background-image: url(@Url.Content("~/Images/faq.png"))"></div>
         </a>
-        <a id="contact" class="small" href="@(Url.Action("Contact", "Support"))">
+        @*<a id="contact" class="small" href="@(Url.Action("Contact", "Support"))">
             <div style="background-image: url(@Url.Content("~/Images/contact.png"))"></div>
-        </a>
+        </a>*@
         <a id="déconnection" class="small" href="@Url.Action("Logout", "Account")">
             <div style="background-image: url(@Url.Content("~/Images/logout.png"))"></div>
         </a>
@@ -144,12 +144,12 @@
     $(document).ready(function () {
         setCurrentTab();
         setInterval(function () {
-            if (getCookie("seenResults") == null)
-                getMatchResults();
+            //if (getCookie("seenResults") == null)
+                //getMatchResults();
         }, 60 * 1000 * 2);
 
-        if (getCookie("seenResults") == null)
-            getMatchResults();
+        //if (getCookie("seenResults") == null)
+            //getMatchResults();
 
         //createMatchResult_PopUp();
     });

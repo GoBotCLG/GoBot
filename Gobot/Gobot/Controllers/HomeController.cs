@@ -20,36 +20,35 @@ namespace Gobot.Controllers
                 return RedirectToAction("Index", "Account");
             }
 
-            //MySQLWrapper Bd = new MySQLWrapper();
+            Match match = new MySQLWrapper().GetLiveMatch(0);
+            if (match != null)
+            {
+                JObject[] Teams = new JObject[2];
+                for (int i = 0; i < Teams.Length; i++)
+                {
+                    Teams[i] = new JObject();
+                    Teams[i].Add("Name", match.Teams[i].Name);
+                    Teams[i].Add("Wins", match.Teams[i].Wins);
+                    Teams[i].Add("Games", match.Teams[i].Games);
 
-            //DataTable InfoLiveMatch = Bd.Procedure("IsMatchCurrent");
+                    JObject[] Bots = new JObject[5];
+                    for (int j = 0; j < Bots.Length; j++)
+                    {
+                        Bots[j] = new JObject();
+                        Bots[j].Add("Name", match.Teams[i].TeamComp[j].Name);
+                        Bots[j].Add("Gun", match.Teams[i].TeamComp[j].Gun);
+                    }
 
-            //if (InfoLiveMatch.Rows.Count > 0)
-            //{
-            //    JObject[] Teams = new JObject[2];
-            //    if (InfoLiveMatch.Rows[0]["Team1"].ToString() != "")
-            //    {
-            //        Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
-            //        Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
-            //    }
-            //    else
-            //    {
-            //        Teams[0] = new JObject();
-            //        Teams[1] = new JObject();
-            //    }
-            //    List<MySqlParameter> idTeam = new List<MySqlParameter>();
-            //    idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
-            //    DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            //    Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
-            //    Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
-            //    idTeam.Clear();
-            //    idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
-            //    DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            //    Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
-            //    Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
+                    Teams[i].Add("Bot1", Bots[0]);
+                    Teams[i].Add("Bot2", Bots[1]);
+                    Teams[i].Add("Bot3", Bots[2]);
+                    Teams[i].Add("Bot4", Bots[3]);
+                    Teams[i].Add("Bot5", Bots[4]);
+                }
 
-            //    ViewBag.LiveStats = Teams;
-            //}
+                ViewBag.Team1 = match.Teams[0];
+                ViewBag.Team2 = match.Teams[1];
+            }
 
             return View();
         }

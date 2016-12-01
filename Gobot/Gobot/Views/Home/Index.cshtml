@@ -90,59 +90,74 @@
                         <div id="signIn_border"><p></p></div>
                     </div>
                 </div>
-                <input type="hidden" name="clientTime" value=""/>
+                <input type="hidden" name="clientTime" value="" />
             }
         </div>
     </div>
 
     <div id="main">
         <div class="side ct">
-            <img src="~/Images/ct_side.png" />
-            <h1>CLOUD6@{/*((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["TeamName"].ToObject<string>()*/}</h1>
-            <h2><b class="green">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Wins"].ToObject<string>()*/}</b> <img src="~/Images/games_won.png" /> <b class="white">@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Games"].ToObject<string>()*/}</b> <img src="~/Images/games_played.png" /></h2>
-            <h2></h2>
+            @{
+                if (ViewBag.Team1 != null)
+                {
+                    <img src="~/Images/ct_side.png" />
+                    <h1>@(((Gobot.Models.Team)ViewBag.Team1).Name.ToString())</h1>
+                    <h2>
+                        <b class="green">@(((Gobot.Models.Team)ViewBag.Team1).Wins.ToString())</b><img src="~/Images/games_won.png" />
+                        <b class="white">@(((Gobot.Models.Team)ViewBag.Team1).Games.ToString())</b> <img src="~/Images/games_played.png" />
+                    </h2>
 
-            <div class="team">
-                <div class="names">
-                    <span>Albert@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot1"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Cecil@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot2"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Elliot@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot3"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Marvin@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot4"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Fergus@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[0]["Bot5"]["BotName"].ToObject<string>()*/}</span>
-                </div>
-                <div class="roles">
-                    <span>Rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot1"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Sniper@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot2"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot3"]["BotName"].ToObject<string>()*/}</span>
-                    <span>Shotgun@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot4"]["BotName"].ToObject<string>()*/}</span>
-                    <span>rifle@{/*@((Newtonsoft.Json.Linq.JObject)ViewBag.LiveStats)[1]["Bot5"]["BotName"].ToObject<string>()*/}</span>
-                </div>
-            </div>
+                    <div class="team">
+                        <div class="names">
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Name.ToString())</span>
+                        </div>
+                        <div class="roles">
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Gun.ToString())</span>
+                        </div>
+                    </div>
+                }
+            }
         </div>
         <div id="video">
             <iframe src="https://player.twitch.tv/?channel=gobotts" frameborder="0" scrolling="no" height="378" width="620"></iframe>
         </div>
         <div class="side t">
-            <img src="~/Images/t_side.png" />
-            <h1>CLOUD6</h1>
-            <h2><b class="green">49</b> <img src="~/Images/games_won.png" /> <b class="white">90</b> <img src="~/Images/games_played.png" /></h2>
+            @{
+                if (ViewBag.Team2 != null)
+                {
+                    <img src="~/Images/t_side.png" />
+                    <h1>@(((Gobot.Models.Team)ViewBag.Team2).Name.ToString())</h1>
+                    <h2>
+                        <b class="green">@(((Gobot.Models.Team)ViewBag.Team2).Wins.ToString())</b><img src="~/Images/games_won.png" />
+                        <b class="white">@(((Gobot.Models.Team)ViewBag.Team2).Games.ToString())</b> <img src="~/Images/games_played.png" />
+                    </h2>
 
-            <div class="team">
-                <div class="names">
-                    <span>Albert</span>
-                    <span>Cecil</span>
-                    <span>Elliot</span>
-                    <span>Marvin</span>
-                    <span>Fergus</span>
-                </div>
-                <div class="roles">
-                    <span>Rifle</span>
-                    <span>Sniper</span>
-                    <span>Rifle</span>
-                    <span>Shotgun</span>
-                    <span>rifle</span>
-                </div>
-            </div>
+                    <div class="team">
+                        <div class="names">
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Name.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Name.ToString())</span>
+                        </div>
+                        <div class="roles">
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Gun.ToString())</span>
+                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Gun.ToString())</span>
+                        </div>
+                    </div>
+                    }
+                }
         </div>
     </div>
 

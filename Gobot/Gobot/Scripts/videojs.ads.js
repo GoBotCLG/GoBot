@@ -268,7 +268,7 @@ as a result of an ad ending, that is a bug. The `redispatch` method should recog
 such `ended` events and prefix them so they are sent as `adended`, and so on with
 all other player events.
 */
-
+adend
 var redispatch = function redispatch(event) {
 
   // We do a quick play/pause before we check for prerolls. This creates a "playing"
