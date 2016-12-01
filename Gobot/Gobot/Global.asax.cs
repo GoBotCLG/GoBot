@@ -16,8 +16,11 @@ namespace Gobot
     }
 }
 
-// TODO: fix 500 error occuring ALL THE FUCKING TIME
 // TODO: see if EOM popUp displays correctly.
+// TODO: correct EOM bet attribution
+// TODO: correct getnextday method
+// TODO: display correctly the guns used
+// TODO: correct display of names that are too long for their container + add tag title everywhere that is a possibility.
 
 // TODO: LATER||Create a method (json) to get portion of bets to reduce load on refresh in [/stats/schedule, /stats/history] (load first 2 days on refresh and click button to load the next 20).
 // TODO: LATER||Add an header to show which day is currently shown in [/stats/schedule, /stats/history] before the matches of the said day.

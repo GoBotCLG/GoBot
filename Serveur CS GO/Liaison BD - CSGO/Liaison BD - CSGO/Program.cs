@@ -412,7 +412,19 @@ namespace Liaison_BD___CSGO
                     Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
                 }
 
-                SetVictoryBets(CurrentMatchId, (int)(CurrentTeam1Score > CurrentTeam2Score ? teams.Rows[0]["IdTeam"] : teams.Rows[1]["IdTeam"]));
+                int winner, loser;
+                if (CurrentTeam1Score > CurrentTeam2Score)
+                {
+                    winner = (int)teams.Rows[0]["IdTeam"];
+                    loser = (int)teams.Rows[1]["IdTeam"];
+                }
+                else
+                {
+                    winner = (int)teams.Rows[1]["IdTeam"];
+                    loser = (int)teams.Rows[0]["IdTeam"];
+                }
+
+                SetVictoryBets(CurrentMatchId, winner, loser);
                 StopMatch();
             }
             else if (e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
@@ -659,66 +671,54 @@ namespace Liaison_BD___CSGO
         /// </summary>
         /// <param name="currentMatchId">Match ID</param>
         /// <param name="VictoryTeam">Winner's team ID</param>
-        private static void SetVictoryBets(int currentMatchId, int WinnerID)
+        private static void SetVictoryBets(int currentMatchId, int WinnerId, int LoserId)
         {
             int xpWin = 100; // Amount of xp a user gain when winning bet.
-            int xpLvl = 1500;
             DataTable bets = new DataTable();
-            DataTable users = new DataTable();
 
             Monitor.Enter(BD);
             try
             {
-                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId));
-                users = BD.Select("user", "", new List<MySqlParameter>(), "Username", "Credit", "EXP", "LVL");
+                BD.Procedure("SetVictoire", new MySqlParameter(":IdMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId)); // Set victory for current match to 'winnerId'
+                BD.Procedure("TeamIncrementWin", new MySqlParameter(":IdTeam", WinnerId)); // TODO: create procedure TeamIncrementWin in DB. (Win + 1, Game + 1)
+                BD.Procedure("TeamIncrementGame", new MySqlParameter(":IdTeam", LoserId)); // TODO: create procedure TeamIncrementGame in DB. (Game + 1)
 
-                BD.Procedure("SetVictoire", new MySqlParameter("PidMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerID));
+                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId)); // Get all bets from match with 'currentMatchId'
             }
             finally
             {
                 Monitor.Exit(BD);
             }
 
-            var totalBets = getTotalBets(ref bets, WinnerID);
-
             if (bets != null && bets.Rows.Count > 0)
             {
+                Dictionary<string, int> totalBets = getTotalBets(ref bets, WinnerId); // get total bets on current match for each side and for admin
+
                 decimal remains = 0;
                 foreach (DataRow bet in bets.Rows)
                 {
                     try
                     {
-                        if ((int)bet["Team_IdTeam"] == WinnerID)
+                        if ((int)bet["Team_IdTeam"] == WinnerId)
                         {
                             List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]);
                             remains += gains[1];
 
-                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)gains[0] : 0;
-
-                            DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
-                            int userCredit = user != null && user.Length > 0 ? (int)user[0]["Credit"] : -1;
-
-                            if (userCredit != -1)
+                            Monitor.Enter(BD);
+                            try
                             {
-                                int xp = (int)user[0]["EXP"] + xpWin;
-                                int lvl = (int)user[0]["LVL"];
-                                if (xp >= xpLvl)
-                                {
-                                    xp -= xpLvl;
-                                    lvl += 1;
-                                }
-                                Monitor.Enter(BD);
-                                try
-                                {
-                                    BD.Procedure("AddEXP", new MySqlParameter("Pusername", bet["User_Username"]), new MySqlParameter("Pexp", xp), new MySqlParameter("Plevel", lvl));
-                                    BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", userCredit + toAdd));
-                                }
-                                finally
-                                {
-                                    Monitor.Exit(BD);
-                                }
+                                // TODO: correct procedure AddEXP in DB to auto increment level: if xp >= 1500 ->  xp - 1500, lvl + 1
+                                BD.Procedure("AddFunds", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter("Argent", (int)gains[0]));
+                                BD.Procedure("IncrementWin", new MySqlParameter(":Username", bet["User_Username"])); // TODO: modify procedure IncrementWin: Win + 1, Game + 1
+                                BD.Procedure("AddEXP", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter("Pexp", xpWin));
+                            }
+                            finally
+                            {
+                                Monitor.Exit(BD);
                             }
                         }
+                        else
+                            BD.Procedure("IncrementGame", new MySqlParameter(":Username", bet["User_Username"]));
                     }
                     catch (Exception e)
                     {
@@ -740,19 +740,19 @@ namespace Liaison_BD___CSGO
                     winnerTotal += (int)row["Mise"];
                 else
                     loserTotal += (int)row["Mise"];
+
+                total += (int)row["Mise"];
             }
 
-            total = loserTotal;
             loserTotal = (int)Math.Floor(decimal.Multiply(reduction, loserTotal));
-            winnerTotal = (int)Math.Floor(decimal.Multiply(reduction, winnerTotal));
-            int admin = total - loserTotal;
+            int admin = total - loserTotal - winnerTotal;
 
-            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", total } };
+            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", admin } };
         }
 
-        private static List<decimal> getGain(int bet, int total, int losers)
+        private static List<decimal> getGain(int bet, int total_win, int total_loss)
         {
-            decimal totalGain = decimal.Multiply(decimal.Divide(bet, total), losers);
+            decimal totalGain = decimal.Multiply(decimal.Divide(bet, total_win), total_loss);
             decimal roundedDown = Math.Floor(totalGain);
             return new List<decimal>() { roundedDown, totalGain - roundedDown };
         }
@@ -762,7 +762,7 @@ namespace Liaison_BD___CSGO
             Monitor.Enter(BD);
             try
             {
-                BD.Procedure("AddFunds", new MySqlParameter("UserNames", "admin"), new MySqlParameter("Argent", amount));
+                BD.Procedure("AddFunds", new MySqlParameter(":Username", "admin"), new MySqlParameter(":Argent", amount));
             }
             catch (Exception e)
             {
@@ -773,26 +773,5 @@ namespace Liaison_BD___CSGO
                 Monitor.Exit(BD);
             }
         }
-
-        /*public static double GetTimeOffset(string time)
-        {
-            DateTime bdTime = DateTime.Now;
-            Monitor.Enter(BD);
-            try
-            {
-                bdTime = BD.GetBDTime();
-                DateTime clientTime = DateTime.Now;
-                double offset = (clientTime - bdTime).TotalMinutes / 60;
-                return (double)(Math.Round(2 * (offset))) / 2;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-            finally
-            {
-                Monitor.Exit(BD);
-            }
-        }*/
     }
 }
