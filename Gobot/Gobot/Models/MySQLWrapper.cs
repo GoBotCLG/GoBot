@@ -546,10 +546,13 @@ namespace Gobot.Models
                     for (int i = 0; i < 5; i++)
                     {
                         t.TeamComp[i] = new Bot(
-                            (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
+                            (int)BotsFromTeam.Rows[i]["IdBot"],
+                            BotsFromTeam.Rows[i]["NomBot"].ToString(),
                             Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
                             Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
-                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2])
+                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]),
+                            BotsFromTeam.Rows[i]["Gun"].ToString(),
+                            BotsFromTeam.Rows[i]["GunComplet"].ToString()
                         );
                     }
 
