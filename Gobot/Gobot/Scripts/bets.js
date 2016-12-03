@@ -135,16 +135,12 @@ function createTeamBets(data, teamName) {
 }
 
 function appendNextDayBets(data) {
-    var days = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
-    var date = new Date(data.date); // data.date == milliseconds
-    var day = '<div class="info day"><h2>' + days[date.getDay()] + '<grey>&nbsp;' + zeros(date.getDate()) + '-' + zeros(date.getMonth()) + '-' + date.getFullYear() + '</grey></h2></div>';
+    var day = '<div class="info day"><h2>' + data.date_day + '<grey>&nbsp;' + data.date_complete + '</grey></h2></div>';
     $(day).insertBefore("#showNextDay");
 
     $.each(data.matches, function (i, match) {
-        var mDate = new Date(match.date); // match.date == milliseconds
-
         var start = '<div class="info">';
-        var time = '<div class="time sqr"><h3 ' + (getTeamBet(match) != undefined ? 'class="menuColor"' : '') + '>' + mDate.getHours() + ':' + zeros(mDate.getMinutes()) + '</h3></div>';
+        var time = '<div class="time sqr"><h3 ' + (getTeamBet(match) != undefined ? 'class="menuColor"' : '') + '>' + match.date + '</h3></div>';
         var team1 = getTeamText(match.teams[0]);
         var vs = '<div class="vs"><h1>VS</h1></div>';
         var manage = getManageText(match);

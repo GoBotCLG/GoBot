@@ -379,14 +379,13 @@ namespace Gobot.Controllers
 
         public ActionResult GetNextDay(int lastMatchId)
         {
-            // TODO: get the correct amount of matches for the day and send it with the correct time.
             if ((User)Session["User"] == null)
                 return Json("", JsonRequestBehavior.DenyGet);
 
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"]);
+                List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"], lastMatchId, 1);
 
                 if (Matches.Count() > 0)
                 {
@@ -469,18 +468,20 @@ namespace Gobot.Controllers
                             new { id = m.Teams[1].Id, num = 2, name = m.Teams[1].Name, img = m.Teams[1].ImagePath, bet = teamBets[1] }
                         };
 
-                        matches_obj.Add(new { date = m.Date.Millisecond, id = m.Id, teams = teams });
+                        matches_obj.Add(new { date = (m.Date.Hour + ":" + m.Date.Minute.ToString("00")), id = m.Id, teams = teams });
                     }
 
-                    object json = new { date = Matches[0].Date.Millisecond, matches = matches_obj };
+                    string date_day = Matches[0].Date.DayOfWeek.ToString();
+                    string date_complete = Matches[0].Date.ToString("dd-MM-yyyy");
+                    object json = new { date_day = date_day, date_complete = date_complete, matches = matches_obj };
                     return Json(json, JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "No more matches");
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Il n'y a plus de parties à venir");
             }
             catch (Exception)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "An error as occured");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Une erreur s'est produite lors de la récupération des parties.");
             }
         }
 
