@@ -62,9 +62,9 @@
             $(".team_info").remove();
             $(".triangle").remove();
             $(".allow_overflow").each(function () { $(this).removeClass("allow_overflow"); });
-            createTeamInfo(e.attr("id"), $(".teams > :nth-child(" + insertAfter + ")"), eRow);
+            createTeamInfo(e, e.attr("id"), $(".teams > :nth-child(" + insertAfter + ")"), eRow, clicked);
         }
-        function createTeamInfo(teamId, prev, eRow) {
+        function createTeamInfo(e, teamId, prev, eRow, clicked) {
             var data = new XMLHttpRequest();
             data.open("GET", '@Url.Action("Team", "Stats")/' + teamId);
 
@@ -82,10 +82,10 @@
 
                     $(".team_info").append('<div class="players"></div>');
                     for (let i = 0; i < team.players.length; i++) {
-                        var gun = team.players[i].gun.toString().toLowerCase().replace(" ", "");
-                        $(".players").append('<div class="player"><h1>' + team.players[i].name + '</h1></div>');
+                        var gun = team.players[i].gun.toString().toLowerCase().replaceAll(" ", "").replaceAll(".", "").replaceAll("'", "");
+                        $(".players").append('<div class="player"><h1 title="' + team.players[i].name + '">' + team.players[i].name + '</h1></div>');
                         $(".player:last-child").append('<div><div class="gun" style="background-image:url(\'/Images/guns/' + gun + '.png\')"></div><h2 class="grey" title="' + team.players[i].gunComplet + '">' + team.players[i].gun + '</h2></div>');
-                        $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey">K: ' + team.players[i].k + '</h2><h2 class="grey">D: ' + team.players[i].d + '</h2><h2 class="grey">A: ' + team.players[i].a + '</h2><h2 class="grey">K/D: ' + team.players[i].kd + '</h2></div>');
+                        $(".player:last-child").append('<div><div class="kd"></div><h2 class="grey" title="Assassinations">K: ' + team.players[i].k + '</h2><h2 class="grey" title="Morts">D: ' + team.players[i].d + '</h2><h2 class="grey" title="Aides">A: ' + team.players[i].a + '</h2><h2 class="grey" title="Ratio Assassinations/Morts">K/D: ' + team.players[i].kd + '</h2></div>');
                     }
 
                     $(".team_info").css({

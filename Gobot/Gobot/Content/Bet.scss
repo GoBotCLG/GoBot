@@ -141,6 +141,7 @@ $betH: 300px;
     border-top: 4px solid $infoBgColor;
     top: -4px;
     height: $betH;
+    overflow: hidden;
 
     > div:not(.separator) {
         position: relative;

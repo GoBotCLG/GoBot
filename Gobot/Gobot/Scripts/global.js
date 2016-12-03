@@ -51,7 +51,7 @@ function h_align_window(e) {
 }
 function v_align_window(e) {
     var pos = $(window).height() / 2 - e.height() / 2;
-    e.css("top", pos);
+    e.css("top", pos > 0 ? pos : 0);
 }
 function v_align(e, p, eH) {
     var pos = p.height() / 2 - eH / 2;
@@ -213,4 +213,8 @@ function loading_remove(success, redirect) {
                 window.location.href = redirect;
         }, 600);
     }
+}
+
+String.prototype.replaceAll = function (str1, str2, ignore) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 }

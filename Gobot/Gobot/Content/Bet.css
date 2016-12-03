@@ -143,7 +143,8 @@ input[type=number]::-webkit-outer-spin-button {
 #bet_chooseTeam {
   border-top: 4px solid #232323;
   top: -4px;
-  height: 300px; }
+  height: 300px;
+  overflow: hidden; }
   #bet_chooseTeam > div:not(.separator) {
     position: relative;
     float: left;
