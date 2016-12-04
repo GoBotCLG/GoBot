@@ -61,7 +61,7 @@ img {
   color: white; }
 
 .orange, orange {
-  color: #ffbf5c; }
+  color: #ffbf5c !important; }
 
 .offw, offw {
   color: #eeeeee; }
@@ -450,6 +450,40 @@ menuColor {
       display: block;
       background: no-repeat center url(/Images/close_white.png);
       background-size: 40px; }
+
+#toTop, #toBottom {
+  float: left;
+  position: fixed;
+  display: block;
+  left: 0;
+  bottom: 0 !important;
+  margin: 0 0 15px 15px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  background-size: 15px !important;
+  background-color: #232323 !important; }
+
+#toTop {
+  background: no-repeat center url(/Images/up_dark.png);
+  left: 55px; }
+
+#toBottom {
+  background: no-repeat center url(/Images/down_dark.png); }
+
+#toTop:hover, #toBottom:hover {
+  border: 1px solid #626262;
+  margin: 0 0 14px 14px; }
+
+#toTop:hover {
+  background-image: url(/Images/up.png); }
+
+#toBottom:hover {
+  background-image: url(/Images/down.png); }
+
+#toTop:active, #toBottom:active {
+  border: 1px solid #f16651;
+  margin: 0 0 14px 14px; }
 
 /* -------------------------------------------------------------------------------------------------------------------
                                                         MENU

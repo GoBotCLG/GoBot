@@ -165,6 +165,13 @@ $(document).on("click", ".popUp > .prompt > div > button", function () {
     }, 100);
 });
 
+$(document).on("click", "#toTop", function () {
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+});
+$(document).on("click", "#toBottom", function () {
+    $("html, body").animate({ scrollTop: $(document).height() }, "fast");
+});
+
 function input_error_show(input, text, onTop) {
     if (input.next().hasClass("inputError"))
         input.next().remove();
