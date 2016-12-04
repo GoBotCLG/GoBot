@@ -19,78 +19,85 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null)
                 return RedirectToAction("Index", "Home");
 
-            MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> FutureMatches = Bd.GetMatches(true, (double)Session["timeOffset"]);
-            List<Match> Matches = new List<Match>();
-
-            if (FutureMatches.Count() > 0)
+            try
             {
-                int firstDate = FutureMatches[0].Date.DayOfYear;
-                int secondDate = FutureMatches[0].Date.AddDays(1).DayOfYear;
-                foreach (Match m in FutureMatches)
+                MySQLWrapper Bd = new MySQLWrapper();
+                List<Match> FutureMatches = Bd.GetMatches(true, (double)Session["timeOffset"]);
+                List<Match> Matches = new List<Match>();
+
+                if (FutureMatches.Count() > 0)
                 {
-                    if (m.Date.DayOfYear == firstDate || m.Date.DayOfYear == secondDate)
-                        Matches.Add(m);
-                    else
+                    int firstDate = FutureMatches[0].Date.DayOfYear;
+                    int secondDate = FutureMatches[0].Date.AddDays(1).DayOfYear;
+                    foreach (Match m in FutureMatches)
                     {
-                        Matches.Add(m);
-                        break;
-                    }
-                }
-            }
-
-            List<Bet> Bets = new List<Bet>();
-
-            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
-
-            foreach (DataRow row in BetResult.Rows)
-            {
-                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
-            }
-
-            foreach (Bet bet in Bets)
-            {
-                foreach (Match match in Matches)
-                {
-                    if (bet.MatchId == match.Id)
-                    {
-                        match.CurrentUserBet = true;
-                        match.CurrentUserAmount = bet.Amount;
-                        if (bet.TeamId == match.Teams[0].Id)
-                        {
-                            match.TeamNumberBet = 1;
-                        }
+                        if (m.Date.DayOfYear == firstDate || m.Date.DayOfYear == secondDate)
+                            Matches.Add(m);
                         else
                         {
-                            match.TeamNumberBet = 2;
+                            Matches.Add(m);
+                            break;
                         }
                     }
                 }
-            }
 
-            Bets.Clear();
+                List<Bet> Bets = new List<Bet>();
 
-            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+                DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
-            foreach (DataRow row in BetResult.Rows)
-            {
-                foreach (Match match in Matches)
+                foreach (DataRow row in BetResult.Rows)
                 {
-                    if ((int)row["Match_IdMatch"] == match.Id)
+                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                }
+
+                foreach (Bet bet in Bets)
+                {
+                    foreach (Match match in Matches)
                     {
-                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        if (bet.MatchId == match.Id)
                         {
-                            match.Team1TotalBet += (int)row["Mise"];
-                        }
-                        else
-                        {
-                            match.Team2TotalBet += (int)row["Mise"];
+                            match.CurrentUserBet = true;
+                            match.CurrentUserAmount = bet.Amount;
+                            if (bet.TeamId == match.Teams[0].Id)
+                            {
+                                match.TeamNumberBet = 1;
+                            }
+                            else
+                            {
+                                match.TeamNumberBet = 2;
+                            }
                         }
                     }
                 }
-            }
 
-            return View(Matches);
+                Bets.Clear();
+
+                BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+
+                foreach (DataRow row in BetResult.Rows)
+                {
+                    foreach (Match match in Matches)
+                    {
+                        if ((int)row["Match_IdMatch"] == match.Id)
+                        {
+                            if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                            {
+                                match.Team1TotalBet += (int)row["Mise"];
+                            }
+                            else
+                            {
+                                match.Team2TotalBet += (int)row["Mise"];
+                            }
+                        }
+                    }
+                }
+
+                return View(Matches);
+            }
+            catch (Exception)
+            {
+                return View(new List<Match>());
+            }
         }
         
         public ActionResult Add(int MatchId, int TeamId, int Amount)
@@ -326,20 +333,7 @@ namespace Gobot.Controllers
             }
             return RedirectToAction("Index", "Bet");
         }
-
-        public JsonResult GetMatchResultUrl()
-        {
-            try
-            {
-                string url = Url.Action("MatchResult", "Home");
-                return Json(new { url = url }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception)
-            {
-                return Json("", JsonRequestBehavior.DenyGet);
-            }
-        }
-
+       
         public ActionResult Ad()
         {
             if ((User)Session["User"] == null)
@@ -471,7 +465,9 @@ namespace Gobot.Controllers
                         matches_obj.Add(new { date = (m.Date.Hour + ":" + m.Date.Minute.ToString("00")), id = m.Id, teams = teams });
                     }
 
-                    string date_day = Matches[0].Date.DayOfWeek.ToString();
+                    var culture = (System.Globalization.CultureInfo)Session["cultureInfo"];
+                    var day = culture.DateTimeFormat.GetDayName(Matches[0].Date.DayOfWeek);
+                    string date_day = day.ToString();
                     string date_complete = Matches[0].Date.ToString("dd-MM-yyyy");
                     object json = new { date_day = date_day, date_complete = date_complete, matches = matches_obj };
                     return Json(json, JsonRequestBehavior.AllowGet);

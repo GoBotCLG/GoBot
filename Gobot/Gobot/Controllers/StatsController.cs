@@ -23,60 +23,85 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null)
                 return RedirectToAction("Index", "Home");
 
-            MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetMatches(false, (double)Session["timeOffset"]);
-            List<Bet> Bets = new List<Bet>();
-
-            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
-
-            foreach (DataRow row in BetResult.Rows)
+            try
             {
-                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
-            }
+                MySQLWrapper Bd = new MySQLWrapper();
+                List<Match> FutureMatches = Bd.GetMatches(false, (double)Session["timeOffset"]);
+                List<Match> Matches = new List<Match>();
 
-            foreach (Bet bet in Bets)
-            {
-                foreach (Match match in Matches)
+                if (FutureMatches.Count() > 0)
                 {
-                    if (bet.MatchId == match.Id)
+                    int firstDate = FutureMatches[0].Date.DayOfYear;
+                    int secondDate = FutureMatches[0].Date.AddDays(-1).DayOfYear;
+                    foreach (Match m in FutureMatches)
                     {
-                        match.CurrentUserBet = true;
-                        match.CurrentUserAmount = bet.Amount;
-                        if (bet.TeamId == match.Teams[0].Id)
-                        {
-                            match.TeamNumberBet = 1;
-                        }
+                        if (m.Date.DayOfYear == firstDate || m.Date.DayOfYear == secondDate)
+                            Matches.Add(m);
                         else
                         {
-                            match.TeamNumberBet = 2;
+                            Matches.Add(m);
+                            break;
                         }
                     }
                 }
-            }
 
-            Bets.Clear();
+                List<Bet> Bets = new List<Bet>();
 
-            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+                DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
-            foreach (DataRow row in BetResult.Rows)
-            {
-                foreach (Match match in Matches)
+                foreach (DataRow row in BetResult.Rows)
                 {
-                    if ((int)row["Match_IdMatch"] == match.Id)
+                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                }
+
+                foreach (Bet bet in Bets)
+                {
+                    foreach (Match match in Matches)
                     {
-                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        if (bet.MatchId == match.Id)
                         {
-                            match.Team1TotalBet += (int)row["Mise"];
-                        }
-                        else
-                        {
-                            match.Team2TotalBet += (int)row["Mise"];
+                            match.CurrentUserBet = true;
+                            match.CurrentUserAmount = bet.Amount;
+                            if (bet.TeamId == match.Teams[0].Id)
+                            {
+                                match.TeamNumberBet = 1;
+                            }
+                            else
+                            {
+                                match.TeamNumberBet = 2;
+                            }
                         }
                     }
                 }
-            }
 
-            return View(Matches);
+                Bets.Clear();
+
+                BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+
+                foreach (DataRow row in BetResult.Rows)
+                {
+                    foreach (Match match in Matches)
+                    {
+                        if ((int)row["Match_IdMatch"] == match.Id)
+                        {
+                            if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                            {
+                                match.Team1TotalBet += (int)row["Mise"];
+                            }
+                            else
+                            {
+                                match.Team2TotalBet += (int)row["Mise"];
+                            }
+                        }
+                    }
+                }
+
+                return View(Matches);
+            }
+            catch (Exception)
+            {
+                return View(new List<Match>());
+            }
         }
 
         public ActionResult Schedule()
@@ -84,60 +109,85 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null)
                 return RedirectToAction("Index", "Home");
 
-            MySQLWrapper Bd = new MySQLWrapper();
-            List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"]);
-            List<Bet> Bets = new List<Bet>();
-
-            DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
-
-            foreach (DataRow row in BetResult.Rows)
+            try
             {
-                Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
-            }
+                MySQLWrapper Bd = new MySQLWrapper();
+                List<Match> FutureMatches = Bd.GetMatches(true, (double)Session["timeOffset"]);
+                List<Match> Matches = new List<Match>();
 
-            foreach (Bet bet in Bets)
-            {
-                foreach (Match match in Matches)
+                if (FutureMatches.Count() > 0)
                 {
-                    if (bet.MatchId == match.Id)
+                    int firstDate = FutureMatches[0].Date.DayOfYear;
+                    int secondDate = FutureMatches[0].Date.AddDays(1).DayOfYear;
+                    foreach (Match m in FutureMatches)
                     {
-                        match.CurrentUserBet = true;
-                        match.CurrentUserAmount = bet.Amount;
-                        if (bet.TeamId == match.Teams[0].Id)
-                        {
-                            match.TeamNumberBet = 1;
-                        }
+                        if (m.Date.DayOfYear == firstDate || m.Date.DayOfYear == secondDate)
+                            Matches.Add(m);
                         else
                         {
-                            match.TeamNumberBet = 2;
+                            Matches.Add(m);
+                            break;
                         }
                     }
                 }
-            }
 
-            Bets.Clear();
+                List<Bet> Bets = new List<Bet>();
 
-            BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+                DataTable BetResult = Bd.Procedure("GetBetUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
 
-            foreach (DataRow row in BetResult.Rows)
-            {
-                foreach (Match match in Matches)
+                foreach (DataRow row in BetResult.Rows)
                 {
-                    if ((int)row["Match_IdMatch"] == match.Id)
+                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                }
+
+                foreach (Bet bet in Bets)
+                {
+                    foreach (Match match in Matches)
                     {
-                        if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                        if (bet.MatchId == match.Id)
                         {
-                            match.Team1TotalBet += (int)row["Mise"];
-                        }
-                        else
-                        {
-                            match.Team2TotalBet += (int)row["Mise"];
+                            match.CurrentUserBet = true;
+                            match.CurrentUserAmount = bet.Amount;
+                            if (bet.TeamId == match.Teams[0].Id)
+                            {
+                                match.TeamNumberBet = 1;
+                            }
+                            else
+                            {
+                                match.TeamNumberBet = 2;
+                            }
                         }
                     }
                 }
-            }
 
-            return View(Matches);
+                Bets.Clear();
+
+                BetResult = Bd.Select("bet", "", new List<MySqlParameter>(), "*");
+
+                foreach (DataRow row in BetResult.Rows)
+                {
+                    foreach (Match match in Matches)
+                    {
+                        if ((int)row["Match_IdMatch"] == match.Id)
+                        {
+                            if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
+                            {
+                                match.Team1TotalBet += (int)row["Mise"];
+                            }
+                            else
+                            {
+                                match.Team2TotalBet += (int)row["Mise"];
+                            }
+                        }
+                    }
+                }
+
+                return View(Matches);
+            }
+            catch (Exception)
+            {
+                return View(new List<Match>());
+            }
         }
 
         public ActionResult Teams()

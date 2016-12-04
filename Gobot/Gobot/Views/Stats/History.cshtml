@@ -33,8 +33,15 @@
     @{
         if (Model.Count() > 0)
         {
-            for (int i = 0; i < Model.Count; i++)
+            int year = Model[0].Date.Year;
+            int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(-1).DayOfYear;
+            for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
+                if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
+                {
+                    <div class="info day"><h2>@(Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                }
+
                 <div class="info">
                     <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute.ToString("00")</h3></div>
 
@@ -94,6 +101,11 @@
                         </div>
                     </div>
                 </div>
+            }
+
+            if (Model[Model.Count() - 1].Date.DayOfYear < secondDay || Model[Model.Count() - 1].Date.Year < year)
+            {
+                <div class="info" id="showNextDay"><h2>Afficher le jour précédent</h2><div></div></div>
             }
         }
     }

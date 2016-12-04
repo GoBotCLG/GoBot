@@ -79,17 +79,20 @@ $(document).on("click", ".user", function () {
 $(document).on("click", "#showNextDay", function () {
     if ($(".team").length > 0) {
         var matchId = $(".team").last().closest(".info").find("> input").val();
+        var href = window.location.href;
+        href = href.substring(href.lastIndexOf("/") + 1).toLowerCase();
+        var method = href.indexOf("history") > -1 ? "GetPreviousDay" : "GetNextDay";
 
         if (matchId != undefined && matchId != "") {
             loading_create();
             $.ajax({
                 type: "POST",
-                url: "/Bet/GetNextDay",
+                url: "/Bet/" + method,
                 data: JSON.stringify({ lastMatchId: matchId }),
                 dataType: "json",
                 success: function (data) {
                     loading_remove(true);
-                    appendNextDayBets(data);
+                    appendNextDayBets((href.indexOf("bet") > -1 ? true : false), data);
                 },
                 error: function (data) {
                     $("#showNextDay").remove();
@@ -134,7 +137,7 @@ function createTeamBets(data, teamName) {
     posTeamBets();
 }
 
-function appendNextDayBets(data) {
+function appendNextDayBets(bet, data) {
     var day = '<div class="info day"><h2>' + data.date_day + '<grey>&nbsp;' + data.date_complete + '</grey></h2></div>';
     $(day).insertBefore("#showNextDay");
 
@@ -143,7 +146,7 @@ function appendNextDayBets(data) {
         var time = '<div class="time sqr"><h3 ' + (getTeamBet(match) != undefined ? 'class="menuColor"' : '') + '>' + match.date + '</h3></div>';
         var team1 = getTeamText(match.teams[0]);
         var vs = '<div class="vs"><h1>VS</h1></div>';
-        var manage = getManageText(match);
+        var manage = bet == true ? getManageText(match) : "";
         var team2 = getTeamText(match.teams[1]);
         var matchId = '<input name="matchId" type="hidden" value="' + match.id + '" />';
         var end = '</div>';
