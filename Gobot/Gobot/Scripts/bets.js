@@ -185,11 +185,14 @@ function appendNextDayBets(bet, data, previous) {
 
     var divs = $(".day").last().nextAll().not("#showNextDay");
     $.each(divs, function () {
-        if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
-            v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
-        else
-            v_align($(this).children(), $(this), getHeightOfChilds($(this)))
+        $(this).find("> div").each(function () {
+            if ($(this).children().children().length > 0 && $(this).children().height() == $(this).height())
+                v_align($(this).children().children(), $(this), getHeightOfChilds($(this).children()));
+            else
+                v_align($(this).children(), $(this), getHeightOfChilds($(this)));
+        });
     });
+
     adaptScroll();
     $(".day").last().scrollView(650);
 }
