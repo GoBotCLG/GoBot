@@ -3,6 +3,14 @@
 });
 
 $(document).scroll(function () {
+    adaptScroll();
+});
+
+$(window).resize(function () {
+    onBetResize();
+});
+
+function adaptScroll() {
     var y = 400;
     if ($(document).scrollTop() > y && $("#toTop").length == 0)
         $("body").prepend('<div id="toTop"></div>');
@@ -17,12 +25,7 @@ $(document).scroll(function () {
         if ($("#toBottom").length == 0)
             $("body").prepend('<div id="toBottom"></div>');
     }
-
-});
-
-$(window).resize(function () {
-    onBetResize();
-});
+}
 
 function onBetResize() {
     h_align_window($(".info_container"));
@@ -99,14 +102,14 @@ $(document).on("click", "#showNextDay", function () {
         var matchId = $(".team").last().closest(".info").find("> input").val();
         var href = window.location.href;
         href = href.substring(href.lastIndexOf("/") + 1).toLowerCase();
-        var method = href.indexOf("history") > -1 ? "GetPreviousDay" : "GetNextDay";
+        var past = href.indexOf("history") > -1;
 
         if (matchId != undefined && matchId != "") {
             loading_create();
             $.ajax({
                 type: "POST",
-                url: "/Bet/" + method,
-                data: JSON.stringify({ lastMatchId: matchId }),
+                url: "/Bet/GetNextDay",
+                data: JSON.stringify({ lastMatchId: matchId, past: past }),
                 dataType: "json",
                 success: function (data) {
                     loading_remove(true);
@@ -187,6 +190,8 @@ function appendNextDayBets(bet, data, previous) {
         else
             v_align($(this).children(), $(this), getHeightOfChilds($(this)))
     });
+    adaptScroll();
+    $(".day").last().scrollView(650);
 }
 
 function zeros(n) {
@@ -254,7 +259,7 @@ function prev_getTeamText(team) {
     var start = '<div class="team team' + team.num + '"><div class="img" style="background-image: url(/Images/' + team.img + ');"></div><div class="text">';
     var text;
 
-    if (team.winner)
+    if (team.winner == true)
     {
         text = '<h1><green>' + team.name.toString().toUpperCase() + '</green></h1><h4 class="grey">Mise Totale ' + team.bet.total + 'GC</h4>';
 
@@ -267,16 +272,6 @@ function prev_getTeamText(team) {
         
         if (team.bet.user != undefined && team.bet.user != "")
             text += '<h4 class="grey">Pertes<red> ' + team.bet.user + '</red>GC</h4>';
-    }
-
-    if (team.bet.user != undefined && team.bet.user != "") {
-        text = '<h1><green>' + team.name.toString().toUpperCase() + '</green></h1>\
-                <h4 class="grey">Mise Totale<green> ' + team.bet.total + '</green>GC</h4>\
-                <h4 class="grey">Votre mise<green> ' + team.bet.user + '</green>GC</h4>';
-    }
-    else {
-        text = '<h1>' + team.name.toString().toUpperCase() + '</h1>\
-                <h4 class="grey">Mise Totale<offw> ' + team.bet.total + '</offw>GC</h4>';
     }
     var end = '</div><input type="hidden" name="teamId" value="' + team.id + '" /></div>';
 

@@ -37,11 +37,13 @@
         {
             int year = Model[0].Date.Year;
             int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(-1).DayOfYear;
+            System.Globalization.CultureInfo cult = (System.Globalization.CultureInfo)Session["cultureInfo"];
+
             for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
                 if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
                 {
-                    <div class="info day"><h2>@(Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                    <div class="info day"><h2>@(cult.DateTimeFormat.GetDayName(Model[i].Date.DayOfWeek)) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
                 }
 
                 <div class="info">
@@ -54,7 +56,7 @@
                                 if (Model[i].TeamVictoire == Model[i].Teams[0].Id)
                                 {
                                     <h1><green>@(Model[i].Teams[0].Name.ToUpper())</green></h1>
-                                    <h4 class="grey">Mise Totale @(Model[i].Team1TotalBet)GC</h4>
+                                    <h4 class="grey">Mise Totale <offw>@(Model[i].Team1TotalBet)</offw>GC</h4>
 
                                     if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
                                     {
@@ -73,6 +75,7 @@
                                 }
                             }
                         </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[0].Id)" />
                     </div>
                     <div class="vs"><h1>VS</h1></div>
                     <div class="team team2">
@@ -101,7 +104,9 @@
                                 }
                             }
                         </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[1].Id)" />
                     </div>
+                    <input name="matchId" type="hidden" value="@(Model[i].Id)" />
                 </div>
             }
 

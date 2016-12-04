@@ -172,6 +172,14 @@ $(document).on("click", "#toBottom", function () {
     $("html, body").animate({ scrollTop: $(document).height() }, "fast");
 });
 
+$.fn.scrollView = function (speed) {
+    return this.each(function () {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, speed);
+    });
+}
+
 function input_error_show(input, text, onTop) {
     if (input.next().hasClass("inputError"))
         input.next().remove();

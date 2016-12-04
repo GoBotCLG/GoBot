@@ -16,13 +16,12 @@ namespace Gobot
     }
 }
 
+// TODO: Create method that adds (1 video watched and 25xp) to user. (Check if match is finished, if not, check if row in 'expliaison' with session username and 
+//       match_id exists, if yes, do nothing, if not, add xp/video and row in db.
+// TODO: Create method /bet/GetPreviousDay.
 // TODO: See if EOM popUp displays correctly.
-// TODO: Design menu for smaller screens.
 // TODO: Add try catch everywhere to prevent site from showing error 500.
 // TODO: Verify that only session user can access every method on the website.
-
-// TODO: Create a method (json) to get portion of bets to reduce load on refresh in [/stats/schedule, /stats/history] (load first 2 days on refresh and click button to load the next 20).
-// TODO: Add an header to show which day is currently shown in [/stats/schedule, /stats/history] before the matches of the said day.
 // TODO: Code /Support/Contact with a form to send an email to us.
 // TODO: Correctly display if incorrect information is entered in inputs.
 

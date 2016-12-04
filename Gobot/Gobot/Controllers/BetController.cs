@@ -371,7 +371,7 @@ namespace Gobot.Controllers
             return RedirectToAction("Index", "Account", new { Username = username });
         }
 
-        public ActionResult GetNextDay(int lastMatchId)
+        public ActionResult GetNextDay(int lastMatchId, bool past = false)
         {
             if ((User)Session["User"] == null)
                 return Json("", JsonRequestBehavior.DenyGet);
@@ -379,7 +379,8 @@ namespace Gobot.Controllers
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                List<Match> Matches = Bd.GetMatches(true, (double)Session["timeOffset"], lastMatchId, 1);
+                List<Match> Matches = Bd.GetMatches(!past, (double)Session["timeOffset"], lastMatchId);
+
 
                 if (Matches.Count() > 0)
                 {
@@ -457,10 +458,18 @@ namespace Gobot.Controllers
                             teamBets[1] = new { total = m.Team2TotalBet };
                         }
 
-                        object[] teams = {
-                            new { id = m.Teams[0].Id, num = 1, name = m.Teams[0].Name, img = m.Teams[0].ImagePath, bet = teamBets[0] },
-                            new { id = m.Teams[1].Id, num = 2, name = m.Teams[1].Name, img = m.Teams[1].ImagePath, bet = teamBets[1] }
-                        };
+                        object[] teams = new object[2];
+                        if (past)
+                        {
+                            bool team1_won = m.TeamVictoire == m.Teams[0].Id;
+                            teams[0] = new { id = m.Teams[0].Id, num = 1, name = m.Teams[0].Name, img = m.Teams[0].ImagePath, bet = teamBets[0], winner = m.TeamVictoire != 0 && team1_won };
+                            teams[1] = new { id = m.Teams[1].Id, num = 2, name = m.Teams[1].Name, img = m.Teams[1].ImagePath, bet = teamBets[1], winner = m.TeamVictoire != 0 && !team1_won };
+                        }
+                        else
+                        {
+                            teams[0] = new { id = m.Teams[0].Id, num = 1, name = m.Teams[0].Name, img = m.Teams[0].ImagePath, bet = teamBets[0] };
+                            teams[1] = new { id = m.Teams[1].Id, num = 2, name = m.Teams[1].Name, img = m.Teams[1].ImagePath, bet = teamBets[1] };
+                        }
 
                         matches_obj.Add(new { date = (m.Date.Hour + ":" + m.Date.Minute.ToString("00")), id = m.Id, teams = teams });
                     }
