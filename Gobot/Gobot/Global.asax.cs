@@ -18,7 +18,6 @@ namespace Gobot
 
 // TODO: Create method that adds (1 video watched and 25xp) to user. (Check if match is finished, if not, check if row in 'expliaison' with session username and 
 //       match_id exists, if yes, do nothing, if not, add xp/video and row in db.
-// TODO: Create method /bet/GetPreviousDay.
 // TODO: See if EOM popUp displays correctly.
 // TODO: Add try catch everywhere to prevent site from showing error 500.
 // TODO: Verify that only session user can access every method on the website.
