@@ -151,7 +151,6 @@ namespace Gobot.Controllers
                                 {
                                     string dir = AppDomain.CurrentDomain.BaseDirectory;
                                     string basePath = Path.Combine(dir, @"Images\profiles\");
-                                    //string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\");
 
                                     if (!Directory.Exists(basePath))
                                         Directory.CreateDirectory(basePath);

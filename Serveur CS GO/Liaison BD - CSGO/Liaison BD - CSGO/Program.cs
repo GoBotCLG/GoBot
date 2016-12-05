@@ -673,17 +673,17 @@ namespace Liaison_BD___CSGO
         /// <param name="VictoryTeam">Winner's team ID</param>
         private static void SetVictoryBets(int currentMatchId, int WinnerId, int LoserId)
         {
-            int xpWin = 100; // Amount of xp a user gain when winning bet.
+            int xpWin = 100;
             DataTable bets = new DataTable();
 
             Monitor.Enter(BD);
             try
             {
-                BD.Procedure("SetVictoire", new MySqlParameter(":IdMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId)); // Set victory for current match to 'winnerId'
-                BD.Procedure("TeamIncrementWin", new MySqlParameter(":IdTeam", WinnerId)); // TODO: create procedure TeamIncrementWin in DB. (Win + 1, Game + 1)
-                BD.Procedure("TeamIncrementGame", new MySqlParameter(":IdTeam", LoserId)); // TODO: create procedure TeamIncrementGame in DB. (Game + 1)
+                BD.Procedure("SetVictoire", new MySqlParameter(":IdMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId));
+                BD.Procedure("AddWinTeam", new MySqlParameter(":IdTeam", WinnerId)); 
+                BD.Procedure("AddLoseTeam", new MySqlParameter(":IdTeam", LoserId));
 
-                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId)); // Get all bets from match with 'currentMatchId'
+                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId));
             }
             finally
             {
@@ -692,7 +692,7 @@ namespace Liaison_BD___CSGO
 
             if (bets != null && bets.Rows.Count > 0)
             {
-                Dictionary<string, int> totalBets = getTotalBets(ref bets, WinnerId); // get total bets on current match for each side and for admin
+                Dictionary<string, int> totalBets = getTotalBets(ref bets, WinnerId);
 
                 decimal remains = 0;
                 foreach (DataRow bet in bets.Rows)
@@ -707,10 +707,9 @@ namespace Liaison_BD___CSGO
                             Monitor.Enter(BD);
                             try
                             {
-                                // TODO: correct procedure AddEXP in DB to auto increment level: if xp >= 1500 ->  xp - 1500, lvl + 1
-                                BD.Procedure("AddFunds", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter("Argent", (int)gains[0]));
-                                BD.Procedure("IncrementWin", new MySqlParameter(":Username", bet["User_Username"])); // TODO: modify procedure IncrementWin: Win + 1, Game + 1
-                                BD.Procedure("AddEXP", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter("Pexp", xpWin));
+                                BD.Procedure("AddFunds", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Argent", (int)gains[0]));
+                                BD.Procedure("AddWinUser", new MySqlParameter(":Username", bet["User_Username"]));
+                                BD.Procedure("AddEXP", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Pexp", xpWin));
                             }
                             finally
                             {
@@ -718,7 +717,7 @@ namespace Liaison_BD___CSGO
                             }
                         }
                         else
-                            BD.Procedure("IncrementGame", new MySqlParameter(":Username", bet["User_Username"]));
+                            BD.Procedure("AddLoseUser", new MySqlParameter(":Username", bet["User_Username"]));
                     }
                     catch (Exception e)
                     {

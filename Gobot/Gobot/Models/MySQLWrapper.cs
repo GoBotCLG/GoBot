@@ -419,15 +419,16 @@ namespace Gobot.Models
             {
                 User sessionuser = new User();
 
-                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
-                sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
-                sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString().Replace("=\"\" ", "/");
-                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
-                sessionuser.Credits = UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Credit"] : 0;
-                sessionuser.Wins = UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Win"] : 0;
-                sessionuser.Games = UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Game"] : 0;
-                sessionuser.EXP = UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
-                sessionuser.Level = UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
+                sessionuser.Username        = UserResult.Rows[0]["Username"].ToString();
+                sessionuser.Email           = UserResult.Rows[0]["Email"].ToString();
+                sessionuser.ProfilPic       = UserResult.Rows[0]["Image"].ToString().Replace("=\"\" ", "/");
+                sessionuser.SteamID         = UserResult.Rows[0]["SteamProfile"].ToString();
+                sessionuser.Credits         = UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Credit"] : 0;
+                sessionuser.Wins            = UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Win"] : 0;
+                sessionuser.Games           = UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Game"] : 0;
+                sessionuser.EXP             = UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
+                sessionuser.Level           = UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
+                sessionuser.gamesWatched    = UserResult.Rows[0]["WatchGame"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["WatchGame"] : 0;
 
                 return sessionuser;
             }

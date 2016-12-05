@@ -76,6 +76,16 @@
 
 @section Scripts {
     <script>
+        $(function() {
+            $.ajax({
+                type: "POST",
+                url: "/Watch/SetWatched",
+                data: JSON.stringify(""),
+                dataType: "json",
+                success: function () {},
+                contentType: "application/json"
+            });
+        });
         $(window).ready(function () {
             setVideoPos();
         });
