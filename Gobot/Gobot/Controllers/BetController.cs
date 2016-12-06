@@ -498,7 +498,7 @@ namespace Gobot.Controllers
             {
                 MySQLWrapper bd = new MySQLWrapper();
                 User user = bd.GetUserFromDB(((User)Session["User"]).Username);
-                DataTable update = new MySQLWrapper().Procedure("AddFunds", new MySqlParameter(":Username", user.Username), new MySqlParameter(":Credits", user.Credits + 50));
+                DataTable update = new MySQLWrapper().Procedure("AddFunds", new MySqlParameter(":Username", user.Username), new MySqlParameter(":Credits", 50));
                 TempData["success"] = "Votre compte à été crédité 50 crédits.";
             }
             catch (Exception)
