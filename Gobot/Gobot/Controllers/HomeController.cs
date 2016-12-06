@@ -23,29 +23,6 @@ namespace Gobot.Controllers
             Match match = new MySQLWrapper().GetLiveMatch(0);
             if (match != null)
             {
-                JObject[] Teams = new JObject[2];
-                for (int i = 0; i < Teams.Length; i++)
-                {
-                    Teams[i] = new JObject();
-                    Teams[i].Add("Name", match.Teams[i].Name);
-                    Teams[i].Add("Wins", match.Teams[i].Wins);
-                    Teams[i].Add("Games", match.Teams[i].Games);
-
-                    JObject[] Bots = new JObject[5];
-                    for (int j = 0; j < Bots.Length; j++)
-                    {
-                        Bots[j] = new JObject();
-                        Bots[j].Add("Name", match.Teams[i].TeamComp[j].Name);
-                        Bots[j].Add("Gun", match.Teams[i].TeamComp[j].Gun);
-                    }
-
-                    Teams[i].Add("Bot1", Bots[0]);
-                    Teams[i].Add("Bot2", Bots[1]);
-                    Teams[i].Add("Bot3", Bots[2]);
-                    Teams[i].Add("Bot4", Bots[3]);
-                    Teams[i].Add("Bot5", Bots[4]);
-                }
-
                 ViewBag.Team1 = match.Teams[0];
                 ViewBag.Team2 = match.Teams[1];
             }
@@ -85,6 +62,7 @@ namespace Gobot.Controllers
                             offset = 0;
                         }
                         Session["timeOffset"] = offset;
+                        Session["cultureInfo"] = new CultureInfo("fr-CA");
                         return RedirectToAction("Index", "Account");
                     }
                 }

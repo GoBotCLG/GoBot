@@ -8,6 +8,31 @@
 }
 @Styles.Render("~/Content/Bet.min.css")
 
+<div id="toBottom"></div>
+
+@{
+    if (TempData["error"] != null)
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="error_overlay_image"></div>
+                <h1>@TempData["error"]</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+    else if (TempData["success"] != null)
+    {
+        <div id="error_overlay">
+            <div>
+                <div id="success_overlay_image"></div>
+                <h1>@TempData["success"]</h1>
+                <button id="close_errorOverlay">Fermer</button>
+            </div>
+        </div>
+    }
+}
+
 <div class="info smaller" id="getCredits">
     <a href="@Url.Action("History", "Stats")"><h2>Parties passées</h2></a>
     <div class="separator"><div></div></div>
@@ -33,10 +58,30 @@
     @{
         if (Model.Count() > 0)
         {
-            for (int i = 0; i < Model.Count; i++)
+            int year = Model[0].Date.Year;
+            int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(1).DayOfYear;
+            System.Globalization.CultureInfo cult = (System.Globalization.CultureInfo)Session["cultureInfo"];
+
+            for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
+                if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
+                {
+                    <div class="info day"><h2>@(cult.DateTimeFormat.GetDayName(Model[i].Date.DayOfWeek)) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                }
+
                 <div class="info">
-                    <div class="time sqr"><h3>@Model[i].Date.Hour:@Model[i].Date.Minute.ToString("00")</h3></div>
+                    <div class="time sqr">
+                        @{
+                            if (Model[i].CurrentUserBet)
+                            {
+                                <h3 class="menuColor">@Model[i].Date.Hour:@Model[i].Date.Minute.ToString("00")</h3>
+                            }
+                            else
+                            {
+                                <h3>@Model[i].Date.Hour:@Model[i].Date.Minute.ToString("00")</h3>
+                            }
+                        }
+                    </div>
 
                     <div class="team team1">
                         <div class="img" style="background-image: url(/Images/@(Model[i].Teams[0].ImagePath));"></div>
@@ -55,6 +100,7 @@
                                 }
                             }
                         </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[0].Id)" />
                     </div>
                     <div class="vs"><h1>VS</h1></div>
                     <div class="team team2">
@@ -74,8 +120,15 @@
                                 }
                             }
                         </div>
+                        <input type="hidden" name="teamId" value="@(Model[i].Teams[1].Id)" />
                     </div>
+                    <input name="matchId" type="hidden" value="@(Model[i].Id)" />
                 </div>
+            }
+
+            if (Model[Model.Count() - 1].Date.DayOfYear > secondDay || Model[Model.Count() - 1].Date.Year > year)
+            {
+                <div class="info" id="showNextDay"><h2>Afficher le jour suivant</h2><div></div></div>
             }
         }
     }

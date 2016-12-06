@@ -361,6 +361,7 @@ html, body {
     text-indent: 20px;
     margin-bottom: 15px; }
   #rep > h3 {
+    left: 30px;
     width: 100%;
     text-align: center;
     top: -10px !important; }

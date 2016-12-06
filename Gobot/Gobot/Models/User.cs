@@ -20,6 +20,7 @@ namespace Gobot.Models
         public string favoriteTeam { get; set; }
         public int totalWon { get; set; }
         public int totalLoss { get; set; }
+        public int gamesWatched { get; set; }
 
         public static int xpLvl = 1500;
     }

@@ -51,7 +51,7 @@ function h_align_window(e) {
 }
 function v_align_window(e) {
     var pos = $(window).height() / 2 - e.height() / 2;
-    e.css("top", pos);
+    e.css("top", pos > 0 ? pos : 0);
 }
 function v_align(e, p, eH) {
     var pos = p.height() / 2 - eH / 2;
@@ -165,6 +165,21 @@ $(document).on("click", ".popUp > .prompt > div > button", function () {
     }, 100);
 });
 
+$(document).on("click", "#toTop", function () {
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+});
+$(document).on("click", "#toBottom", function () {
+    $("html, body").animate({ scrollTop: $(document).height() }, "fast");
+});
+
+$.fn.scrollView = function (speed) {
+    return this.each(function () {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, speed);
+    });
+}
+
 function input_error_show(input, text, onTop) {
     if (input.next().hasClass("inputError"))
         input.next().remove();
@@ -213,4 +228,8 @@ function loading_remove(success, redirect) {
                 window.location.href = redirect;
         }, 600);
     }
+}
+
+String.prototype.replaceAll = function (str1, str2, ignore) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignore ? "gi" : "g")), (typeof (str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 }

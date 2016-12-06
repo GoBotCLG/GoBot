@@ -369,6 +369,7 @@
     <Content Include="Scripts\cancelContentPlay.js" />
     <Content Include="Scripts\contentupdate.js" />
     <Content Include="Scripts\global.js" />
+    <Content Include="Scripts\ima3.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
@@ -406,6 +407,8 @@
     <Content Include="Scripts\vjs-lang\uk.js" />
     <Content Include="Scripts\vjs-lang\zh.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Videos\video_dark.mp4" />
+    <Content Include="Videos\video_dog.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

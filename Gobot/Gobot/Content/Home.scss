@@ -241,6 +241,8 @@ body { overflow: hidden; }
         width: 50%;
         max-width: 155px;
         height: auto;
+        border-radius: 50% !important;
+        border: 10px solid rgba(255,255,255,0.08) !important;
     }
     > h1, > h2, > h3, > .roles > span {
         display: block;
@@ -278,12 +280,15 @@ body { overflow: hidden; }
         padding-top: 10%;
 
         > span {
-            display: block;
+            display: inline-block;
             float: left;
             clear: both;
             font: italic 900 24px $font;
             text-transform: uppercase;
             width: 100%;
+            text-wrap: none;
+            word-wrap: normal;
+            overflow: hidden;
         }
     }
     .names > span {
@@ -293,6 +298,7 @@ body { overflow: hidden; }
     .roles > span{
         color: #4c4c4c;
         text-align: left;
+        width: 300px;
     }
 }
 

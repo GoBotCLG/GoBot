@@ -48,8 +48,8 @@ namespace Gobot.Controllers
                 DataTable totalBetsWon = Bd.Procedure("GetTotalBetWon", new MySqlParameter(":Username", user.Username));
                 DataTable totalBetsLost = Bd.Procedure("GetTotalBetLost", new MySqlParameter(":Username", user.Username));
                 user.favoriteTeam = (favTeamBd == null || favTeamBd.Rows.Count == 0) ? null : favTeamBd.Rows[0][0].ToString();
-                user.totalWon = (totalBetsWon == null || totalBetsWon.Rows.Count == 0) ? 0 : (int)totalBetsWon.Rows[0][0];
-                user.totalLoss = (totalBetsLost == null || totalBetsLost.Rows.Count == 0) ? 0 : (int)totalBetsLost.Rows[0][0];
+                user.totalWon = (totalBetsWon == null || totalBetsWon.Rows.Count == 0 || totalBetsWon.Rows[0][0] == null || totalBetsWon.Rows[0][0].ToString() == "") ? 0 : int.Parse(totalBetsWon.Rows[0][0].ToString());
+                user.totalLoss = (totalBetsLost == null || totalBetsLost.Rows.Count == 0 || totalBetsLost.Rows[0][0] == null || totalBetsLost.Rows[0][0].ToString() == "") ? 0 : int.Parse(totalBetsLost.Rows[0][0].ToString());
 
                 user.SessionUser = false;
                 return View(user);
@@ -151,7 +151,6 @@ namespace Gobot.Controllers
                                 {
                                     string dir = AppDomain.CurrentDomain.BaseDirectory;
                                     string basePath = Path.Combine(dir, @"Images\profiles\");
-                                    //string basePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), @"Gobot\profiles\");
 
                                     if (!Directory.Exists(basePath))
                                         Directory.CreateDirectory(basePath);

@@ -21,7 +21,7 @@
         if (Model != null)
         {
             <div class="side ct">
-                <img src="~/Images/ct_side.png" />
+                <img src="~/Images/@Model.Teams[0].ImagePath" />
                 <h1>@Model.Teams[0].Name</h1>
                 <h2>
                     <green>@Model.Teams[0].Wins</green><img src="~/Images/games_won.png" />
@@ -30,23 +30,23 @@
 
                 <div class="team">
                     <div class="names">
-                        <span>@Model.Teams[0].TeamComp[0].Name</span>
-                        <span>@Model.Teams[0].TeamComp[1].Name</span>
-                        <span>@Model.Teams[0].TeamComp[2].Name</span>
-                        <span>@Model.Teams[0].TeamComp[3].Name</span>
-                        <span>@Model.Teams[0].TeamComp[4].Name</span>
+                        <span title="@Model.Teams[0].TeamComp[0].Name">@Model.Teams[0].TeamComp[0].Name</span>
+                        <span title="@Model.Teams[0].TeamComp[1].Name">@Model.Teams[0].TeamComp[1].Name</span>
+                        <span title="@Model.Teams[0].TeamComp[2].Name">@Model.Teams[0].TeamComp[2].Name</span>
+                        <span title="@Model.Teams[0].TeamComp[3].Name">@Model.Teams[0].TeamComp[3].Name</span>
+                        <span title="@Model.Teams[0].TeamComp[4].Name">@Model.Teams[0].TeamComp[4].Name</span>
                     </div>
                     <div class="roles">
-                        <span>@Model.Teams[0].TeamComp[0].Gun</span>
-                        <span>@Model.Teams[0].TeamComp[1].Gun</span>
-                        <span>@Model.Teams[0].TeamComp[2].Gun</span>
-                        <span>@Model.Teams[0].TeamComp[3].Gun</span>
-                        <span>@Model.Teams[0].TeamComp[4].Gun</span>
+                        <span title="@Model.Teams[0].TeamComp[0].GunComplet">@Model.Teams[0].TeamComp[0].Gun</span>
+                        <span title="@Model.Teams[0].TeamComp[1].GunComplet">@Model.Teams[0].TeamComp[1].Gun</span>
+                        <span title="@Model.Teams[0].TeamComp[2].GunComplet">@Model.Teams[0].TeamComp[2].Gun</span>
+                        <span title="@Model.Teams[0].TeamComp[3].GunComplet">@Model.Teams[0].TeamComp[3].Gun</span>
+                        <span title="@Model.Teams[0].TeamComp[4].GunComplet">@Model.Teams[0].TeamComp[4].Gun</span>
                     </div>
                 </div>
             </div>
             <div class="side t">
-                <img src="~/Images/t_side.png" />
+                <img src="~/Images/@Model.Teams[1].ImagePath" />
                 <h1>@Model.Teams[1].Name</h1>
                 <h2>
                     <green>@Model.Teams[1].Wins</green><img src="~/Images/games_won.png" />
@@ -55,18 +55,18 @@
 
                 <div class="team">
                     <div class="names">
-                        <span>@Model.Teams[1].TeamComp[0].Name</span>
-                        <span>@Model.Teams[1].TeamComp[1].Name</span>
-                        <span>@Model.Teams[1].TeamComp[2].Name</span>
-                        <span>@Model.Teams[1].TeamComp[3].Name</span>
-                        <span>@Model.Teams[1].TeamComp[4].Name</span>
+                        <span title="@Model.Teams[1].TeamComp[0].Name">@Model.Teams[1].TeamComp[0].Name</span>
+                        <span title="@Model.Teams[1].TeamComp[1].Name">@Model.Teams[1].TeamComp[1].Name</span>
+                        <span title="@Model.Teams[1].TeamComp[2].Name">@Model.Teams[1].TeamComp[2].Name</span>
+                        <span title="@Model.Teams[1].TeamComp[3].Name">@Model.Teams[1].TeamComp[3].Name</span>
+                        <span title="@Model.Teams[1].TeamComp[4].Name">@Model.Teams[1].TeamComp[4].Name</span>
                     </div>
                     <div class="roles">
-                        <span>@Model.Teams[1].TeamComp[0].Gun</span>
-                        <span>@Model.Teams[1].TeamComp[1].Gun</span>
-                        <span>@Model.Teams[1].TeamComp[2].Gun</span>
-                        <span>@Model.Teams[1].TeamComp[3].Gun</span>
-                        <span>@Model.Teams[1].TeamComp[4].Gun</span>
+                        <span title="@Model.Teams[1].TeamComp[0].GunComplet">@Model.Teams[1].TeamComp[0].Gun</span>
+                        <span title="@Model.Teams[1].TeamComp[1].GunComplet">@Model.Teams[1].TeamComp[1].Gun</span>
+                        <span title="@Model.Teams[1].TeamComp[2].GunComplet">@Model.Teams[1].TeamComp[2].Gun</span>
+                        <span title="@Model.Teams[1].TeamComp[3].GunComplet">@Model.Teams[1].TeamComp[3].Gun</span>
+                        <span title="@Model.Teams[1].TeamComp[4].GunComplet">@Model.Teams[1].TeamComp[4].Gun</span>
                     </div>
                 </div>
             </div>
@@ -76,9 +76,17 @@
 
 @section Scripts {
     <script>
+        $(function() {
+            $.ajax({
+                type: "POST",
+                url: "/Watch/SetWatched",
+                data: JSON.stringify(""),
+                dataType: "json",
+                success: function () {},
+                contentType: "application/json"
+            });
+        });
         $(window).ready(function () {
-            // TODO: Create method that adds (1 video watched and 25xp) to user. (Check if match is finished, if not, check if row in 'expliaison' with session username and 
-            //       match_id exists, if yes, do nothing, if not, add xp/video and row in db.
             setVideoPos();
         });
 

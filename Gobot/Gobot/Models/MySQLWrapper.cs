@@ -419,15 +419,16 @@ namespace Gobot.Models
             {
                 User sessionuser = new User();
 
-                sessionuser.Username = UserResult.Rows[0]["Username"].ToString();
-                sessionuser.Email = UserResult.Rows[0]["Email"].ToString();
-                sessionuser.ProfilPic = UserResult.Rows[0]["Image"].ToString().Replace("=\"\" ", "/");
-                sessionuser.SteamID = UserResult.Rows[0]["SteamProfile"].ToString();
-                sessionuser.Credits = UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Credit"] : 0;
-                sessionuser.Wins = UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Win"] : 0;
-                sessionuser.Games = UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Game"] : 0;
-                sessionuser.EXP = UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
-                sessionuser.Level = UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
+                sessionuser.Username        = UserResult.Rows[0]["Username"].ToString();
+                sessionuser.Email           = UserResult.Rows[0]["Email"].ToString();
+                sessionuser.ProfilPic       = UserResult.Rows[0]["Image"].ToString().Replace("=\"\" ", "/");
+                sessionuser.SteamID         = UserResult.Rows[0]["SteamProfile"].ToString();
+                sessionuser.Credits         = UserResult.Rows[0]["Credit"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Credit"] : 0;
+                sessionuser.Wins            = UserResult.Rows[0]["Win"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Win"] : 0;
+                sessionuser.Games           = UserResult.Rows[0]["Game"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["Game"] : 0;
+                sessionuser.EXP             = UserResult.Rows[0]["EXP"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["EXP"] : 0;
+                sessionuser.Level           = UserResult.Rows[0]["LVL"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["LVL"] : 1;
+                sessionuser.gamesWatched    = UserResult.Rows[0]["WatchGame"].GetType() != typeof(System.DBNull) ? (int)UserResult.Rows[0]["WatchGame"] : 0;
 
                 return sessionuser;
             }
@@ -464,7 +465,9 @@ namespace Gobot.Models
                 {
                     Match m = new Match();
                     m.Id = (int)row["IdMatch"];
-                    m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+
+                    //m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                    m.Date = ((DateTime)row["Date"]).AddHours(3);
                     m.Teams[0] = null;
                     m.Teams[1] = null;
                     m.Map = row["Map"].ToString();
@@ -502,7 +505,8 @@ namespace Gobot.Models
                 DataRow row = matchBd.Rows[0];
                 Match m = new Match();
                 m.Id = (int)row["IdMatch"];
-                m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                //m.Date = ((DateTime)row["Date"]).AddHours(timeOffset);
+                m.Date = ((DateTime)row["Date"]).AddHours(3);
                 m.Teams[0] = GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
                 m.Teams[1] = GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
                 m.Team1Rounds = (int)row["RoundTeam1"];
@@ -543,10 +547,13 @@ namespace Gobot.Models
                     for (int i = 0; i < 5; i++)
                     {
                         t.TeamComp[i] = new Bot(
-                            (int)BotsFromTeam.Rows[i]["IdBot"], BotsFromTeam.Rows[i]["NomBot"].ToString(),
+                            (int)BotsFromTeam.Rows[i]["IdBot"],
+                            BotsFromTeam.Rows[i]["NomBot"].ToString(),
                             Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[0]),
                             Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[1]),
-                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2])
+                            Convert.ToInt32(BotsFromTeam.Rows[i]["KDA"].ToString().Split('/')[2]),
+                            BotsFromTeam.Rows[i]["Gun"].ToString(),
+                            BotsFromTeam.Rows[i]["GunComplet"].ToString()
                         );
                     }
 

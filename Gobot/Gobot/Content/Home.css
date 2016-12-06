@@ -60,10 +60,10 @@ img {
   color: white; }
 
 .orange, orange {
-  color: #ffbf5c; }
+  color: #ffbf5c !important; }
 
 .offw, offw {
-  color: #eeeeee; }
+  color: #eeeeee !important; }
 
 .menuColor,
 menuColor {
@@ -450,6 +450,40 @@ menuColor {
       background: no-repeat center url(/Images/close_white.png);
       background-size: 40px; }
 
+#toTop, #toBottom {
+  float: left;
+  position: fixed;
+  display: block;
+  left: 0;
+  bottom: 0 !important;
+  margin: 0 0 15px 15px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  background-size: 15px !important;
+  background-color: #232323 !important; }
+
+#toTop {
+  background: no-repeat center url(/Images/up_dark.png);
+  left: 55px; }
+
+#toBottom {
+  background: no-repeat center url(/Images/down_dark.png); }
+
+#toTop:hover, #toBottom:hover {
+  border: 1px solid #626262;
+  margin: 0 0 14px 14px; }
+
+#toTop:hover {
+  background-image: url(/Images/up.png); }
+
+#toBottom:hover {
+  background-image: url(/Images/down.png); }
+
+#toTop:active, #toBottom:active {
+  border: 1px solid #f16651;
+  margin: 0 0 14px 14px; }
+
 body {
   overflow: hidden; }
 
@@ -667,7 +701,9 @@ body {
     position: relative;
     width: 50%;
     max-width: 155px;
-    height: auto; }
+    height: auto;
+    border-radius: 50% !important;
+    border: 10px solid rgba(255, 255, 255, 0.08) !important; }
   .side > h1, .side > h2, .side > h3, .side > .roles > span {
     display: block;
     position: relative;
@@ -703,18 +739,22 @@ body {
     text-indent: 10px;
     padding-top: 10%; }
     .team > div > span {
-      display: block;
+      display: inline-block;
       float: left;
       clear: both;
       font: italic 900 24px Lato, Arial, sans-serif;
       text-transform: uppercase;
-      width: 100%; }
+      width: 100%;
+      text-wrap: none;
+      word-wrap: normal;
+      overflow: hidden; }
   .team .names > span {
     color: white;
     text-align: right !important; }
   .team .roles > span {
     color: #4c4c4c;
-    text-align: left; }
+    text-align: left;
+    width: 300px; }
 
 #popOut_login {
   position: absolute;

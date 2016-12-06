@@ -109,6 +109,7 @@ $teamH: 250px;
     width: auto;
     padding: 20px 40px 40px 40px;
     max-width: $teamH * 5 / 6;
+    overflow: hidden;
 
     > h1 {
         text-transform: uppercase;
@@ -130,3 +131,15 @@ $teamH: 250px;
 .acc { background-image: url('/Images/accuracy.png') }
 .r-time { background-image: url('/Images/reactionTime.png') }
 .kd { background-image: url('/Images/killDeath.png') }
+
+.gun {
+    position: relative;
+    float: left;
+    display: block;
+    width: 43px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    margin-right: 3px;
+}

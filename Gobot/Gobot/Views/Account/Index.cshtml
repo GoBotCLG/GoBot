@@ -37,7 +37,7 @@
 <div class="info_container">
     <div class="info" id="accountInfo">
         <div>
-            <img id="img" src="@(Session["User_img"])" />
+            <img id="img" src="@(Model.ProfilPic)" />
         </div>
         <div id="userInfo">
             <h5 id="name" title="@Html.DisplayFor(model => model.Username)">@Html.DisplayFor(model => model.Username)</h5>
@@ -168,7 +168,7 @@
     <div class="info" id="matches">
         <div class="info_logo"></div>
         <div>
-            <h1>0<grey> PARTIES REGARDÉES</grey></h1>
+            <h1>@Model.gamesWatched<grey> PARTIES REGARDÉES</grey></h1>
         </div>
         @{
             if (Model.favoriteTeam != null)
@@ -298,19 +298,18 @@
 
                 $("#userOptions > h3, #openOption").hide();
                 $("#closeOption").show();
-
-                onResize();
             }
             else {
                 $("#options").remove();
                 $("#userOptions > h3, #openOption").show();
                 $("#closeOption").hide();
             }
+            onResize();
         });
 
-        $(document).on("focus", "form input", function () {
+        $(document).on("focus", "input", function () {
             $(this).prev().css("color", "#f16651");
-        }).on("blur", "form input", function () {
+        }).on("blur", "input", function () {
             $(this).prev().css("color", "#eee");
         });
 
@@ -357,6 +356,7 @@
                 else
                     $(this).css("width", "auto");
             });
+            v_align_window($(".info_container"));
         }
 
         function animateRanks(i) {

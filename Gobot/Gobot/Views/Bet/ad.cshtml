@@ -5,11 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/Content/GetCredits.min.css")
-
 <div class="info_container">
     <div class="info" id="header">
         <h6>REGARDEZ UNE ANNONCE</h6>
-        <h4 class="grey">et bénéficiez d’une récompense allant de 10 à 50 crédits.</h4>
+        <h4 class="grey">et bénéficiez d’une récompense de 50 crédits.</h4>
     </div>
 
     <div id="video">
@@ -21,16 +20,19 @@
         <div id="testdiv"></div>
         <video id="my-video" class="video-js" controls preload="auto" width="1280" height="720" poster="MY_VIDEO_POSTER.jpg" data-setup="{}">
             <!-- TODO Rajouter VideoPoster -->
-            <source src="http://googleads.g.doubleclick.net/pagead/ads?ad_type=video&client=ca-video-pub-4968145218643279&videoad_start_delay=0&description_url=http%3A%2F%2Fwww.google.com&max_ad_duration=40000&adtest=on" type='video/mp4'>
+            <source src="~/Videos/video_dark.mp4" type='video/mp4'>
             <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
             </p>
         </video>
-        <script src="http://vjs.zencdn.net/5.8.8/video.js"></script>
+        <script src="https://vjs.zencdn.net/5.8.8/video.js"></script>
         <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-        <script src="~/Scripts/videojs.ads.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/4.1.4/videojs.ads.min.js"></script>
         <script src="~/Scripts/videojs.ima.js"></script>
         <script>
             var player = videojs('my-video');
+            //player.on('adended', function () {
+            //    $("body").prepend('<div id="getCredit_container"><div id="getCredit_btn"><h1>Réclamer mes crédits</h1></div></div>');
+            //});
 
             var options = {
                 id: 'my-video',
@@ -47,6 +49,9 @@
             // player.ima.initializeAdDisplayContainer();
 
             // This must be called after player.ima(...) above.
+            
+            
+
             player.play();
         </script>
     </div>
@@ -61,10 +66,36 @@
             }
 
             h_align_window($(".info_container"));
+            h_align_window($("#getCredit_btn"));
+            v_align_window($("#getCredit_btn"));
+
+            setTimeout(function () {
+                $("body").prepend('<div id="getCredit_container"><div id="getCredit_btn"><h1>Réclamer mes crédits</h1></div></div>');
+                h_align_window($("#getCredit_btn"));
+                v_align_window($("#getCredit_btn"));
+                player.pause();
+            }, 30 * 1000);
         })
 
         $(window).resize(function () {
             h_align_window($(".info_container"));
+            if ($("#getCredit_btn"))
+            {
+                h_align_window($("#getCredit_btn"));
+                v_align_window($("#getCredit_btn"));
+            }
+        });
+
+        $(document).on("click", "#getCredit_btn", function () {
+            var data = new XMLHttpRequest();
+            data.open("GET", '@Url.Action("WatchedAd", "Bet")');
+
+            data.onreadystatechange = function () {
+                if (data.readyState == 4) {
+                    window.location.href = '@Url.Action("Index", "Account")';
+                }
+            }
+            data.send();
         });
     </script>    
 }

@@ -100,7 +100,7 @@
             @{
                 if (ViewBag.Team1 != null)
                 {
-                    <img src="~/Images/ct_side.png" />
+                    <img src="~/Images/@(((Gobot.Models.Team)ViewBag.Team1).ImagePath.ToString())" />
                     <h1>@(((Gobot.Models.Team)ViewBag.Team1).Name.ToString())</h1>
                     <h2>
                         <b class="green">@(((Gobot.Models.Team)ViewBag.Team1).Wins.ToString())</b><img src="~/Images/games_won.png" />
@@ -109,18 +109,18 @@
 
                     <div class="team">
                         <div class="names">
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Name.ToString())</span>
                         </div>
                         <div class="roles">
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[0].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[1].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[2].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[3].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team1).TeamComp[4].Gun.ToString())</span>
                         </div>
                     </div>
                 }
@@ -133,7 +133,7 @@
             @{
                 if (ViewBag.Team2 != null)
                 {
-                    <img src="~/Images/t_side.png" />
+                    <img src="~/Images/@(((Gobot.Models.Team)ViewBag.Team2).ImagePath.ToString())" />
                     <h1>@(((Gobot.Models.Team)ViewBag.Team2).Name.ToString())</h1>
                     <h2>
                         <b class="green">@(((Gobot.Models.Team)ViewBag.Team2).Wins.ToString())</b><img src="~/Images/games_won.png" />
@@ -142,18 +142,18 @@
 
                     <div class="team">
                         <div class="names">
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Name.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Name.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Name.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Name.ToString())</span>
                         </div>
                         <div class="roles">
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Gun.ToString())</span>
-                            <span>@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[0].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[1].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[2].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[3].Gun.ToString())</span>
+                            <span title="@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].GunComplet.ToString())">@(((Gobot.Models.Team)ViewBag.Team2).TeamComp[4].Gun.ToString())</span>
                         </div>
                     </div>
                     }

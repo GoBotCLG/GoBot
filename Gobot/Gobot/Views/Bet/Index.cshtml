@@ -3,10 +3,12 @@
 @{
     ViewBag.Title = "Gager";
     ViewBag.Desc = "Miser sur l'équipe de votre choix sur des parties CS:GO à venir.";
-    ViewBag.Keywords = "Mise, Miser, équipe, CS:GO, Counter-Strike:Global Offensive, Gobot";
+    ViewBag.Keywords = "Mise, Miser, équipe, parties, CS:GO, Counter-Strike:Global Offensive, Gobot";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/Content/Bet.min.css")
+
+<div id="toBottom"></div>
 
 @{
     if (TempData["error"] != null)
@@ -30,8 +32,9 @@
         </div>
     }
 }
-<h1><script>Date.now()</script></h1>
+
 <h1 style="display: none;">@Session["timeOffset"]</h1>
+
 <div class="info_container">
     @{
         if (Model.Count() > 0)
@@ -59,11 +62,13 @@
         {
             int year = Model[0].Date.Year;
             int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(1).DayOfYear;
+            System.Globalization.CultureInfo cult = (System.Globalization.CultureInfo)Session["cultureInfo"];
+
             for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
                 if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
                 {
-                    <div class="info day"><h2>@(Model[i].Date.ToString("dddd")) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
+                    <div class="info day"><h2>@(cult.DateTimeFormat.GetDayName(Model[i].Date.DayOfWeek)) <grey>@Model[i].Date.ToString("dd/MM/yyyy")</grey></h2></div>
                 }
 
                 <div class="info">
@@ -134,13 +139,13 @@
                     </div>
                     <input name="matchId" type="hidden" value="@(Model[i].Id)" />
                 </div>
-                                }
+            }
 
-                                if (Model[Model.Count() - 1].Date.DayOfYear > secondDay || Model[Model.Count() - 1].Date.Year > year)
-                                {
-                                    <div class="info" id="showNextDay"><h2>Afficher le jour suivant</h2><div></div></div>
-                                    }
-                                }
+            if (Model[Model.Count() - 1].Date.DayOfYear > secondDay || Model[Model.Count() - 1].Date.Year > year)
+            {
+                <div class="info" id="showNextDay"><h2>Afficher le jour suivant</h2><div></div></div>
+            }
+        }
     }
 </div>
 

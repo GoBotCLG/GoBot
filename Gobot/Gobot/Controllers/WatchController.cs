@@ -189,5 +189,38 @@ namespace Gobot.Controllers
 
             return (after - now) / 10000;
         }
+
+        public JsonResult SetWatched()
+        {
+            if (Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json("", JsonRequestBehavior.AllowGet);
+
+            try
+            {
+                MySQLWrapper bd = new MySQLWrapper();
+
+                Match currentMatch = bd.GetLiveMatch((double)Session["timeOffset"]);
+
+                if (currentMatch != null && currentMatch.TeamVictoire == 0)
+                {
+                    DataTable watched = bd.Select("expliaison", "idUser = ? and idMatch = ?",
+                        new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username), new MySqlParameter(":idMatch", currentMatch.Id) }, "*");
+
+                    if (watched != null && watched.Rows.Count == 0)
+                    {
+                        bd.Insert("expliaison", new List<string>() { "idUser", "idMatch" },
+                            new List<MySqlParameter>() { new MySqlParameter(":idUser", ((User)Session["User"]).Username), new MySqlParameter(":idMatch", currentMatch.Id) });
+                        bd.Procedure("addEXP", new MySqlParameter(":Username", ((User)Session["User"]).Username), new MySqlParameter(":", 25));
+                        bd.Procedure("AddWatchedUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
+                    }
+                }
+
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

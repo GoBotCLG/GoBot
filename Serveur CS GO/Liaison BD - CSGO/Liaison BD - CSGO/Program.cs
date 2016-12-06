@@ -69,7 +69,7 @@ namespace Liaison_BD___CSGO
         private static void InitializeServer()
         {
             Serveur = new Process();
-            Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
+            Serveur.StartInfo.FileName = "C:\\SteamCMD\\csgoserver\\srcds.exe";
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon +maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
@@ -374,7 +374,7 @@ namespace Liaison_BD___CSGO
             for (int i = 1; i <= 11; i++)
                 File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
 
-            StreamReader InLog = new StreamReader(Directory.GetFiles(@"C:\Users\max_l\Documents\steamcmd\csgoserver\csgo\logs")[0]);
+            StreamReader InLog = new StreamReader(Directory.GetFiles(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\logs")[0]);
             Dictionary<string, int> KillsBots = new Dictionary<string, int>();
             Dictionary<string, int> AssistsBots = new Dictionary<string, int>();
             Dictionary<string, int> DeathsBots = new Dictionary<string, int>();
@@ -469,7 +469,19 @@ namespace Liaison_BD___CSGO
                     Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
                 }
 
-                SetVictoryBets(CurrentMatchId, (int)(CurrentTeam1Score > CurrentTeam2Score ? teams.Rows[0]["IdTeam"] : teams.Rows[1]["IdTeam"]));
+                int winner, loser;
+                if (CurrentTeam1Score > CurrentTeam2Score)
+                {
+                    winner = (int)teams.Rows[0]["IdTeam"];
+                    loser = (int)teams.Rows[1]["IdTeam"];
+                }
+                else
+                {
+                    winner = (int)teams.Rows[1]["IdTeam"];
+                    loser = (int)teams.Rows[0]["IdTeam"];
+                }
+
+                SetVictoryBets(CurrentMatchId, winner, loser);
                 StopMatch();
             }
             else if (e.ProgressPercentage == (int)MatchEvent.ROUND_ENDED)
@@ -688,8 +700,8 @@ namespace Liaison_BD___CSGO
                     Round++;
                     ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
                 }
-                
 
+                Thread.Sleep(2000);
                 if (Round == 11 || CurrentTeam1Score == 6 || CurrentTeam2Score == 6)
                 {
                     if (Round == 11 && CurrentTeam1Score < 6 && CurrentTeam2Score < 6)
@@ -716,66 +728,53 @@ namespace Liaison_BD___CSGO
         /// </summary>
         /// <param name="currentMatchId">Match ID</param>
         /// <param name="VictoryTeam">Winner's team ID</param>
-        private static void SetVictoryBets(int currentMatchId, int WinnerID)
+        private static void SetVictoryBets(int currentMatchId, int WinnerId, int LoserId)
         {
-            int xpWin = 100; // Amount of xp a user gain when winning bet.
-            int xpLvl = 1500;
+            int xpWin = 100;
             DataTable bets = new DataTable();
-            DataTable users = new DataTable();
 
             Monitor.Enter(BD);
             try
             {
-                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId));
-                users = BD.Select("user", "", new List<MySqlParameter>(), "Username", "Credit", "EXP", "LVL");
+                BD.Procedure("SetVictoire", new MySqlParameter(":IdMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId));
+                BD.Procedure("AddWinTeam", new MySqlParameter(":IdTeam", WinnerId)); 
+                BD.Procedure("AddLoseTeam", new MySqlParameter(":IdTeam", LoserId));
 
-                BD.Procedure("SetVictoire", new MySqlParameter("PidMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerID));
+                bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId));
             }
             finally
             {
                 Monitor.Exit(BD);
             }
 
-            var totalBets = getTotalBets(ref bets, WinnerID);
-
             if (bets != null && bets.Rows.Count > 0)
             {
+                Dictionary<string, int> totalBets = getTotalBets(ref bets, WinnerId);
+
                 decimal remains = 0;
                 foreach (DataRow bet in bets.Rows)
                 {
                     try
                     {
-                        if ((int)bet["Team_IdTeam"] == WinnerID)
+                        if ((int)bet["Team_IdTeam"] == WinnerId)
                         {
                             List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]);
                             remains += gains[1];
 
-                            int toAdd = (int)bet["Team_IdTeam"] == WinnerID ? (int)gains[0] : 0;
-
-                            DataRow[] user = users.Select("Username = '" + bet["User_Username"].ToString() + "'");
-                            int userCredit = user != null && user.Length > 0 ? (int)user[0]["Credit"] : -1;
-
-                            if (userCredit != -1)
+                            Monitor.Enter(BD);
+                            try
                             {
-                                int xp = (int)user[0]["EXP"] + xpWin;
-                                int lvl = (int)user[0]["LVL"];
-                                if (xp >= xpLvl)
-                                {
-                                    xp -= xpLvl;
-                                    lvl += 1;
-                                }
-                                Monitor.Enter(BD);
-                                try
-                                {
-                                    BD.Procedure("AddEXP", new MySqlParameter("Pusername", bet["User_Username"]), new MySqlParameter("Pexp", xp), new MySqlParameter("Plevel", lvl));
-                                    BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", userCredit + toAdd));
-                                }
-                                finally
-                                {
-                                    Monitor.Exit(BD);
-                                }
+                                BD.Procedure("AddFunds", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Argent", (int)gains[0]));
+                                BD.Procedure("AddWinUser", new MySqlParameter(":Username", bet["User_Username"]));
+                                BD.Procedure("AddEXP", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Pexp", xpWin));
+                            }
+                            finally
+                            {
+                                Monitor.Exit(BD);
                             }
                         }
+                        else
+                            BD.Procedure("AddLoseUser", new MySqlParameter(":Username", bet["User_Username"]));
                     }
                     catch (Exception e)
                     {
@@ -797,19 +796,19 @@ namespace Liaison_BD___CSGO
                     winnerTotal += (int)row["Mise"];
                 else
                     loserTotal += (int)row["Mise"];
+
+                total += (int)row["Mise"];
             }
 
-            total = loserTotal;
             loserTotal = (int)Math.Floor(decimal.Multiply(reduction, loserTotal));
-            winnerTotal = (int)Math.Floor(decimal.Multiply(reduction, winnerTotal));
-            int admin = total - loserTotal;
+            int admin = total - loserTotal - winnerTotal;
 
-            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", total } };
+            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", admin } };
         }
 
-        private static List<decimal> getGain(int bet, int total, int losers)
+        private static List<decimal> getGain(int bet, int total_win, int total_loss)
         {
-            decimal totalGain = decimal.Multiply(decimal.Divide(bet, total), losers);
+            decimal totalGain = decimal.Multiply(decimal.Divide(bet, total_win), total_loss);
             decimal roundedDown = Math.Floor(totalGain);
             return new List<decimal>() { roundedDown, totalGain - roundedDown };
         }
@@ -819,7 +818,7 @@ namespace Liaison_BD___CSGO
             Monitor.Enter(BD);
             try
             {
-                BD.Procedure("AddFunds", new MySqlParameter("UserNames", "admin"), new MySqlParameter("Argent", amount));
+                BD.Procedure("AddFunds", new MySqlParameter(":Username", "admin"), new MySqlParameter(":Argent", amount));
             }
             catch (Exception e)
             {
@@ -830,26 +829,5 @@ namespace Liaison_BD___CSGO
                 Monitor.Exit(BD);
             }
         }
-
-        /*public static double GetTimeOffset(string time)
-        {
-            DateTime bdTime = DateTime.Now;
-            Monitor.Enter(BD);
-            try
-            {
-                bdTime = BD.GetBDTime();
-                DateTime clientTime = DateTime.Now;
-                double offset = (clientTime - bdTime).TotalMinutes / 60;
-                return (double)(Math.Round(2 * (offset))) / 2;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-            finally
-            {
-                Monitor.Exit(BD);
-            }
-        }*/
     }
 }
