@@ -21,54 +21,54 @@ namespace Gobot.Controllers
 
         public ActionResult Contact()
         {
-            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
-                return RedirectToAction("Index", "Home");
-            else
-                return View();
+            return RedirectToAction("Index", "Home");
+            //if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+            //    return RedirectToAction("Index", "Home");
+            //else
+            //    return View();
         }
 
         public ActionResult SendEmail()
         {
-            string name = string.Format("{0}", Request.Form["name"]);
-            string msg = string.Format("{0}", Request.Form["msg"]);
-            if ((User)Session["User"] != null && ((User)Session["User"]).Username != "")
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return RedirectToAction("Index", "Home");
+
+            string name = Request.Form["name"];
+            string msg = Request.Form["msg"];
+
+            if (name == null || name == "")
             {
-                if (name == null || name == "")
+                TempData["error"] = "Le nom ne peut pas vide.";
+            }
+            else if (msg != null && msg.Length > 15)
+            {
+                try
                 {
-                    TempData["error"] = "Le nom ne peut pas vide.";
+                    SmtpClient smtpClient = new SmtpClient();
+                    NetworkCredential basicCredential = new NetworkCredential("go.bots@outlook.com", "Yolo1234Sw4g1234");
+                    MailMessage message = new MailMessage();
+
+                    smtpClient.Host = "smtp-mail.outlook.com";
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = basicCredential;
+                    smtpClient.EnableSsl = true;
+
+                    message.From = new MailAddress("go.bots@outlook.com");
+                    message.Subject = "Besoin d'assistance! - " + name + "(" + ((User)Session["User"]).Username + ")";
+                    message.IsBodyHtml = true;
+                    message.Body = "Name: " + name + "<br/>Username: " + ((User)Session["User"]).Username + "<br/>Email: " + ((User)Session["User"]).Email + "<br/><br/>" + msg;
+                    message.To.Add("go.bots@outlook.com");
+                    smtpClient.Send(message);
+
+                    TempData["success"] = "Votre courriel à été envoyé avec succès. Notre équipe vous rejoindra sous peu.";
                 }
-                else if (msg != null && msg != "" && msg.Length > 15)
+                catch (Exception)
                 {
-                    try
-                    {
-                        SmtpClient smtpClient = new SmtpClient();
-                        NetworkCredential basicCredential = new NetworkCredential("go.bots@outlook.com", "Yolo1234Sw4g1234");
-                        MailMessage message = new MailMessage();
-
-                        smtpClient.Host = "smtp-mail.outlook.com";
-                        smtpClient.UseDefaultCredentials = false;
-                        smtpClient.Credentials = basicCredential;
-                        smtpClient.EnableSsl = true;
-
-                        message.From = new MailAddress("go.bots@outlook.com");
-                        message.Subject = "Besoin d'assistance! - " + name + "(" + ((User)Session["User"]).Username + ")";
-                        message.IsBodyHtml = true;
-                        message.Body = "Name: " + name + "<br/>Username: " + ((User)Session["User"]).Username + "<br/>Email: " + ((User)Session["User"]).Email + "<br/><br/>" + msg;
-                        message.To.Add("go.bots@outlook.com");
-                        smtpClient.Send(message);
-
-                        TempData["success"] = "Votre courriel à été envoyé avec succès. Notre équipe vous rejoindra sous peu.";
-                    }
-                    catch (Exception)
-                    {
-                        TempData["error"] = "Une erreur est survenue lors de l'envoi du courriel.";
-                    }
+                    TempData["error"] = "Une erreur est survenue lors de l'envoi du courriel.";
                 }
-                else
-                    TempData["error"] = "Le message doit contenir au moins 15 caractères.";
             }
             else
-                RedirectToAction("Index", "Home");
+                TempData["error"] = "Le message doit contenir au moins 15 caractères.";
 
             return RedirectToAction("Contact", "Support");
         }

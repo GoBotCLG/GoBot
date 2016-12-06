@@ -16,7 +16,7 @@ namespace Gobot.Controllers
     {
         public ActionResult Index(string Username)
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             MySQLWrapper Bd = new MySQLWrapper();
@@ -206,16 +206,30 @@ namespace Gobot.Controllers
 
         private string getImagePathFromDb(string user)
         {
-            DataTable userImg = new MySQLWrapper().Select("user", "Username = ?", new List<MySqlParameter>() { new MySqlParameter("", user) }, "Image");
-            return userImg == null || userImg.Rows.Count == 0 ? null : userImg.Rows[0]["Image"].ToString();
+            try
+            {
+                DataTable userImg = new MySQLWrapper().Select("user", "Username = ?", new List<MySqlParameter>() { new MySqlParameter("", user) }, "Image");
+                return userImg == null || userImg.Rows.Count == 0 ? null : userImg.Rows[0]["Image"].ToString();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private int setImagePathToDb(string user, string fileName)
         {
-            return new MySQLWrapper().Update("user",
-                        new List<string>() { "Image" },
-                        new List<MySqlParameter>() { new MySqlParameter(":Image", fileName) },
-                        "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", user) });
+            try
+            {
+                return new MySQLWrapper().Update("user",
+                            new List<string>() { "Image" },
+                            new List<MySqlParameter>() { new MySqlParameter(":Image", fileName) },
+                            "Username = ?", new List<MySqlParameter>() { new MySqlParameter(":Username", user) });
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         private string getFileName(string basePath, string ext)
@@ -281,9 +295,7 @@ namespace Gobot.Controllers
         public JsonResult UpdateAccountInfo()
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
-            {
                 return Json(0, JsonRequestBehavior.DenyGet);
-            }
 
             MySQLWrapper Bd = new MySQLWrapper();
             Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
@@ -391,21 +403,23 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
             List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
 
-            int DeleteResult = Bd.Delete("user", "Username = ?", user);
-            if (DeleteResult == 1)
+            DataTable delete = Bd.Procedure("deleteUser", new MySqlParameter(":Pusername", user));
+            try
             {
-                Logout();
-                return RedirectToAction("Index", "Home");
+                if (delete.Rows.Count == 0)
+                {
+                    Logout();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Account");
+                }
             }
-            else
+            catch (Exception)
             {
                 return RedirectToAction("Index", "Account");
             }
-        }
-
-        public ActionResult AddCredit()
-        {
-            return View();
         }
 
         public ActionResult Logout()

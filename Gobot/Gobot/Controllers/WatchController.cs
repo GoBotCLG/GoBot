@@ -11,13 +11,11 @@ namespace Gobot.Controllers
 {
     public class WatchController : Controller
     {
-        // GET: Watch
         public ActionResult Index()
         {
-            if (Session["User"] == null)
-            {
+            if (Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
-            }
+
             Match m = new MySQLWrapper().GetLiveMatch((double)Session["timeOffset"]);
 
             if (m != null)
@@ -28,8 +26,8 @@ namespace Gobot.Controllers
 
         public JsonResult IsCurrentDone()
         {
-            if (Session["User"] == null)
-                return Json("", JsonRequestBehavior.AllowGet);
+            if (Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json("", JsonRequestBehavior.DenyGet);
 
             if (Session["limitBetRefreshDate"] == null)
                 Session["limitBetRefreshDate"] = DateTime.Now;
@@ -193,7 +191,7 @@ namespace Gobot.Controllers
         public JsonResult SetWatched()
         {
             if (Session["User"] == null || ((User)Session["User"]).Username == "")
-                return Json("", JsonRequestBehavior.AllowGet);
+                return Json("", JsonRequestBehavior.DenyGet);
 
             try
             {

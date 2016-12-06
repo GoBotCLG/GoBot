@@ -13,10 +13,9 @@ namespace Gobot.Controllers
 {
     public class BetController : Controller
     {
-        // GET: Bet
         public ActionResult Index()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             try
@@ -102,9 +101,10 @@ namespace Gobot.Controllers
         
         public ActionResult Add(int MatchId, int TeamId, int Amount)
         {
-            if(Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
-            else
+            
+            try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
                 DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
@@ -114,26 +114,24 @@ namespace Gobot.Controllers
                 if (oldAmount > 0)
                 {
                     if (((User)Session["User"]).Credits + oldAmount < Amount)
-                    {
                         TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
-                        return RedirectToAction("Index", "Bet");
-                    }
                     else
                         editBetDb(MatchId, TeamId, oldAmount, Amount);
                 }
                 else
                 {
                     if (((User)Session["User"]).Credits < Amount)
-                    {
                         TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
-                        return RedirectToAction("Index", "Bet");
-                    }
                     else
                         addBetDb(MatchId, TeamId, Amount);
                 }
-
-                return RedirectToAction("Index", "Bet");
             }
+            catch (Exception)
+            {
+                TempData["error"] = "Une erreur s'est produite lors du placement ou de la modification du pari.";
+            }
+
+            return RedirectToAction("Index", "Bet");
         }
         
         private int betExists(int MatchId, int TeamId)
@@ -178,6 +176,7 @@ namespace Gobot.Controllers
                         if (updateresult == 1)
                         {
                             Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                            TempData["success"] = "Votre pari à été modifié.";
                         }
                         else
                         {
@@ -230,6 +229,7 @@ namespace Gobot.Controllers
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                        TempData["success"] = "Votre pari à été enregistré.";
                     }
                     else
                     {
@@ -239,12 +239,13 @@ namespace Gobot.Controllers
                             new MySqlParameter(":MatchId", MatchId)
                         };
                         Bd.Delete("bet", "User_Username = ? and Team_IdTeam = ? and Match_IdMatch = ?", conditions);
-                        throw new Exception("Un joueur a fait un pari mais la somme n'a pas été déduie de son compte. La mise n'a pas été enregistrée.");
+
+                        throw new Exception();
                     }
                 }
                 else
                 {
-                    throw new Exception("Une erreur est survenue lors du placement du pari. Veuillez réessayer.");
+                    throw new Exception();
                 }
             }
             catch (Exception)
@@ -255,69 +256,64 @@ namespace Gobot.Controllers
 
         public ActionResult Remove(int tId, int mId)
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return RedirectToAction("Index", "Home");
+
             try
             {
-                if ((User)Session["User"] == null)
-                    return RedirectToAction("Index", "Home");
-                else
-                {
-                    MySQLWrapper Bd = new MySQLWrapper();
-                    Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                MySQLWrapper Bd = new MySQLWrapper();
+                Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
 
-                    List<MySqlParameter> Bet = new List<MySqlParameter>() {
+                List<MySqlParameter> Bet = new List<MySqlParameter>() {
+                    new MySqlParameter(":TeamId", tId),
+                    new MySqlParameter(":MatchId", mId),
+                    new MySqlParameter(":Username", ((User)Session["User"]).Username)
+                };
+
+                DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
+                if (resultBet.Rows.Count > 0)
+                {
+                    int Amount = (int)resultBet.Rows[0]["Mise"];
+                    if ((int)resultBet.Rows[0]["Profit"] != 0)
+                        throw new Exception("Une erreur est survenue lors de la supression du pari.");
+
+                    Bet = new List<MySqlParameter>() {
                         new MySqlParameter(":TeamId", tId),
                         new MySqlParameter(":MatchId", mId),
                         new MySqlParameter(":Username", ((User)Session["User"]).Username)
                     };
 
-                    DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
-                    if (resultBet.Rows.Count > 0)
+                    int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
+                    if (result > 0)
                     {
-                        int Amount = (int)resultBet.Rows[0]["Mise"];
-                        if ((int)resultBet.Rows[0]["Profit"] != 0)
-                            throw new Exception("Une erreur est survenue lors de la supression du pari.");
-
-                        Bet = new List<MySqlParameter>() {
-                            new MySqlParameter(":TeamId", tId),
-                            new MySqlParameter(":MatchId", mId),
-                            new MySqlParameter(":Username", ((User)Session["User"]).Username)
-                        };
-
-                        int result = Bd.Delete("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet);
-                        if (result > 0)
+                        int xp = ((User)Session["User"]).EXP - Models.Bet.xpBet;
+                        int lvl = ((User)Session["User"]).Level;
+                        if (xp < 0)
                         {
-                            int xp = ((User)Session["User"]).EXP - Models.Bet.xpBet;
-                            int lvl = ((User)Session["User"]).Level;
-                            if (xp < 0)
-                            {
-                                xp += Models.User.xpLvl;
-                                lvl -= 1;
-                            }
-                            List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
-                            List<MySqlParameter> values = new List<MySqlParameter>() { new MySqlParameter(":Credit", ((User)Session["User"]).Credits + Amount), new MySqlParameter(":EXP", xp), new MySqlParameter(":LVL", lvl) };
-                            List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
-                            int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
-                            if (updateresult == 1)
-                            {
-                                Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                            }
-                            else
-                            {
-                                List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
-
-                                List<MySqlParameter> parameters = new List<MySqlParameter>() {
-                                    new MySqlParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
-                                    new MySqlParameter(":Profit", 0),
-                                    new MySqlParameter(":Username", ((User)Session["User"]).Username),
-                                    new MySqlParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
-                                    new MySqlParameter(":Match", (int)resultBet.Rows[0]["Match_IdMatch"])
-                                };
-                                Bd.Insert("bet", col, parameters);
-                                throw new Exception("Une erreur est survenue lors de la supression du pari.");
-                            }
+                            xp += Models.User.xpLvl;
+                            lvl -= 1;
+                        }
+                        List<string> columns = new List<string>() { "Credit", "EXP", "LVL" };
+                        List<MySqlParameter> values = new List<MySqlParameter>() { new MySqlParameter(":Credit", ((User)Session["User"]).Credits + Amount), new MySqlParameter(":EXP", xp), new MySqlParameter(":LVL", lvl) };
+                        List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
+                        int updateresult = Bd.Update("user", columns, values, "Username = ?", user);
+                        if (updateresult == 1)
+                        {
+                            Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                            TempData["success"] = "Votre pari à été supprimé.";
                         }
                         else
                         {
+                            List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
+
+                            List<MySqlParameter> parameters = new List<MySqlParameter>() {
+                                new MySqlParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
+                                new MySqlParameter(":Profit", 0),
+                                new MySqlParameter(":Username", ((User)Session["User"]).Username),
+                                new MySqlParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
+                                new MySqlParameter(":Match", (int)resultBet.Rows[0]["Match_IdMatch"])
+                            };
+                            Bd.Insert("bet", col, parameters);
                             throw new Exception("Une erreur est survenue lors de la supression du pari.");
                         }
                     }
@@ -326,17 +322,22 @@ namespace Gobot.Controllers
                         throw new Exception("Une erreur est survenue lors de la supression du pari.");
                     }
                 }
+                else
+                {
+                    throw new Exception("Une erreur est survenue lors de la supression du pari.");
+                }
             }
             catch (Exception ex)
             {
-                ViewBag.Error = ex.Message;
+                TempData["error"] = ex.Message;
             }
+
             return RedirectToAction("Index", "Bet");
         }
        
         public ActionResult Ad()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             return View();
@@ -344,36 +345,34 @@ namespace Gobot.Controllers
 
         public JsonResult GetBetUsers(int TeamId, int MatchId)
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
 
-            DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new MySqlParameter(":IdTeam", TeamId), new MySqlParameter(":IdMatch", MatchId));
-            
-            if (users != null && users.Rows.Count > 0)
+            try
             {
-                List<object> usersString = new List<object>();
-                foreach (DataRow row in users.Rows)
-                    usersString.Add(new { username = row["User_Username"], img = row["Image"] });
+                DataTable users = new MySQLWrapper().Procedure("GetUserFromTeamBet", new MySqlParameter(":IdTeam", TeamId), new MySqlParameter(":IdMatch", MatchId));
 
-                object users_obj = new { users = usersString.ToArray() };
-                return Json(users_obj, JsonRequestBehavior.AllowGet);
+                if (users != null && users.Rows.Count > 0)
+                {
+                    List<object> usersString = new List<object>();
+                    foreach (DataRow row in users.Rows)
+                        usersString.Add(new { username = row["User_Username"], img = row["Image"] });
+
+                    object users_obj = new { users = usersString.ToArray() };
+                    return Json(users_obj, JsonRequestBehavior.AllowGet);
+                }
+                else
+                    return Json(new { users = new string[] { } }, JsonRequestBehavior.AllowGet);
             }
-            else
-                return Json(new { users = new string[] { } }, JsonRequestBehavior.AllowGet);
+            catch (Exception)
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
         }
-
-        public ActionResult GetBetUser(string Username)
-        {
-            if ((User)Session["User"] == null)
-                return RedirectToAction("Index", "Bet");
-
-            string username = Request.Form["Username"];
-            return RedirectToAction("Index", "Account", new { Username = username });
-        }
-
+        
         public ActionResult GetNextDay(int lastMatchId, bool past = false)
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
 
             try
@@ -482,7 +481,7 @@ namespace Gobot.Controllers
                     return Json(json, JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Il n'y a plus de parties à venir");
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Il n'y a plus de parties à venir.");
             }
             catch (Exception)
             {
@@ -492,22 +491,21 @@ namespace Gobot.Controllers
 
         public JsonResult WatchedAd()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
-            else
+
+            try
             {
-                try
-                {
-                    MySQLWrapper bd = new MySQLWrapper();
-                    User user = bd.GetUserFromDB(((User)Session["User"]).Username);
-                    DataTable update = new MySQLWrapper().Procedure("AddFunds", new MySqlParameter(":Username", user.Username), new MySqlParameter(":Credits", user.Credits + 50));
-                    TempData["success"] = "Votre compte a ete credite 50 credits.";
-                }
-                catch (Exception)
-                {
-                    TempData["error"] = "Une erreur est survenue lors de l'attribution de vos credits.";
-                }
+                MySQLWrapper bd = new MySQLWrapper();
+                User user = bd.GetUserFromDB(((User)Session["User"]).Username);
+                DataTable update = new MySQLWrapper().Procedure("AddFunds", new MySqlParameter(":Username", user.Username), new MySqlParameter(":Credits", 50));
+                TempData["success"] = "Votre compte à été crédité 50 crédits.";
             }
+            catch (Exception)
+            {
+                TempData["error"] = "Une erreur est survenue lors de l'attribution de vos crédits.";
+            }
+
             return Json("", JsonRequestBehavior.AllowGet);
         }
     }
