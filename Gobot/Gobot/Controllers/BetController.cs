@@ -176,6 +176,7 @@ namespace Gobot.Controllers
                         if (updateresult == 1)
                         {
                             Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                            TempData["success"] = "Votre pari à été modifié.";
                         }
                         else
                         {
@@ -228,6 +229,7 @@ namespace Gobot.Controllers
                     if (updateresult == 1)
                     {
                         Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                        TempData["success"] = "Votre pari à été enregistré.";
                     }
                     else
                     {
@@ -298,6 +300,7 @@ namespace Gobot.Controllers
                         if (updateresult == 1)
                         {
                             Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                            TempData["success"] = "Votre pari à été supprimé.";
                         }
                         else
                         {
