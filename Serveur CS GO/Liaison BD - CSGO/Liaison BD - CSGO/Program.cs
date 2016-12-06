@@ -27,6 +27,7 @@ namespace Liaison_BD___CSGO
         public static int CurrentTeam1Score;
         public static int CurrentTeam2Score;
         public static MySQLWrapper BD;
+        public static StreamWriter Journal;
 
         private static string NextMap;
         private static bool Team1CTNextMatch;
@@ -43,6 +44,8 @@ namespace Liaison_BD___CSGO
             work.WorkerReportsProgress = true;
 
             BD = new MySQLWrapper();
+
+            Journal = new StreamWriter("C:\\Users\\max_l\\Documents\\JOURNAL.txt");
 
             InitializeServer();
 
@@ -72,7 +75,7 @@ namespace Liaison_BD___CSGO
             Serveur.Start();
             Thread.Sleep(20000);
             ConnectionServeur = new SourceRcon.SourceRcon();
-            while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
+            while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[1], 27016), "GoBot")) ;
             ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));
 
             ConnectionServeur.ServerCommand("sv_lan 1");
@@ -111,6 +114,10 @@ namespace Liaison_BD___CSGO
                 Monitor.Exit(BD);
             }
 
+            Journal.WriteLine("Préparation du match #" + CurrentMatch.Rows[0]["IdMatch"].ToString() + " ---------------------------------");
+            Journal.WriteLine("Team 1: " + CurrentMatch.Rows[0]["Team_IdTeam1"].ToString());
+            Journal.WriteLine("Team 2: " + CurrentMatch.Rows[0]["Team_IdTeam2"].ToString());
+
             NextMap = CurrentMatch.Rows[0]["Map"].ToString();
 
             RNGCryptoServiceProvider random = new RNGCryptoServiceProvider();
@@ -131,15 +138,37 @@ namespace Liaison_BD___CSGO
             {
                 if (TeamCT == 0)
                 {
+                    Journal.WriteLine("La team 1 commence en tant que CT");
                     Team1CTNextMatch = true;
                     BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam1"])));
                     BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", ((int)CurrentMatch.Rows[0]["Team_IdTeam2"])));
+                    Journal.WriteLine("Bots pour la team 1 (CT):");
+                    foreach (DataRow bot in BotsCT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
+                    Journal.WriteLine("Bots pour la team 2 (T):");
+                    foreach (DataRow bot in BotsT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
                 }
                 else
                 {
+                    Journal.WriteLine("La team 2 commence en tant que CT");
                     Team1CTNextMatch = false;
                     BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
                     BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
+                    Journal.WriteLine("Bots pour la team 2 (CT):");
+                    foreach (DataRow bot in BotsCT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
+                    Journal.WriteLine("Bots pour la team 1 (T):");
+                    foreach (DataRow bot in BotsT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
                 }
             }
             finally
@@ -201,6 +230,7 @@ namespace Liaison_BD___CSGO
             OutFile.Write("mp_restartgame 1; mp_defuser_allocation 1; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
+            Journal.WriteLine("Fin de la préparation du match #" + CurrentMatch.Rows[0]["IdMatch"].ToString() + " ---------------------------------");
         }
 
         private static void PrepareNextMatch()
@@ -215,6 +245,10 @@ namespace Liaison_BD___CSGO
             {
                 Monitor.Exit(BD);
             }
+
+            Journal.WriteLine("Préparation du match #" + NextMatch.Rows[0]["IdMatch"].ToString() + " ---------------------------------");
+            Journal.WriteLine("Team 1: " + NextMatch.Rows[0]["Team_IdTeam1"].ToString());
+            Journal.WriteLine("Team 2: " + NextMatch.Rows[0]["Team_IdTeam2"].ToString());
 
             NextMap = NextMatch.Rows[0]["Map"].ToString();
 
@@ -236,15 +270,37 @@ namespace Liaison_BD___CSGO
             {
                 if (TeamCT == 0)
                 {
+                    Journal.WriteLine("La team 1 commence en tant que CT");
                     Team1CTNextMatch = true;
                     BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam1"])));
                     BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", ((int)NextMatch.Rows[0]["Team_IdTeam2"])));
+                    Journal.WriteLine("Bots pour la team 1 (CT):");
+                    foreach (DataRow bot in BotsCT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
+                    Journal.WriteLine("Bots pour la team 2 (T):");
+                    foreach (DataRow bot in BotsT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
                 }
                 else
                 {
+                    Journal.WriteLine("La team 2 commence en tant que CT");
                     Team1CTNextMatch = false;
                     BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)NextMatch.Rows[0]["Team_IdTeam1"]));
                     BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)NextMatch.Rows[0]["Team_IdTeam2"]));
+                    Journal.WriteLine("Bots pour la team 1 (CT):");
+                    foreach (DataRow bot in BotsCT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
+                    Journal.WriteLine("Bots pour la team 2 (T):");
+                    foreach (DataRow bot in BotsT.Rows)
+                    {
+                        Journal.WriteLine(bot["NomBot"].ToString());
+                    }
                 }
             }
             finally
@@ -303,6 +359,7 @@ namespace Liaison_BD___CSGO
             OutFile.Write("mp_restartgame 1; mp_defuser_allocation 1; mp_warmup_end; log on;");
             OutFile.Flush();
             OutFile.Close();
+            Journal.WriteLine("Fin de la préparation du match #" + NextMatch.Rows[0]["IdMatch"].ToString() + " ---------------------------------");
         }
 
         private static void StopMatch()
