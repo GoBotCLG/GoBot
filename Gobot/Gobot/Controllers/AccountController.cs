@@ -92,10 +92,6 @@ namespace Gobot.Controllers
             {
                 TempData["error"] = "Le mot de passes saisi est invalide. Le mot de passe doit comporter un minimum de 6 caractères et un maximum de 45 caractères.";
             }
-            else if (!confirmPassword.All(c => Char.IsLetterOrDigit(c) || c == '_'))
-            {
-                TempData["error"] = "Le mot de passe saisi est invalide. Il ne peut comporter que des lettres, des chiffres et des barres de soulignement (_).";
-            }
             else
             {
                 try
@@ -348,15 +344,6 @@ namespace Gobot.Controllers
                 if (!user.Username.All(Char.IsLetterOrDigit))
                 {
                     TempData["error"] = "Le nom d'utilisateur saisi est invalide. Il ne peut comporter que des lettres et des chiffres.";
-                    Erreur = true;
-                }
-            }
-
-            if (!Erreur)
-            {
-                if (!user.Username.All(c => Char.IsLetterOrDigit(c) || c == '_'))
-                {
-                    TempData["error"] = "Le mot de passe saisi est invalide. Il ne peut comporter que des lettres, des chiffres et des barres de soulignement (_).";
                     Erreur = true;
                 }
             }
