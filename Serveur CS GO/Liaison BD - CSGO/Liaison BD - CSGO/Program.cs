@@ -46,6 +46,7 @@ namespace Liaison_BD___CSGO
             BD = new MySQLWrapper();
 
             Journal = new StreamWriter("C:\\Users\\max_l\\Documents\\JOURNAL.txt");
+            Journal.AutoFlush = true;
 
             InitializeServer();
 
@@ -69,13 +70,13 @@ namespace Liaison_BD___CSGO
         private static void InitializeServer()
         {
             Serveur = new Process();
-            Serveur.StartInfo.FileName = "C:\\SteamCMD\\csgoserver\\srcds.exe";
+            Serveur.StartInfo.FileName = "C:\\Users\\max_l\\Documents\\steamcmd\\csgoserver\\srcds.exe";
             Serveur.StartInfo.Arguments = "-game csgo -console -usercon +maxplayers_override 11 +rcon_password GoBot +tv_enable 1 +tv_advertise_watchable 1 +tv_deltacache 2 +tv_title GoBot +sv_hibernate_when_empty 0 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +sv_cheats 1 +mp_defuser_allocation 1 +bot_join_after_player 1 +mp_autoteambalance 0 +mp_limitteams 30";
             Serveur.StartInfo.ErrorDialog = true;
             Serveur.Start();
             Thread.Sleep(20000);
             ConnectionServeur = new SourceRcon.SourceRcon();
-            while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[1], 27016), "GoBot")) ;
+            while (!ConnectionServeur.Connect(new IPEndPoint(Dns.GetHostAddresses(Dns.GetHostName())[2], 27016), "GoBot")) ;
             ConnectionServeur.ServerOutput += new StringOutput(x => Console.WriteLine(x));
 
             ConnectionServeur.ServerCommand("sv_lan 1");
@@ -364,6 +365,7 @@ namespace Liaison_BD___CSGO
 
         private static void StopMatch()
         {
+            Journal.WriteLine("Fin du match #" + CurrentMatchId + " ----------------------------------------------------------------------------");
             IntPtr window = Serveur.MainWindowHandle;
             SetForegroundWindow(window);
             ConnectionServeur.ServerCommand("log off");
@@ -431,6 +433,7 @@ namespace Liaison_BD___CSGO
             {
                 foreach (KeyValuePair<string, int> bot in IdBots)
                 {
+                    Journal.WriteLine(bot.Key + " <KDA>: " + KillsBots[bot.Key].ToString() + "/" + DeathsBots[bot.Key].ToString() + "/" + AssistsBots[bot.Key].ToString());
                     BD.Procedure("SetKDA", new MySqlParameter("PKDA", KillsBots[bot.Key].ToString() + "/" + DeathsBots[bot.Key].ToString() + "/" + AssistsBots[bot.Key].ToString()), new MySqlParameter("PidBot", bot.Value));
                 }
             }
@@ -448,10 +451,12 @@ namespace Liaison_BD___CSGO
         private static void NewEvent(object sender, ProgressChangedEventArgs e)
         {
             DataTable teams = new DataTable();
+            DataTable match = new DataTable();
             Monitor.Enter(BD);
             try
             {
                 teams = BD.Procedure("TeamFromMatch", new MySqlParameter("PIdMatch", CurrentMatchId));
+                match = BD.Procedure("IsMatchCurrent");
             }
             finally
             {
@@ -459,26 +464,57 @@ namespace Liaison_BD___CSGO
             }
             if (e.ProgressPercentage == (int)MatchEvent.MATCH_ENDED)
             {
-                if (CurrentTeam1Score > CurrentTeam2Score)
+                if ((int)teams.Rows[0]["IdTeam"] == (int)match.Rows[0]["Team_IdTeam1"])
                 {
-                    ConnectionServeur.ServerCommand("tv_msg \"" + teams.Rows[0]["Name"] + " won \"");
-                    Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[0]["Name"] + " avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                    if (CurrentTeam1Score > CurrentTeam2Score)
+                    {
+                        ConnectionServeur.ServerCommand("tv_msg \"" + teams.Rows[0]["Name"] + " won \"");
+                        Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[0]["Name"] + " avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
+                    if (CurrentTeam1Score > CurrentTeam2Score)
+                    {
+                        ConnectionServeur.ServerCommand("tv_msg \"" + teams.Rows[0]["Name"] + " won \"");
+                        Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[1]["Name"] + " avec un score de " + CurrentTeam1Score + "-" + CurrentTeam2Score);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Le match #" + CurrentMatchId + " opposant " + teams.Rows[0]["Name"] + " contre " + teams.Rows[1]["Name"] + " est terminé. Le gagnant est " + teams.Rows[0]["Name"] + " avec un score de " + CurrentTeam2Score + "-" + CurrentTeam1Score);
+                    }
                 }
 
                 int winner, loser;
-                if (CurrentTeam1Score > CurrentTeam2Score)
+                if((int)teams.Rows[0]["IdTeam"] == (int)match.Rows[0]["Team_IdTeam1"])
                 {
-                    winner = (int)teams.Rows[0]["IdTeam"];
-                    loser = (int)teams.Rows[1]["IdTeam"];
+                    if (CurrentTeam1Score > CurrentTeam2Score)
+                    {
+                        winner = (int)teams.Rows[0]["IdTeam"];
+                        loser = (int)teams.Rows[1]["IdTeam"];
+                    }
+                    else
+                    {
+                        winner = (int)teams.Rows[1]["IdTeam"];
+                        loser = (int)teams.Rows[0]["IdTeam"];
+                    }
                 }
                 else
                 {
-                    winner = (int)teams.Rows[1]["IdTeam"];
-                    loser = (int)teams.Rows[0]["IdTeam"];
+                    if (CurrentTeam1Score > CurrentTeam2Score)
+                    {
+                        winner = (int)teams.Rows[1]["IdTeam"];
+                        loser = (int)teams.Rows[0]["IdTeam"];
+                    }
+                    else
+                    {
+                        winner = (int)teams.Rows[0]["IdTeam"];
+                        loser = (int)teams.Rows[1]["IdTeam"];
+                    }
                 }
 
                 SetVictoryBets(CurrentMatchId, winner, loser);
@@ -490,6 +526,7 @@ namespace Liaison_BD___CSGO
                 UploadScores();
                 if (CurrentRoundNumber >= 12)
                 {
+                    Journal.WriteLine("############################################################## Fin du knife round");
                     ConnectionServeur.ServerCommand("mp_give_player_c4 1");
                     ConnectionServeur.ServerCommand("bot_all_weapons");
                 }
@@ -511,6 +548,7 @@ namespace Liaison_BD___CSGO
             }
             else if (e.ProgressPercentage == (int)MatchEvent.START_KNIFE_ROUND)
             {
+                Journal.WriteLine("############################################################## Début du knife round");
                 Console.WriteLine("Un knife round est lancé pour déterminer l'équipe gagnante!");
                 ConnectionServeur.ServerCommand("mp_give_player_c4 0");
                 ConnectionServeur.ServerCommand("bot_knives_only");
@@ -519,6 +557,7 @@ namespace Liaison_BD___CSGO
 
         private static void UploadScores()
         {
+            Journal.WriteLine("Fin du round #" + (CurrentRoundNumber - 1) + " et enregistrement des scores ----------------------------------");
             StreamReader InRound = new StreamReader(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
 
             int TotalCT = 0;
@@ -532,16 +571,16 @@ namespace Liaison_BD___CSGO
                     if (ligne.Contains("FirstHalfScore"))
                     {
                         InRound.ReadLine();                             //{
-                        ligne = InRound.ReadLine();                     //  "team1"     "2"
-                        TotalCT = int.Parse(ligne.Split('"')[3]);
-                        ligne = InRound.ReadLine();                     //  "team2"     "3"
+                        ligne = InRound.ReadLine(); Journal.WriteLine("First half CT: " + int.Parse(ligne.Split('"')[3]));     //  "team1"     "2"
+                        TotalCT = int.Parse(ligne.Split('"')[3]); 
+                        ligne = InRound.ReadLine(); Journal.WriteLine("First half  T: " + int.Parse(ligne.Split('"')[3]));     //  "team2"     "3"
                         TotalT = int.Parse(ligne.Split('"')[3]);
                         InRound.ReadLine();                             //}
                         InRound.ReadLine();                             //SecondHalfScore
                         InRound.ReadLine();                             //{
-                        ligne = InRound.ReadLine();                     //  "team1"     "4"
+                        ligne = InRound.ReadLine(); Journal.WriteLine("Second half CT -> T: " + int.Parse(ligne.Split('"')[3]));//  "team1"     "4"
                         TotalCT += int.Parse(ligne.Split('"')[3]);
-                        ligne = InRound.ReadLine();                     //  "team2"     "1"
+                        ligne = InRound.ReadLine(); Journal.WriteLine("Second half T -> CT: " + int.Parse(ligne.Split('"')[3]));//  "team2"     "1"
                         TotalT += int.Parse(ligne.Split('"')[3]);
                         break;
                     }
@@ -551,9 +590,9 @@ namespace Liaison_BD___CSGO
                     if (ligne.Contains("FirstHalfScore"))
                     {
                         InRound.ReadLine();                             //{
-                        ligne = InRound.ReadLine();                     //  "team1"     "2"
+                        ligne = InRound.ReadLine(); Journal.WriteLine("First half CT: " + int.Parse(ligne.Split('"')[3]));       //  "team1"     "2"
                         TotalCT = int.Parse(ligne.Split('"')[3]);
-                        ligne = InRound.ReadLine();                     //  "team2"     "3"
+                        ligne = InRound.ReadLine(); Journal.WriteLine("First half  T: " + int.Parse(ligne.Split('"')[3]));       //  "team2"     "3"
                         TotalT = int.Parse(ligne.Split('"')[3]);
                         break;
                     }
@@ -567,15 +606,19 @@ namespace Liaison_BD___CSGO
                 {
                     BD.Procedure("SetRoundTeam1", new MySqlParameter("Pround", TotalCT), new MySqlParameter("PIdMatch", CurrentMatchId));
                     CurrentTeam1Score = TotalCT;
+                    Journal.WriteLine("Total Team 1: " + TotalCT);
                     BD.Procedure("SetRoundTeam2", new MySqlParameter("Pround", TotalT), new MySqlParameter("PIdMatch", CurrentMatchId));
                     CurrentTeam2Score = TotalT;
+                    Journal.WriteLine("Total Team 2: " + TotalT);
                 }
                 else
                 {
                     BD.Procedure("SetRoundTeam1", new MySqlParameter("Pround", TotalT), new MySqlParameter("PIdMatch", CurrentMatchId));
                     CurrentTeam1Score = TotalT;
+                    Journal.WriteLine("Total Team 1: " + TotalT);
                     BD.Procedure("SetRoundTeam2", new MySqlParameter("Pround", TotalCT), new MySqlParameter("PIdMatch", CurrentMatchId));
                     CurrentTeam2Score = TotalCT;
+                    Journal.WriteLine("Total Team 2: " + TotalCT);
                 }
             }
             finally
@@ -589,60 +632,6 @@ namespace Liaison_BD___CSGO
                 if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt"))
                     File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
             }
-        }
-
-        private static void EndKnifeRound()
-        {
-            StreamReader InRound = new StreamReader(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\backup_round" + (CurrentRoundNumber - 1).ToString("00") + ".txt");
-
-            int TotalCT = 5;
-            int TotalT = 5;
-
-            while (!InRound.EndOfStream)
-            {
-                string ligne = InRound.ReadLine();
-                if (ligne.Contains("FirstHalfScore"))
-                {
-                    InRound.ReadLine();                             //{
-                    ligne = InRound.ReadLine();                     //  "team1"     "2"
-                    TotalCT += int.Parse(ligne.Split('"')[3]);
-                    ligne = InRound.ReadLine();                     //  "team2"     "3"
-                    TotalT += int.Parse(ligne.Split('"')[3]);
-                }
-            }
-
-            Monitor.Enter(BD);
-            try
-            {
-                if (Team1CTCurrentMatch)
-                {
-                    BD.Procedure("SetRoundTeam1", new MySqlParameter("Pround", TotalCT), new MySqlParameter("PIdMatch", CurrentMatchId));
-                    CurrentTeam1Score = TotalCT;
-                    BD.Procedure("SetRoundTeam2", new MySqlParameter("Pround", TotalT), new MySqlParameter("PIdMatch", CurrentMatchId));
-                    CurrentTeam2Score = TotalT;
-                }
-                else
-                {
-                    BD.Procedure("SetRoundTeam1", new MySqlParameter("Pround", TotalT), new MySqlParameter("PIdMatch", CurrentMatchId));
-                    CurrentTeam1Score = TotalT;
-                    BD.Procedure("SetRoundTeam2", new MySqlParameter("Pround", TotalCT), new MySqlParameter("PIdMatch", CurrentMatchId));
-                    CurrentTeam2Score = TotalCT;
-                }
-            }
-            finally
-            {
-                Monitor.Exit(BD);
-            }
-
-            InRound.Close();
-            for (int i = 1; i <= 11; i++)
-            {
-                if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt"))
-                    File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
-            }
-
-            ConnectionServeur.ServerCommand("bot_all_weapons");
-
         }
 
         private static void StartMatch()
@@ -662,13 +651,12 @@ namespace Liaison_BD___CSGO
             {
                 Monitor.Exit(BD);
             }
+            Journal.WriteLine("------------------------- Début du match #" + CurrentMatchId + " ----------------------");
             CurrentRoundNumber = 1;
             CurrentTeam1Score = 0;
             CurrentTeam2Score = 0;
             ConnectionServeur.ServerCommand("tv_delay 10");
             ConnectionServeur.ServerCommand("exec gamestart");
-
-
         }
 
         private static void LookForEvents(object sender, DoWorkEventArgs e)
@@ -712,8 +700,6 @@ namespace Liaison_BD___CSGO
                             Thread.Sleep(1000);
                         }
                         ((BackgroundWorker)sender).ReportProgress((int)MatchEvent.ROUND_ENDED);
-                        ConnectionServeur.ServerCommand("bot_all_weapons");
-                        ConnectionServeur.ServerCommand("mp_give_player_c4 1");
                     }
                     Thread.Sleep(10000);
                     Round = 0;
@@ -730,15 +716,19 @@ namespace Liaison_BD___CSGO
         /// <param name="VictoryTeam">Winner's team ID</param>
         private static void SetVictoryBets(int currentMatchId, int WinnerId, int LoserId)
         {
+            Journal.WriteLine("//////////////// Attribution des profits pour ceux qui ont parié pour l'équipe " + WinnerId + " contre ceux qui ont parié pour l'équipe " + LoserId + " pour le match #" + currentMatchId + "//////////////////////");
             int xpWin = 100;
             DataTable bets = new DataTable();
 
             Monitor.Enter(BD);
             try
             {
-                BD.Procedure("SetVictoire", new MySqlParameter(":IdMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId));
-                BD.Procedure("AddWinTeam", new MySqlParameter(":IdTeam", WinnerId)); 
-                BD.Procedure("AddLoseTeam", new MySqlParameter(":IdTeam", LoserId));
+                Journal.WriteLine("// Officialisation de la victoire dans la table Matchs");
+                BD.Procedure("SetVictoire", new MySqlParameter("PidMatch", currentMatchId), new MySqlParameter("IdTeam", WinnerId));
+                Journal.WriteLine("// Attribution d'1 victoire pour l'équipe " + WinnerId);
+                BD.Procedure("AddWinTeam", new MySqlParameter("PIdTeam", WinnerId));
+                Journal.WriteLine("// Attribution d'1 défaite  pour l'équipe " + LoserId);
+                BD.Procedure("AddLoseTeam", new MySqlParameter("PIdTeam", LoserId));
 
                 bets = BD.Procedure("GetBetsFromMatch", new MySqlParameter("IDMatch", currentMatchId));
             }
@@ -758,15 +748,18 @@ namespace Liaison_BD___CSGO
                     {
                         if ((int)bet["Team_IdTeam"] == WinnerId)
                         {
-                            List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["losers"]);
+                            List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["loser"]);
                             remains += gains[1];
 
                             Monitor.Enter(BD);
                             try
                             {
-                                BD.Procedure("AddFunds", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Argent", (int)gains[0]));
-                                BD.Procedure("AddWinUser", new MySqlParameter(":Username", bet["User_Username"]));
-                                BD.Procedure("AddEXP", new MySqlParameter(":Username", bet["User_Username"]), new MySqlParameter(":Pexp", xpWin));
+                                BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (int)gains[0]));
+                                Journal.WriteLine("// Ajout de " + (int)gains[0] + " crédits pour " + bet["User_Username"].ToString());
+                                BD.Procedure("AddWinUser", new MySqlParameter("PUsername", bet["User_Username"]));
+                                Journal.WriteLine("// Ajout d'1 victoire pour " + bet["User_Username"].ToString());
+                                BD.Procedure("AddEXP", new MySqlParameter("pidusername", bet["User_Username"]), new MySqlParameter("toAdd", xpWin));
+                                Journal.WriteLine("// Ajout de " + xpWin + " EXP pour " + bet["User_Username"].ToString());
                             }
                             finally
                             {
@@ -774,14 +767,18 @@ namespace Liaison_BD___CSGO
                             }
                         }
                         else
-                            BD.Procedure("AddLoseUser", new MySqlParameter(":Username", bet["User_Username"]));
+                        {
+                            BD.Procedure("AddLoseUser", new MySqlParameter("PUsername", bet["User_Username"]));
+                            Journal.WriteLine("// Ajout   d'1   défaite  pour " + bet["User_Username"].ToString());
+                        }
                     }
                     catch (Exception e)
                     {
-                        string ex = e.Message;
+                        Journal.WriteLine(e.Message.ToUpper());
                     }
                 }
-                updateBetsAdmin((int)Math.Floor(totalBets["admin"] + remains));
+                updateBetsAdmin((int)Math.Floor(remains));
+                Journal.WriteLine("// Ajout de " + remains + " crédits pour l'Admin");
             }
         }
 
@@ -818,11 +815,11 @@ namespace Liaison_BD___CSGO
             Monitor.Enter(BD);
             try
             {
-                BD.Procedure("AddFunds", new MySqlParameter(":Username", "admin"), new MySqlParameter(":Argent", amount));
+                BD.Procedure("AddFunds", new MySqlParameter("UserNames", "admin"), new MySqlParameter("Argent", amount));
             }
             catch (Exception e)
             {
-                string ex = e.Message;
+                Journal.WriteLine(e.Message.ToUpper());
             }
             finally
             {

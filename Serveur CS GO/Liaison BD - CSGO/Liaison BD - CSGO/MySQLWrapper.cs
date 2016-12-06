@@ -129,6 +129,7 @@ namespace Liaison_BD___CSGO
                     adapt.SelectCommand.Parameters.Add(arg);
                 }
                 adapt.Fill(result);
+                adapt.Dispose();
                 StringBuilder sb = new StringBuilder();
                 sb.Append(procedurename + "(");
                 foreach (MySqlParameter param in args)
