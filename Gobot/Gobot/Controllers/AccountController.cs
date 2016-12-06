@@ -403,13 +403,20 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
             List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
 
-            int DeleteResult = Bd.Delete("user", "Username = ?", user);
-            if (DeleteResult == 1)
+            DataTable delete = Bd.Procedure("deleteUser", new MySqlParameter(":Pusername", user));
+            try
             {
-                Logout();
-                return RedirectToAction("Index", "Home");
+                if (delete.Rows.Count == 0)
+                {
+                    Logout();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Account");
+                }
             }
-            else
+            catch (Exception)
             {
                 return RedirectToAction("Index", "Account");
             }
