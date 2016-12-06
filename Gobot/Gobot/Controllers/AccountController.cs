@@ -405,7 +405,6 @@ namespace Gobot.Controllers
                 }
 
                 Session["timeOffset"] = offset;
-
                 TempData["success"] = "Votre compte a été créé. Vous vous trouvez actuellement sur votre page de gestion de compte où vous pouvez voir tout vos activités sur Gobot.";
 
                 return RedirectToAction("Index", "Account");
@@ -421,7 +420,7 @@ namespace Gobot.Controllers
             MySQLWrapper Bd = new MySQLWrapper();
             List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
 
-            DataTable delete = Bd.Procedure("deleteUser", new MySqlParameter(":Pusername", user));
+            DataTable delete = Bd.Procedure("deleteUser", new MySqlParameter(":Pusername", ((User)Session["User"]).Username));
             try
             {
                 if (delete.Rows.Count == 0)
