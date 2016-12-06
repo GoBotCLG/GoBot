@@ -9,18 +9,19 @@ using System.Web.Mvc;
 
 namespace Gobot.Controllers
 {
-    //Dank AF
     public class StatsController : Controller
     {
-        // GET: Stats
         public ActionResult Index()
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return RedirectToAction("Index", "Home");
+
             return RedirectToAction("Index", "Bet");
         }
 
         public ActionResult History()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             try
@@ -106,7 +107,7 @@ namespace Gobot.Controllers
 
         public ActionResult Schedule()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             try
@@ -192,7 +193,7 @@ namespace Gobot.Controllers
 
         public ActionResult Teams()
         {
-            if ((User)Session["User"] == null)
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
             List<Team> Teams = new MySQLWrapper().GetTeam(true);
@@ -201,6 +202,9 @@ namespace Gobot.Controllers
         
         public JsonResult Team(int id)
         {
+            if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
+                return Json("", JsonRequestBehavior.DenyGet);
+
             try
             {
                 List<Team> Teams = new MySQLWrapper().GetTeam(false, id);
@@ -220,11 +224,11 @@ namespace Gobot.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return Json("");
+                    return Json("", JsonRequestBehavior.AllowGet);
             }
             catch (Exception)
             {
-                return Json("");
+                return Json("", JsonRequestBehavior.AllowGet);
             }
         }
     }

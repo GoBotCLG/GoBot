@@ -16,16 +16,18 @@ namespace Gobot.Controllers
         public ActionResult Index()
         {
             if (Session["User"] != null)
-            {
                 return RedirectToAction("Index", "Account");
-            }
 
-            Match match = new MySQLWrapper().GetLiveMatch(0);
-            if (match != null)
+            try
             {
-                ViewBag.Team1 = match.Teams[0];
-                ViewBag.Team2 = match.Teams[1];
+                Match match = new MySQLWrapper().GetLiveMatch(0);
+                if (match != null)
+                {
+                    ViewBag.Team1 = match.Teams[0];
+                    ViewBag.Team2 = match.Teams[1];
+                }
             }
+            catch (Exception) { }
 
             return View();
         }
@@ -33,7 +35,7 @@ namespace Gobot.Controllers
         [HttpPost]
         public ActionResult Index(LoginViewModel user)
         {
-            if(user.Username != null && user.Username != "" && user.Username.Length <= 45)
+            if (user.Username != null && user.Username != "" && user.Username.Length <= 45)
             {
                 MySQLWrapper Bd = new MySQLWrapper();
 
@@ -87,40 +89,6 @@ namespace Gobot.Controllers
             {
                 return 0;
             }
-        }
-
-        /// <summary>
-        /// Returns full informations for the current match in JSON form
-        /// </summary>
-        /// <returns>JSON data of the current match</returns>
-        public JsonResult GetCurrentStats()
-        {
-            MySQLWrapper Bd = new MySQLWrapper();
-
-            DataTable InfoLiveMatch = Bd.Procedure("IsMatchCurrent");
-            JObject[] Teams = new JObject[2];
-            if (InfoLiveMatch.Rows[0]["Team1"].ToString() != "")
-            {
-                Teams[0] = JObject.Parse(InfoLiveMatch.Rows[0]["Team1"].ToString());
-                Teams[1] = JObject.Parse(InfoLiveMatch.Rows[0]["Team2"].ToString());
-            }
-            else
-            {
-                Teams[0] = new JObject();
-                Teams[1] = new JObject();
-            }
-            List<MySqlParameter> idTeam = new List<MySqlParameter>();
-            idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam1"]));
-            DataTable Team1 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            Teams[0].Add("Wins", (int)Team1.Rows[0]["Win"]);
-            Teams[0].Add("Games", (int)Team1.Rows[0]["Game"]);
-            idTeam.Clear();
-            idTeam.Add(new MySqlParameter(":IdTeam", (int)InfoLiveMatch.Rows[0]["Team_IdTeam2"]));
-            DataTable Team2 = Bd.Select("team", "IdTeam = ?", idTeam, "Win", "Game");
-            Teams[1].Add("Wins", (int)Team2.Rows[0]["Win"]);
-            Teams[1].Add("Games", (int)Team2.Rows[0]["Game"]);
-            
-            return Json(Teams.ToString(), JsonRequestBehavior.AllowGet);
         }
     }
 }
