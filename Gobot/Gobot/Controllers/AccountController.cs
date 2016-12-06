@@ -341,6 +341,24 @@ namespace Gobot.Controllers
 
             if (!Erreur)
             {
+                if (!user.Username.All(Char.IsLetterOrDigit))
+                {
+                    TempData["error"] = "Le nom d'utilisateur saisi est invalide. Il ne peut comporter que des lettres et des chiffres.";
+                    Erreur = true;
+                }
+            }
+
+            if (!Erreur)
+            {
+                if (!user.Username.All(c => Char.IsLetterOrDigit(c) || c == '_'))
+                {
+                    TempData["error"] = "Le mot de passe saisi est invalide. Il ne peut comporter que des lettres, des chiffres et des barres de soulignement (_).";
+                    Erreur = true;
+                }
+            }
+
+            if (!Erreur)
+            {
                 Regex r = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
                 if (!r.IsMatch(user.Email.ToUpper()))
                 {
