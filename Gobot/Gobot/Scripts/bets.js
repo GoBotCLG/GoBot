@@ -77,7 +77,7 @@ $(document).on("click", ".team", function () {
             data: JSON.stringify({ TeamId: team, MatchId: match }),
             dataType: "json",
             success: function (data) {
-                loading_remove(true);
+                loading_remove(true, false, false);
                 createTeamBets(data, teamName);
             },
             error: function() {

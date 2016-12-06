@@ -210,23 +210,30 @@ function loading_create() {
     v_align($(".loading"), $("#loading"), $(".loading").height());
 }
 
-function loading_remove(success, redirect) {
+function loading_remove(success, redirect, animate) {
+    if (animate == undefined)
+        animate = true;
+
     if ($("#loading").length > 0) {
-        $(".loading").addClass(success ? "success" : "error").removeClass("loading");
-        $("." + (success ? "success" : "error") + " > div").animate({
-            "background-size": 20,
-        }, 100, function () {
+        if (animate) {
+            $(".loading").addClass(success ? "success" : "error").removeClass("loading");
             $("." + (success ? "success" : "error") + " > div").animate({
-                "background-size": 26,
-            }, 50);
-        });
+                "background-size": 20,
+            }, 100, function () {
+                $("." + (success ? "success" : "error") + " > div").animate({
+                    "background-size": 26,
+                }, 50);
+            });
 
-        setTimeout(function () {
+            setTimeout(function () {
+                $("#loading").remove();
+
+                if (redirect !== undefined && redirect == true)
+                    window.location.href = redirect;
+            }, 600);
+        }
+        else
             $("#loading").remove();
-
-            if (redirect !== undefined)
-                window.location.href = redirect;
-        }, 600);
     }
 }
 

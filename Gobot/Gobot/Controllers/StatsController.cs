@@ -52,7 +52,7 @@ namespace Gobot.Controllers
 
                 foreach (DataRow row in BetResult.Rows)
                 {
-                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                    Bets.Add(new Bet((int)row["IdBet"], (long)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
                 }
 
                 foreach (Bet bet in Bets)
@@ -87,11 +87,11 @@ namespace Gobot.Controllers
                         {
                             if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
                             {
-                                match.Team1TotalBet += (int)row["Mise"];
+                                match.Team1TotalBet += (long)row["Mise"];
                             }
                             else
                             {
-                                match.Team2TotalBet += (int)row["Mise"];
+                                match.Team2TotalBet += (long)row["Mise"];
                             }
                         }
                     }
@@ -138,7 +138,7 @@ namespace Gobot.Controllers
 
                 foreach (DataRow row in BetResult.Rows)
                 {
-                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                    Bets.Add(new Bet((int)row["IdBet"], (long)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
                 }
 
                 foreach (Bet bet in Bets)
@@ -173,11 +173,11 @@ namespace Gobot.Controllers
                         {
                             if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
                             {
-                                match.Team1TotalBet += (int)row["Mise"];
+                                match.Team1TotalBet += (long)row["Mise"];
                             }
                             else
                             {
-                                match.Team2TotalBet += (int)row["Mise"];
+                                match.Team2TotalBet += (long)row["Mise"];
                             }
                         }
                     }

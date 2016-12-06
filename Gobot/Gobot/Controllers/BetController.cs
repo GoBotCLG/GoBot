@@ -103,32 +103,37 @@ namespace Gobot.Controllers
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
-            
-            try
-            {
-                MySQLWrapper Bd = new MySQLWrapper();
-                DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
-                Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                long oldAmount = betExists(MatchId, TeamId);
 
-                if (oldAmount > 0)
-                {
-                    if (((User)Session["User"]).Credits + oldAmount < Amount)
-                        TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
-                    else
-                        editBetDb(MatchId, TeamId, oldAmount, Amount);
-                }
-                else
-                {
-                    if (((User)Session["User"]).Credits < Amount)
-                        TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
-                    else
-                        addBetDb(MatchId, TeamId, Amount);
-                }
-            }
-            catch (Exception)
+            if (Amount == 0)
+                TempData["error"] = "La mise minimale d'un pari est de 1 crédit.";
+            else
             {
-                TempData["error"] = "Une erreur s'est produite lors du placement ou de la modification du pari.";
+                try
+                {
+                    MySQLWrapper Bd = new MySQLWrapper();
+                    DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
+                    Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
+                    long oldAmount = betExists(MatchId, TeamId);
+
+                    if (oldAmount > 0)
+                    {
+                        if (((User)Session["User"]).Credits + oldAmount < Amount)
+                            TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
+                        else
+                            editBetDb(MatchId, TeamId, oldAmount, Amount);
+                    }
+                    else
+                    {
+                        if (((User)Session["User"]).Credits < Amount)
+                            TempData["error"] = "Vous ne possédez pas assez de crédits pour éffectuer ce pari.";
+                        else
+                            addBetDb(MatchId, TeamId, Amount);
+                    }
+                }
+                catch (Exception)
+                {
+                    TempData["error"] = "Une erreur s'est produite lors du placement ou de la modification du pari.";
+                }
             }
 
             return RedirectToAction("Index", "Bet");
@@ -388,7 +393,7 @@ namespace Gobot.Controllers
 
                     foreach (DataRow row in BetResult.Rows)
                     {
-                        Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                        Bets.Add(new Bet((int)row["IdBet"], (long)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
                     }
 
                     foreach (Bet bet in Bets)

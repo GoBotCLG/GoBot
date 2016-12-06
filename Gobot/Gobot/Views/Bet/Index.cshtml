@@ -286,7 +286,7 @@
             $('#bet_placeBet > form').append('<input type="hidden" name="matchId" value="' + matchId + '"/>');
             $("#bet_placeBet > form").append('<div><h2>Crédits disponibles</h2><h2><white class="baseGC">' + baseGC + '</white> <orange>GC</orange></h2></div>'); // Available credits
             $("#bet_placeBet > form").append('<div><h2>-</h2><h2><red class="deductGC">0</red> <orange style="visibility: hidden;">GC</orange></h2></div>'); // Deducted credits
-            $("#bet_placeBet > form").append('<div><h2>=</h2><h2><white class="remainGC">0</white> <orange>GC</orange></h2></div>'); // Remaining credits
+            $("#bet_placeBet > form").append('<div><h2>=</h2><h2><white class="remainGC">' + (toAdd == undefined ? baseGC : (parseInt(baseGC) - parseInt(toAdd))) + '</white> <orange>GC</orange></h2></div>'); // Remaining credits
             $("#bet_placeBet > form").append('<div class="betSelector"></div>');
             $("#bet_placeBet > form > .betSelector").append('<div class="sub"></div><input type="number" name="Amount" value="0" max="9999999" step="1"/><div class="add"></div>');
             $("#bet_placeBet > form").append('<input class="' + (pos == 1 ? 'right' : 'left') + '" type="submit" value="Confirmer"></input>');
