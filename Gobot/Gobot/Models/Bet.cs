@@ -7,7 +7,7 @@ namespace Gobot.Models
 {
     public class Bet
     {
-        public Bet(int id, int amount, int profit, string username, int teamid, int matchid)
+        public Bet(int id, long amount, int profit, string username, int teamid, int matchid)
         {
             Id = id;
             Amount = amount;
@@ -18,7 +18,7 @@ namespace Gobot.Models
         }
 
         public int Id { get; set; }
-        public int Amount { get; set; }
+        public long Amount { get; set; }
         public int Profit { get; set; }
         public string Username { get; set; }
         public int TeamId { get; set; }

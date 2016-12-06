@@ -739,7 +739,7 @@ namespace Liaison_BD___CSGO
 
             if (bets != null && bets.Rows.Count > 0)
             {
-                Dictionary<string, int> totalBets = getTotalBets(ref bets, WinnerId);
+                Dictionary<string, long> totalBets = getTotalBets(ref bets, WinnerId);
 
                 decimal remains = 0;
                 foreach (DataRow bet in bets.Rows)
@@ -748,13 +748,13 @@ namespace Liaison_BD___CSGO
                     {
                         if ((int)bet["Team_IdTeam"] == WinnerId)
                         {
-                            List<decimal> gains = getGain((int)bet["Mise"], totalBets["winner"], totalBets["loser"]);
+                            List<decimal> gains = getGain((long)bet["Mise"], totalBets["winner"], totalBets["loser"]);
                             remains += gains[1];
 
                             Monitor.Enter(BD);
                             try
                             {
-                                BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (int)gains[0]));
+                                BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (long)gains[0]));
                                 Journal.WriteLine("// Ajout de " + (int)gains[0] + " crédits pour " + bet["User_Username"].ToString());
                                 BD.Procedure("AddWinUser", new MySqlParameter("PUsername", bet["User_Username"]));
                                 Journal.WriteLine("// Ajout d'1 victoire pour " + bet["User_Username"].ToString());
@@ -782,28 +782,28 @@ namespace Liaison_BD___CSGO
             }
         }
 
-        private static Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
+        private static Dictionary<string, long> getTotalBets(ref DataTable bets, int winner)
         {
             decimal reduction = 0.9m;
-            int loserTotal = 0, winnerTotal = 0, total = 0;
+            long loserTotal = 0, winnerTotal = 0, total = 0;
 
             foreach (DataRow row in bets.Rows)
             {
                 if ((int)row["Team_IdTeam"] == winner)
-                    winnerTotal += (int)row["Mise"];
+                    winnerTotal += (long)row["Mise"];
                 else
-                    loserTotal += (int)row["Mise"];
+                    loserTotal += (long)row["Mise"];
 
-                total += (int)row["Mise"];
+                total += (long)row["Mise"];
             }
 
             loserTotal = (int)Math.Floor(decimal.Multiply(reduction, loserTotal));
-            int admin = total - loserTotal - winnerTotal;
+            long admin = total - loserTotal - winnerTotal;
 
-            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", admin } };
+            return new Dictionary<string, long>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", admin } };
         }
 
-        private static List<decimal> getGain(int bet, int total_win, int total_loss)
+        private static List<decimal> getGain(long bet, long total_win, long total_loss)
         {
             decimal totalGain = decimal.Multiply(decimal.Divide(bet, total_win), total_loss);
             decimal roundedDown = Math.Floor(totalGain);

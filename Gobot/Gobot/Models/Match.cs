@@ -29,9 +29,9 @@ namespace Gobot.Models
         public int TeamVictoire { get; set; }
         public bool CurrentUserBet { get; set; }
         public int TeamNumberBet { get; set; }
-        public int CurrentUserAmount { get; set; }
-        public int Team1TotalBet { get; set; }
-        public int Team2TotalBet { get; set; }
+        public long CurrentUserAmount { get; set; }
+        public long Team1TotalBet { get; set; }
+        public long Team2TotalBet { get; set; }
         public int Team1Rounds { get; set; }
         public int Team2Rounds { get; set; }
         public string Map { get; set; }

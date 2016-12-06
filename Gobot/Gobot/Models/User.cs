@@ -10,7 +10,7 @@ namespace Gobot.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string ProfilPic { get; set; }
-        public ulong Credits { get; set; }
+        public long Credits { get; set; }
         public string SteamID { get; set; }
         public int Wins { get; set; }
         public int Games { get; set; }

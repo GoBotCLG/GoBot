@@ -46,7 +46,7 @@ namespace Gobot.Controllers
 
                 foreach (DataRow row in BetResult.Rows)
                 {
-                    Bets.Add(new Bet((int)row["IdBet"], (int)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
+                    Bets.Add(new Bet((int)row["IdBet"], (long)row["Mise"], (int)row["Profit"], ((User)Session["User"]).Username, (int)row["Team_IdTeam"], (int)row["Match_IdMatch"]));
                 }
 
                 foreach (Bet bet in Bets)
@@ -81,11 +81,11 @@ namespace Gobot.Controllers
                         {
                             if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
                             {
-                                match.Team1TotalBet += (int)row["Mise"];
+                                match.Team1TotalBet += (long)row["Mise"];
                             }
                             else
                             {
-                                match.Team2TotalBet += (int)row["Mise"];
+                                match.Team2TotalBet += (long)row["Mise"];
                             }
                         }
                     }
@@ -99,7 +99,7 @@ namespace Gobot.Controllers
             }
         }
         
-        public ActionResult Add(int MatchId, int TeamId, ulong Amount)
+        public ActionResult Add(int MatchId, int TeamId, long Amount)
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
@@ -109,7 +109,7 @@ namespace Gobot.Controllers
                 MySQLWrapper Bd = new MySQLWrapper();
                 DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
                 Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                ulong oldAmount = betExists(MatchId, TeamId);
+                long oldAmount = betExists(MatchId, TeamId);
 
                 if (oldAmount > 0)
                 {
@@ -134,7 +134,7 @@ namespace Gobot.Controllers
             return RedirectToAction("Index", "Bet");
         }
         
-        private ulong betExists(int MatchId, int TeamId)
+        private long betExists(int MatchId, int TeamId)
         {
             List<MySqlParameter> conditions = new List<MySqlParameter>() {
                 new MySqlParameter(":Username", ((User)Session["User"]).Username),
@@ -147,11 +147,11 @@ namespace Gobot.Controllers
                 return 0;
             else
             {
-                return (ulong)result.Rows[0]["Mise"];
+                return (long)result.Rows[0]["Mise"];
             }
         }
 
-        private void editBetDb(int MatchId, int TeamId, ulong oldAmount, ulong newAmount)
+        private void editBetDb(int MatchId, int TeamId, long oldAmount, long newAmount)
         {
             if (oldAmount != newAmount)
             {
@@ -197,7 +197,7 @@ namespace Gobot.Controllers
             }
         }
 
-        private void addBetDb(int MatchId, int TeamId, ulong Amount)
+        private void addBetDb(int MatchId, int TeamId, long Amount)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace Gobot.Controllers
                 DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
                 if (resultBet.Rows.Count > 0)
                 {
-                    ulong Amount = (ulong)resultBet.Rows[0]["Mise"];
+                    long Amount = (long)resultBet.Rows[0]["Mise"];
                     if ((int)resultBet.Rows[0]["Profit"] != 0)
                         throw new Exception("Une erreur est survenue lors de la supression du pari.");
 
@@ -307,7 +307,7 @@ namespace Gobot.Controllers
                             List<string> col = new List<string>() { "Mise", "Profit", "User_Username", "Team_IdTeam", "Match_IdMatch" };
 
                             List<MySqlParameter> parameters = new List<MySqlParameter>() {
-                                new MySqlParameter(":Mise", (int)resultBet.Rows[0]["Mise"]),
+                                new MySqlParameter(":Mise", (long)resultBet.Rows[0]["Mise"]),
                                 new MySqlParameter(":Profit", 0),
                                 new MySqlParameter(":Username", ((User)Session["User"]).Username),
                                 new MySqlParameter(":Team", (int)resultBet.Rows[0]["Team_IdTeam"]),
@@ -423,11 +423,11 @@ namespace Gobot.Controllers
                             {
                                 if ((int)row["Team_IdTeam"] == match.Teams[0].Id)
                                 {
-                                    match.Team1TotalBet += (int)row["Mise"];
+                                    match.Team1TotalBet += (long)row["Mise"];
                                 }
                                 else
                                 {
-                                    match.Team2TotalBet += (int)row["Mise"];
+                                    match.Team2TotalBet += (long)row["Mise"];
                                 }
                             }
                         }
