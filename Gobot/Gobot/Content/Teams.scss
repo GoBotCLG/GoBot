@@ -117,11 +117,10 @@ $teamH: 250px;
     }
 
     > div {
-        > div {
-
-        }
         > h2 {
             font-size: 20px;
+            float: left;
+            clear: both;
             text-transform: uppercase;
             text-align: left;
         }

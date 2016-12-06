@@ -110,6 +110,8 @@
     margin-bottom: 10px; }
   .player > div > h2 {
     font-size: 20px;
+    float: left;
+    clear: both;
     text-transform: uppercase;
     text-align: left; }
 
