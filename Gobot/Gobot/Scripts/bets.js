@@ -116,6 +116,7 @@ $(document).on("click", "#showNextDay", function () {
                     appendNextDayBets(href.indexOf("bet") > -1, data, href.indexOf("history") > -1);
                 },
                 error: function (data) {
+                    $(".info").last().css("margin-bottom", 75);
                     $("#showNextDay").remove();
                     loading_remove(false);
                 },

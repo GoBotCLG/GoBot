@@ -188,7 +188,7 @@
             return bg;
         }
 
-        $(".manageBet > .edit").click(function () {
+        $(document).on("click", ".manageBet > .edit", function() {
             let teams = $(this).closest(".info").find("> .team");
             var teamId;
             var teamNum = 1;

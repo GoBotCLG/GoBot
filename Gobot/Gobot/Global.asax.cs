@@ -20,6 +20,7 @@ namespace Gobot
 // TODO: See if EOM popUp displays correctly.
 // TODO: Add try catch everywhere to prevent site from showing error 500.
 // TODO: Correctly display if incorrect information is entered in inputs.
+// TODO: Verify that every method functions correctly.
 
 /*
  
