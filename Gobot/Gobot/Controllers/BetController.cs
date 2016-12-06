@@ -99,7 +99,7 @@ namespace Gobot.Controllers
             }
         }
         
-        public ActionResult Add(int MatchId, int TeamId, int Amount)
+        public ActionResult Add(int MatchId, int TeamId, ulong Amount)
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
@@ -109,7 +109,7 @@ namespace Gobot.Controllers
                 MySQLWrapper Bd = new MySQLWrapper();
                 DataTable UserResult = Bd.Procedure("GetUser", new MySqlParameter(":username", ((User)Session["User"]).Username));
                 Session["User"] = Bd.GetUserFromDB(((User)Session["User"]).Username);
-                int oldAmount = betExists(MatchId, TeamId);
+                ulong oldAmount = betExists(MatchId, TeamId);
 
                 if (oldAmount > 0)
                 {
@@ -134,7 +134,7 @@ namespace Gobot.Controllers
             return RedirectToAction("Index", "Bet");
         }
         
-        private int betExists(int MatchId, int TeamId)
+        private ulong betExists(int MatchId, int TeamId)
         {
             List<MySqlParameter> conditions = new List<MySqlParameter>() {
                 new MySqlParameter(":Username", ((User)Session["User"]).Username),
@@ -147,11 +147,11 @@ namespace Gobot.Controllers
                 return 0;
             else
             {
-                return (int)result.Rows[0]["Mise"];
+                return (ulong)result.Rows[0]["Mise"];
             }
         }
 
-        private void editBetDb(int MatchId, int TeamId, int oldAmount, int newAmount)
+        private void editBetDb(int MatchId, int TeamId, ulong oldAmount, ulong newAmount)
         {
             if (oldAmount != newAmount)
             {
@@ -197,7 +197,7 @@ namespace Gobot.Controllers
             }
         }
 
-        private void addBetDb(int MatchId, int TeamId, int Amount)
+        private void addBetDb(int MatchId, int TeamId, ulong Amount)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace Gobot.Controllers
                 DataTable resultBet = Bd.Select("bet", "Team_IdTeam = ? and Match_IdMatch = ? and User_Username = ?", Bet, "Mise", "User_Username", "Team_IdTeam", "Match_IdMatch", "Profit");
                 if (resultBet.Rows.Count > 0)
                 {
-                    int Amount = (int)resultBet.Rows[0]["Mise"];
+                    ulong Amount = (ulong)resultBet.Rows[0]["Mise"];
                     if ((int)resultBet.Rows[0]["Profit"] != 0)
                         throw new Exception("Une erreur est survenue lors de la supression du pari.");
 
