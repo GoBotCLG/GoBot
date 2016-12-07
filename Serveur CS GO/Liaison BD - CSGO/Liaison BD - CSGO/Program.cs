@@ -754,8 +754,14 @@ namespace Liaison_BD___CSGO
                             Monitor.Enter(BD);
                             try
                             {
-                                BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (long)gains[0]));
-                                Journal.WriteLine("// Ajout de " + (int)gains[0] + " crédits pour " + bet["User_Username"].ToString());
+                                if (gains[0] != 0)
+                                {
+                                    BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (long)gains[0]));
+                                    Journal.WriteLine("// Ajout de " + (int)gains[0] + " crédits pour " + bet["User_Username"].ToString());
+                                }
+                                else
+                                    Journal.WriteLine("// Aucun crédits ajoutés pour " + bet["User_Username"].ToString());
+
                                 BD.Procedure("AddWinUser", new MySqlParameter("PUsername", bet["User_Username"]));
                                 Journal.WriteLine("// Ajout d'1 victoire pour " + bet["User_Username"].ToString());
                                 BD.Procedure("AddEXP", new MySqlParameter("pidusername", bet["User_Username"]), new MySqlParameter("toAdd", xpWin));
@@ -805,6 +811,9 @@ namespace Liaison_BD___CSGO
 
         private static List<decimal> getGain(long bet, long total_win, long total_loss)
         {
+            if (total_loss == 0)
+                return new List<decimal>() { 0, 0 };
+
             decimal totalGain = decimal.Multiply(decimal.Divide(bet, total_win), total_loss);
             decimal roundedDown = Math.Floor(totalGain);
             return new List<decimal>() { roundedDown, totalGain - roundedDown };

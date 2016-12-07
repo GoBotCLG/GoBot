@@ -72,47 +72,56 @@
         data.send();
     }
 
+    function getBetText(json) {
+        var bet = '';
+        if (json.bets.user.won) {
+            var percent = (parseInt(json.bets.user.amount) / parseInt(json.bets.winners)).toFixed(2);
+            if (json.bets.user.gain == 0)
+                bet = "<h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">V";
+            else
+                bet = "<h2>Vous avez gagné <green>" + json.bets.user.gain + "GC</green> <grey>(" + percent + "% de " + json.bets.losers + "GC)</grey></h2><h3 class=\"grey\">Additionnellement, v";
+
+            bet += 'otre mise de départ de <offw>' + json.bets.user.amount + 'GC</offw> vous à été remise.</h3>';
+        }
+        else
+            bet = "<h2>Vous avez perdu votre mise de départ de <red>" + json.bets.user.amount + "GC</red></h2>";
+
+        return bet;
+    }
+
     function createMatchResult_PopUp(json) {
         var current = 
             '<div class="lastMatch">\
-                <div class="imgTeam"><img src="' + json.winner.img + '"/></div>\
-                <div><h1><green>' + json.winner.name + ' (' + json.winner.rounds + ')</green> À GAGNÉ CONTRE <red>' + json.loser.name + ' (' + json.loser.rounds + ')</red></h1></div>\
-                <div class="imgTeam"><img src="' + json.loser.img + '"/></div>\
+                <div class="imgTeam"><img src="/Images/' + json.winner.img + '"/></div>\
+                <div>\
+                    <h1><green>' + json.winner.name + ' (' + json.winner.rounds + ')</green> À GAGNÉ CONTRE <red>' + json.loser.name + ' (' + json.loser.rounds + ')</red></h1>'
+                    + getBetText(json) + 
+                '</div>\
+                <div class="imgTeam"><img src="/Images/' + json.loser.img + '"/></div>\
             </div>';
 
-        var bet = '';
-        if (json.bets.user.won) {
-            var percent = (json.bets.user.amount / json.bets.winners).toFixed(2);
-            if (json.bets.user.gain == 0)
-                bet = "<div><h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">";
-            else
-                bet = "<div><h2>Vous avez gagné <green>" + json.bets.user.gain + "GC</green> (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">Additionnellement, ";
-
-            bet += 'votre mise de départ de ' + json.bets.user.bet + 'GC vous à été remise.</h3></div>';
-        }
-        else
-            bet = "<div><h2>Vous avez perdu votre mise de départ de <red>" + json.bets.user.amount + "GC</red>";
-
         var next = '';
-        if (json.next.has("map")) {
+        if (json.has('next')) {
             next = 
                 '<div class="nextMatch">\
                       <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
                       <div>\
-                         <div class="imgTeam smallerImg"><img src="' + json.next.teams[0].img + '"/></div>\
+                         <div class="imgTeam"><img src="/Images/' + json.next.teams[0].img + '"/></div>\
                          <div><h2>' + json.next.teams[0].name + '<grey> VS </grey>' + json.next.teams[1].name + '</h2></div>\
-                         <div class="imgTeam smallerImg"><img src="' + json.next.teams[1].img + '"/></div>\
-                         <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="~/Images/maps/' + json.next.map + '.png"/></div>\
+                         <div class="imgTeam smallerImg"><img src="/Images/' + json.next.teams[1].img + '"/></div>\
+                         <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="/Images/maps/' + json.next.map + '.png"/></div>\
                       </div>\
                 </div>';
         }
 
-        var text = current + bet + next;
+        var text = current + next;
         //var text = '\
         //    <div class="lastMatch">\
         //        <div class="imgTeam"><img src="/Images/teams/tism.png"/></div>\
-        //        <div><h1><green>Tism (6)</green> À GAGNÉ CONTRE <red>Pirates in pyjamas (5)</red></h1>\
-        //            <h2>Vous avez gagné <green>250GC</green> <grey>(8.78% de 2848GC)</grey></h2><h3 class="grey">Additionnellement, votre mise de départ de <offw>500GC</offw> vous à été remise.</h3>\
+        //        <div>\
+        //            <h1><green>Tism (6)</green> À GAGNÉ CONTRE <red>Pirates in pyjamas (5)</red></h1>\
+        //            <h2>Vous avez gagné <green>250GC</green> <grey>(8.78% de 2848GC)</grey></h2>\
+        //            <h3 class="grey">Additionnellement, votre mise de départ de <offw>500GC</offw> vous à été remise.</h3>\
         //        </div>\
         //        <div class="imgTeam"><img src="/Images/teams/piratesinpyjamas.png"/></div>\
         //    </div>\

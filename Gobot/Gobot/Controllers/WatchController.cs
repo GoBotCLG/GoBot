@@ -57,7 +57,7 @@ namespace Gobot.Controllers
 
                                 return Json(new { winner = obj["winner"], loser = obj["loser"], next = next_obj, bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
                             }
-                            else
+                            else // if there is no future match left
                             {
                                 Session["limitBetRefreshDate"] = date.Add(TimeSpan.FromMinutes(10)); // prevent access to this method for 10 minutes
                                 return Json(new { winner = obj["winner"], loser = obj["loser"], bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
