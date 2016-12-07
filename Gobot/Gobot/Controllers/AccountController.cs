@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 
 namespace Gobot.Controllers
 {
@@ -18,6 +19,9 @@ namespace Gobot.Controllers
         {
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
+
+            if (Session["cultureInfo"] == null)
+                Session["cultureInfo"] = new CultureInfo("fr-CA");
 
             MySQLWrapper Bd = new MySQLWrapper();
             if (string.IsNullOrEmpty(Username))
@@ -67,6 +71,11 @@ namespace Gobot.Controllers
             if (newLink == null || newLink == "" || !newLink.All(c => Char.IsLetterOrDigit(c)))
             {
                 TempData["error"] = "Le lien entré contient des caractères invalides.";
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+            else if (newLink.Length > 45 || newLink.Length < 2)
+            {
+                TempData["error"] = "Le lien doit contenir de 2 à 45 caractères.";
                 return Json("", JsonRequestBehavior.AllowGet);
             }
 

@@ -64,7 +64,6 @@ namespace Gobot.Controllers
                             offset = 0;
                         }
                         Session["timeOffset"] = offset;
-                        Session["cultureInfo"] = new CultureInfo("fr-CA");
                         return RedirectToAction("Index", "Account");
                     }
                 }

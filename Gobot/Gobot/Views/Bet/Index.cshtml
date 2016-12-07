@@ -64,6 +64,11 @@
             int firstDay = Model[0].Date.DayOfYear, secondDay = Model[0].Date.AddDays(1).DayOfYear;
             System.Globalization.CultureInfo cult = (System.Globalization.CultureInfo)Session["cultureInfo"];
 
+            if (cult == null)
+            {
+                cult = new System.Globalization.CultureInfo("fr-CA");
+            }
+
             for (int i = 0; i < Model.Count && (Model[i].Date.DayOfYear == firstDay || Model[i].Date.DayOfYear == secondDay); i++)
             {
                 if (i != 0 && Model[i].Date.DayOfYear != Model[i - 1].Date.DayOfYear)
