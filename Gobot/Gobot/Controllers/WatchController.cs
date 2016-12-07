@@ -26,7 +26,6 @@ namespace Gobot.Controllers
 
         public JsonResult IsCurrentDone()
         {
-            var dateSession = (DateTime)Session["limitBetRefreshDate"];
             if (Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
 
@@ -220,15 +219,16 @@ namespace Gobot.Controllers
 
                 if (currentMatch != null && currentMatch.TeamVictoire == 0)
                 {
+                    string username = ((User)Session["User"]).Username;
                     DataTable watched = bd.Select("expliaison", "idUser = ? and idMatch = ?",
-                        new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username), new MySqlParameter(":idMatch", currentMatch.Id) }, "*");
+                        new List<MySqlParameter>() { new MySqlParameter(":Username", username), new MySqlParameter(":idMatch", currentMatch.Id) }, "*");
 
                     if (watched != null && watched.Rows.Count == 0)
                     {
+                        bd.Procedure("addEXP", new MySqlParameter(":Username", username), new MySqlParameter(":toAdd", 25));
+                        bd.Procedure("AddWatchedUser", new MySqlParameter(":PUsername", username));
                         bd.Insert("expliaison", new List<string>() { "idUser", "idMatch" },
-                            new List<MySqlParameter>() { new MySqlParameter(":idUser", ((User)Session["User"]).Username), new MySqlParameter(":idMatch", currentMatch.Id) });
-                        bd.Procedure("addEXP", new MySqlParameter(":Username", ((User)Session["User"]).Username), new MySqlParameter(":", 25));
-                        bd.Procedure("AddWatchedUser", new MySqlParameter(":Username", ((User)Session["User"]).Username));
+                            new List<MySqlParameter>() { new MySqlParameter(":idUser", username), new MySqlParameter(":idMatch", currentMatch.Id) });
                     }
                 }
 

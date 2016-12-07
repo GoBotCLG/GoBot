@@ -63,6 +63,7 @@ namespace Gobot.Controllers
                         {
                             match.CurrentUserBet = true;
                             match.CurrentUserAmount = bet.Amount;
+                            match.CurrentUserProfit = bet.Profit;
                             if (bet.TeamId == match.Teams[0].Id)
                             {
                                 match.TeamNumberBet = 1;

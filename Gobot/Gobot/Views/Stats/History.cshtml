@@ -58,7 +58,7 @@
                                     <h1><green>@(Model[i].Teams[0].Name.ToUpper())</green></h1>
                                     <h4 class="grey">Mise Totale <offw>@(Model[i].Team1TotalBet)</offw>GC</h4>
 
-                                    if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
+                                    if (Model[i].TeamVictoire != 0 && Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
                                     {
                                         <h4 class="grey">Gains<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
                                     }
@@ -68,7 +68,7 @@
                                     <h1>@(Model[i].Teams[0].Name.ToUpper())</h1>
                                     <h4 class="grey">Mise Totale<offw> @(Model[i].Team1TotalBet)</offw>GC</h4>
 
-                                    if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
+                                    if (Model[i].TeamVictoire != 0 && Model[i].CurrentUserBet && Model[i].TeamNumberBet == 1)
                                     {
                                         <h4 class="grey">Pertes<red> @(Model[i].CurrentUserAmount)</red>GC</h4>
                                     }
@@ -85,19 +85,19 @@
                                 if (Model[i].TeamVictoire == Model[i].Teams[1].Id)
                                 {
                                     <h1><green>@(Model[i].Teams[1].Name.ToUpper())</green></h1>
-                                    <h4 class="grey">Mise Totale @(Model[i].Team1TotalBet)GC</h4>
+                                    <h4 class="grey">Mise Totale @(Model[i].Team2TotalBet)GC</h4>
 
-                                    if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
+                                    if (Model[i].TeamVictoire != 0 && Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
                                     {
-                                        <h4 class="grey">Gains<green> @(Model[i].CurrentUserAmount)</green>GC</h4>
+                                        <h4 class="grey">Gains<green> @(Model[i].CurrentUserProfit + Model[i].CurrentUserAmount)</green>GC</h4>
                                     }
                                 }
                                 else
                                 {
                                     <h1>@(Model[i].Teams[1].Name.ToUpper())</h1>
-                                    <h4 class="grey">Mise Totale<offw> @(Model[i].Team1TotalBet)</offw>GC</h4>
+                                    <h4 class="grey">Mise Totale<offw> @(Model[i].Team2TotalBet)</offw>GC</h4>
 
-                                    if (Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
+                                    if (Model[i].TeamVictoire != 0 && Model[i].CurrentUserBet && Model[i].TeamNumberBet == 2)
                                     {
                                         <h4 class="grey">Pertes<red> @(Model[i].CurrentUserAmount)</red>GC</h4>
                                     }
