@@ -312,7 +312,8 @@ menuColor {
         border-radius: 50%;
         border: 8px solid rgba(255, 255, 255, 0.2); }
     .popUp > .prompt > .lastMatch {
-      width: auto; }
+      width: auto;
+      padding-bottom: 30px !important; }
       .popUp > .prompt > .lastMatch h2, .popUp > .prompt > .lastMatch h3 {
         width: 100%;
         margin: 0 0 2px 0;
