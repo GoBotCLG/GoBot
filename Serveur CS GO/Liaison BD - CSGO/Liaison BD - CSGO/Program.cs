@@ -157,9 +157,9 @@ namespace Liaison_BD___CSGO
                 else
                 {
                     Journal.WriteLine("La team 2 commence en tant que CT");
-                    Team1CTNextMatch = false;
-                    BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
-                    BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
+                    Team1CTNextMatch = true;
+                    BotsCT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam1"]));
+                    BotsT = BD.Procedure("BotFromTeam", new MySqlParameter("PIdTeam", (int)CurrentMatch.Rows[0]["Team_IdTeam2"]));
                     Journal.WriteLine("Bots pour la team 2 (CT):");
                     foreach (DataRow bot in BotsCT.Rows)
                     {
@@ -416,15 +416,22 @@ namespace Liaison_BD___CSGO
 
             while (!InLog.EndOfStream)
             {
-                string ligne = InLog.ReadLine();
-                if (ligne.Contains("killed"))
+                try
                 {
-                    KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
-                    DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] = DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] + 1;
+                    string ligne = InLog.ReadLine();
+                    if (ligne.Contains("killed"))
+                    {
+                        KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = KillsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
+                        DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] = DeathsBots[ligne.Split('"')[3].Substring(0, ligne.Split('"')[3].IndexOf('<'))] + 1;
+                    }
+                    if (ligne.Contains("assisted"))
+                    {
+                        AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
+                    }
                 }
-                if (ligne.Contains("assisted"))
+                catch(Exception ex)
                 {
-                    AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] = AssistsBots[ligne.Split('"')[1].Substring(0, ligne.Split('"')[1].IndexOf('<'))] + 1;
+                    Journal.WriteLine(ex.Message.ToUpper());
                 }
             }
 
@@ -757,6 +764,7 @@ namespace Liaison_BD___CSGO
                                 if (gains[0] != 0)
                                 {
                                     BD.Procedure("AddFunds", new MySqlParameter("UserNames", bet["User_Username"]), new MySqlParameter("Argent", (long)gains[0]));
+                                    BD.Procedure("AddGain", new MySqlParameter("Pusername", bet["User_Username"]), new MySqlParameter("PIdMatch", currentMatchId), new MySqlParameter("Gain", (long)gains[0]));
                                     Journal.WriteLine("// Ajout de " + (int)gains[0] + " crédits pour " + bet["User_Username"].ToString());
                                 }
                                 else
