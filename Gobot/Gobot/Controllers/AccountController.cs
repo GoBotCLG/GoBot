@@ -37,7 +37,10 @@ namespace Gobot.Controllers
                 user.SessionUser = true;
                 Session["User"] = user;
                 Session["User_img"] = user.ProfilPic == "" ? "/Images/profiles/anonymous.png" : user.ProfilPic;
-                Session["limitBetRefreshDate"] = DateTime.Now;
+
+                if (Session["limitBetRefreshDate"] == null)
+                    Session["limitBetRefreshDate"] = DateTime.Now;
+
                 return View((User)Session["User"]);
             }
             else

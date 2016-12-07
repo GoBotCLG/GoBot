@@ -26,6 +26,7 @@ namespace Gobot.Controllers
 
         public JsonResult IsCurrentDone()
         {
+            var dateSession = (DateTime)Session["limitBetRefreshDate"];
             if (Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
 
@@ -33,7 +34,6 @@ namespace Gobot.Controllers
             if (Session["limitBetRefreshDate"] == null)
                 Session["limitBetRefreshDate"] = date;
 
-            var dateSession = (DateTime)Session["limitBetRefreshDate"];
             if (date >= (DateTime)Session["limitBetRefreshDate"])
             {
                 try
@@ -101,7 +101,7 @@ namespace Gobot.Controllers
                 }
             }
             else
-                return Json("Exceeded limit of demands.", JsonRequestBehavior.AllowGet); // warn user that he cannot access this method yet
+                return Json("", JsonRequestBehavior.AllowGet); // warn user that he cannot access this method yet
         }
 
         private void limitBetRefresh(DateTime limit)
