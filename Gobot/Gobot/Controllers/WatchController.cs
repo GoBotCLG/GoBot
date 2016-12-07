@@ -33,6 +33,7 @@ namespace Gobot.Controllers
             if (Session["limitBetRefreshDate"] == null)
                 Session["limitBetRefreshDate"] = date;
 
+            var dateSession = (DateTime)Session["limitBetRefreshDate"];
             if (date >= (DateTime)Session["limitBetRefreshDate"])
             {
                 try
@@ -53,14 +54,14 @@ namespace Gobot.Controllers
                             if (nextMatch != null) // if there is a future match
                             {
                                 object next_obj = getNextObject(nextMatch); // convert nextMatch (Match) to object
-                                limitBetRefresh(nextMatch.Date.AddMinutes(5)); // prevent access to this method for 5 minutes
 
-                                return Json(new { winner = obj["winner"], loser = obj["loser"], next = next_obj, bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
+                                limitBetRefresh(nextMatch.Date.AddMinutes(5)); // prevent access to this method for 5 minutes
+                                return Json(new { winner = obj["winner"], loser = obj["loser"], next = next_obj, bets = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
                             }
                             else // if there is no future match left
                             {
-                                Session["limitBetRefreshDate"] = date.Add(TimeSpan.FromMinutes(10)); // prevent access to this method for 10 minutes
-                                return Json(new { winner = obj["winner"], loser = obj["loser"], bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
+                                limitBetRefresh(date.Add(TimeSpan.FromMinutes(10)));// prevent access to this method for 10 minutes
+                                return Json(new { winner = obj["winner"], loser = obj["loser"], bets = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
                             }
                         }
                         else // if the user has NOT placed a bet
@@ -93,7 +94,7 @@ namespace Gobot.Controllers
                         return Json("", JsonRequestBehavior.AllowGet); // return blank json
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     limitBetRefresh(date.Add(TimeSpan.FromMinutes(1))); // prevent access to this method for 1 minute
                     return Json("", JsonRequestBehavior.AllowGet); // return blank json
@@ -122,8 +123,6 @@ namespace Gobot.Controllers
                             },
                     map = nextMatch.Map,
                 };
-
-                limitBetRefresh(nextMatch.Date.AddMinutes(5));
             }
 
             return next_obj;
@@ -174,7 +173,7 @@ namespace Gobot.Controllers
 
             object winner_obj = new { name = winner.Name, img = winner.ImagePath, rounds = winnerRounds };
             object loser_obj = new { name = loser.Name, img = loser.ImagePath, rounds = loserRounds };
-            object bets_obj = new { user = new { won = (winner.Id == (int)userBet["Team_IdTeam"]), amount = (long)userBet["Mise"], gain = (long)userBet["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
+            object bets_obj = new { user = new { won = (winner.Id == int.Parse(userBet["Team_IdTeam"].ToString())), amount = userBet["Mise"], gain = userBet["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
 
             return new Dictionary<string, object>() { { "winner", winner_obj }, { "loser", loser_obj }, { "bets", bets_obj } };
         }

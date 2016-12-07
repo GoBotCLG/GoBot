@@ -75,7 +75,7 @@
     function getBetText(json) {
         var bet = '';
         if (json.bets.user.won) {
-            var percent = (parseInt(json.bets.user.amount) / parseInt(json.bets.winners)).toFixed(2);
+            var percent = ((parseInt(json.bets.user.amount) / parseInt(json.bets.winners)) * 100).toFixed(2);
             if (json.bets.user.gain == 0)
                 bet = "<h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">V";
             else
@@ -101,7 +101,7 @@
             </div>';
 
         var next = '';
-        if (json.has('next')) {
+        if (json.hasOwnProperty('next')) {
             next = 
                 '<div class="nextMatch">\
                       <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
@@ -109,7 +109,7 @@
                          <div class="imgTeam"><img src="/Images/' + json.next.teams[0].img + '"/></div>\
                          <div><h2>' + json.next.teams[0].name + '<grey> VS </grey>' + json.next.teams[1].name + '</h2></div>\
                          <div class="imgTeam smallerImg"><img src="/Images/' + json.next.teams[1].img + '"/></div>\
-                         <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="/Images/maps/' + json.next.map + '.png"/></div>\
+                         <div class="map"><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="/Images/maps/' + json.next.map + '.png"/></div>\
                       </div>\
                 </div>';
         }
