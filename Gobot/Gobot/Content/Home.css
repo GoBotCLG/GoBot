@@ -462,11 +462,12 @@ menuColor {
   height: 50px;
   cursor: pointer;
   background-size: 15px !important;
-  background-color: #232323 !important; }
+  background-color: #232323 !important;
+  z-index: 895 !important; }
 
 #toTop {
   background: no-repeat center url(/Images/up_dark.png);
-  left: 55px; }
+  bottom: 55px !important; }
 
 #toBottom {
   background: no-repeat center url(/Images/down_dark.png); }

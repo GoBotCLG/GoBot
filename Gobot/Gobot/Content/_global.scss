@@ -468,7 +468,7 @@ menuColor       { color: $orange !important; }
     background-color: $infoBgColor !important;
     z-index: 895 !important;
 }
-    #toTop { background: no-repeat center url(/Images/up_dark.png); left: 55px; }
+    #toTop { background: no-repeat center url(/Images/up_dark.png); bottom: 55px !important; }
     #toBottom { background: no-repeat center url(/Images/down_dark.png); }
 
     #toTop:hover, #toBottom:hover {

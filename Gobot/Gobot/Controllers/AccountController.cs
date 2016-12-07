@@ -420,10 +420,7 @@ namespace Gobot.Controllers
             if ((User)Session["User"] == null || ((User)Session["User"]).Username == "")
                 return RedirectToAction("Index", "Home");
 
-            MySQLWrapper Bd = new MySQLWrapper();
-            List<MySqlParameter> user = new List<MySqlParameter>() { new MySqlParameter(":Username", ((User)Session["User"]).Username) };
-
-            DataTable delete = Bd.Procedure("deleteUser", new MySqlParameter(":Pusername", ((User)Session["User"]).Username));
+            DataTable delete = new MySQLWrapper().Procedure("DeleteUser", new MySqlParameter("Pusername", ((User)Session["User"]).Username));
             try
             {
                 if (delete.Rows.Count == 0)
