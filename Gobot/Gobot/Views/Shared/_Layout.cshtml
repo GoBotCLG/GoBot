@@ -64,97 +64,77 @@
             if (data.readyState == 4) {
                 var json = JSON.parse(data.response);
                 if (json != null && json != "") {
-                    var shown;
                     if (json.bet != "noBet")
-                        shown = createMatchResult_PopUp(json);
-
-                    if (shown && json.next.time != 0)
-                        createCookie(json.next.time);
+                        createMatchResult_PopUp(json);
                 }
             }
         }
         data.send();
     }
 
-    function getCookie(name) {
-        var re = new RegExp(name + "=([^;]+)");
-        var value = re.exec(document.cookie);
-        return (value != null) ? unescape(value[1]) : null;
-    }
-
-    function createCookie(expire) {
-        var date = new Date();
-        date.setTime(date.getTime() + expire);
-        $.cookie("seenResults", "yes", { expires: date });
-    }
-
     function createMatchResult_PopUp(json) {
-        //var current = 
-        //    '<div class="lastMatch">\
-        //        <div class="imgTeam"><img src="' + json.winner.img + '"/></div>\
-        //        <div><h1><green>' + json.winner.name + ' (' + json.winner.rounds + ')</green> À GAGNÉ CONTRE <red>' + json.loser.name + ' (' + json.loser.rounds + ')</red></h1></div>\
-        //        <div class="imgTeam"><img src="' + json.loser.img + '"/></div>\
-        //    </div>';
-
-        //var bet = '';
-        //if (json.bets.user.won) {
-        //    var percent = (json.bets.user.amount / json.bets.winners).toFixed(2);
-        //    if (json.bets.user.gain == 0)
-        //        bet = "<div><h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">";
-        //    else
-        //        bet = "<div><h2>Vous avez gagné <green>" + json.bets.user.gain + "GC</green> (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">Additionnellement, ";
-
-        //    bet += 'votre mise de départ de ' + json.bets.user.bet + 'GC vous à été remise.</h3></div>';
-        //}
-        //else
-        //    bet = "<div><h2>Vous avez perdu votre mise de départ de <red>" + json.bets.user.amount + "GC</red>";
-
-        //var next = '';
-        //if (json.next.has("map")) {
-        //    next = 
-        //        '<div class="nextMatch">\
-        //              <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
-        //              <div>\
-        //                 <div class="imgTeam smallerImg"><img src="' + json.next.teams[0].img + '"/></div>\
-        //                 <div><h2>' + json.next.teams[0].name + '<grey> VS </grey>' + json.next.teams[1].name + '</h2></div>\
-        //                 <div class="imgTeam smallerImg"><img src="' + json.next.teams[1].img + '"/></div>\
-        //                 <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="~/Images/maps/' + json.next.map + '.png"/></div>\
-        //              </div>\
-        //        </div>';
-        //}
-
-        //var text = current + bet + next;
-        var text = '\
-            <div class="lastMatch">\
-                <div class="imgTeam"><img src="/Images/teams/tism.png"/></div>\
-                <div><h1><green>Tism (6)</green> À GAGNÉ CONTRE <red>Pirates in pyjamas (5)</red></h1>\
-                    <h2>Vous avez gagné <green>250GC</green> <grey>(8.78% de 2848GC)</grey></h2><h3 class="grey">Additionnellement, votre mise de départ de <offw>500GC</offw> vous à été remise.</h3>\
-                </div>\
-                <div class="imgTeam"><img src="/Images/teams/piratesinpyjamas.png"/></div>\
-            </div>\
-            <div class="nextMatch">\
-                  <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
-                  <div>\
-                     <div class="imgTeam"><img src="/Images/teams/clown6.png"/></div>\
-                     <div><h2>CLOWN6 <grey>VS</grey> PIRATES IN PYJAMAS</h2></div>\
-                     <div class="imgTeam"><img src="/Images/teams/piratesinpyjamas.png"/></div>\
-                     <div class="map"><h2><grey>DANS LA CARTE</grey> DE_COBBLESTONE</h2><img src="/Images/maps/de_cobblestone.png"/></div>\
-                  </div>\
+        var current = 
+            '<div class="lastMatch">\
+                <div class="imgTeam"><img src="' + json.winner.img + '"/></div>\
+                <div><h1><green>' + json.winner.name + ' (' + json.winner.rounds + ')</green> À GAGNÉ CONTRE <red>' + json.loser.name + ' (' + json.loser.rounds + ')</red></h1></div>\
+                <div class="imgTeam"><img src="' + json.loser.img + '"/></div>\
             </div>';
+
+        var bet = '';
+        if (json.bets.user.won) {
+            var percent = (json.bets.user.amount / json.bets.winners).toFixed(2);
+            if (json.bets.user.gain == 0)
+                bet = "<div><h2>Vous n'avez rien gagné (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">";
+            else
+                bet = "<div><h2>Vous avez gagné <green>" + json.bets.user.gain + "GC</green> (" + percent + "% de " + json.bets.losers + "GC)</h2><h3 class=\"grey\">Additionnellement, ";
+
+            bet += 'votre mise de départ de ' + json.bets.user.bet + 'GC vous à été remise.</h3></div>';
+        }
+        else
+            bet = "<div><h2>Vous avez perdu votre mise de départ de <red>" + json.bets.user.amount + "GC</red>";
+
+        var next = '';
+        if (json.next.has("map")) {
+            next = 
+                '<div class="nextMatch">\
+                      <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
+                      <div>\
+                         <div class="imgTeam smallerImg"><img src="' + json.next.teams[0].img + '"/></div>\
+                         <div><h2>' + json.next.teams[0].name + '<grey> VS </grey>' + json.next.teams[1].name + '</h2></div>\
+                         <div class="imgTeam smallerImg"><img src="' + json.next.teams[1].img + '"/></div>\
+                         <div><h2><grey>DANS LA CARTE </grey>' + json.next.map + '</h2><img src="~/Images/maps/' + json.next.map + '.png"/></div>\
+                      </div>\
+                </div>';
+        }
+
+        var text = current + bet + next;
+        //var text = '\
+        //    <div class="lastMatch">\
+        //        <div class="imgTeam"><img src="/Images/teams/tism.png"/></div>\
+        //        <div><h1><green>Tism (6)</green> À GAGNÉ CONTRE <red>Pirates in pyjamas (5)</red></h1>\
+        //            <h2>Vous avez gagné <green>250GC</green> <grey>(8.78% de 2848GC)</grey></h2><h3 class="grey">Additionnellement, votre mise de départ de <offw>500GC</offw> vous à été remise.</h3>\
+        //        </div>\
+        //        <div class="imgTeam"><img src="/Images/teams/piratesinpyjamas.png"/></div>\
+        //    </div>\
+        //    <div class="nextMatch">\
+        //          <div><h1 class="grey">PROCHAINE PARTIE</h1></div>\
+        //          <div>\
+        //             <div class="imgTeam"><img src="/Images/teams/clown6.png"/></div>\
+        //             <div><h2>CLOWN6 <grey>VS</grey> PIRATES IN PYJAMAS</h2></div>\
+        //             <div class="imgTeam"><img src="/Images/teams/piratesinpyjamas.png"/></div>\
+        //             <div class="map"><h2><grey>DANS LA CARTE</grey> DE_COBBLESTONE</h2><img src="/Images/maps/de_cobblestone.png"/></div>\
+        //          </div>\
+        //    </div>';
         return popUp("", false, text, true);
     }
 
     $(document).ready(function () {
         setCurrentTab();
+
         setInterval(function () {
-            //if (getCookie("seenResults") == null)
-                //getMatchResults();
+                getMatchResults();
         }, 60 * 1000 * 2);
-
-        //if (getCookie("seenResults") == null)
-            //getMatchResults();
-
-        //createMatchResult_PopUp();
+        getMatchResults();
     });
 
     $(window).on('resize', function () {

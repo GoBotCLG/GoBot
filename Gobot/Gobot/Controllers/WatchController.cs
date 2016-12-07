@@ -29,155 +29,175 @@ namespace Gobot.Controllers
             if (Session["User"] == null || ((User)Session["User"]).Username == "")
                 return Json("", JsonRequestBehavior.DenyGet);
 
-            if (Session["limitBetRefreshDate"] == null)
-                Session["limitBetRefreshDate"] = DateTime.Now;
-
             var date = DateTime.Now;
-            var limit = (DateTime)Session["limitBetRefreshDate"];
+            if (Session["limitBetRefreshDate"] == null)
+                Session["limitBetRefreshDate"] = date;
 
-            if (DateTime.Now > (DateTime)Session["limitBetRefreshDate"])
+            if (date >= (DateTime)Session["limitBetRefreshDate"])
             {
                 try
                 {
                     MySQLWrapper Bd = new MySQLWrapper();
-                    Match currentMatch = new MySQLWrapper().GetLiveMatch((double)Session["timeOffset"]);
+                    Match currentMatch = new MySQLWrapper().GetLiveMatch((double)Session["timeOffset"]); // Get current match
 
-                    if (currentMatch != null && currentMatch.TeamVictoire != 0)
+                    if (currentMatch != null && currentMatch.TeamVictoire != 0) // if there is a current match and it is finished
                     {
-                        DataTable bets = Bd.Procedure("GetBetsFromMatch", new MySqlParameter(":Id", currentMatch.Id));
-                        DataRow[] userBet = bets.Select(string.Format("User_Username = '{0}'", ((User)Session["User"]).Username));
+                        DataTable bets = Bd.Procedure("GetBetsFromMatch", new MySqlParameter(":Id", currentMatch.Id)); // get all bets from this match
+                        DataRow[] userBet = bets.Select(string.Format("User_Username = '{0}'", ((User)Session["User"]).Username)); // select user's bets from all bets
 
-                        if (userBet != null && userBet.Length > 0)
+                        if (userBet != null && userBet.Length > 0) // if the user has placed a bet
                         {
-                            Dictionary<string, int> totalBets = getTotalBets(ref bets, currentMatch.TeamVictoire);
+                            Dictionary<string, object> obj = getMatchObjects(ref bets, userBet[0], currentMatch); // get information about the current match
 
-                            DataTable nextMatchBD = Bd.Procedure("Nextmatch");
-                            Match nextMatch = null;
-                            if (nextMatchBD != null && nextMatchBD.Rows.Count > 0)
+                            Match nextMatch = getNextMatch(); // get the next match
+                            if (nextMatch != null) // if there is a future match
                             {
-                                DataRow row = nextMatchBD.Rows[0];
-                                nextMatch = new Match();
-                                nextMatch.Id = (int)row["IdMatch"];
-                                nextMatch.Date = ((DateTime)row["Date"]).AddHours((double)Session["timeOffset"]);
-                                nextMatch.Teams[0] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
-                                nextMatch.Teams[1] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
-                                nextMatch.Team1Rounds = (int)row["RoundTeam1"];
-                                nextMatch.Team2Rounds = (int)row["RoundTeam2"];
-                                nextMatch.Map = row["Map"].ToString();
-                            }
+                                object next_obj = getNextObject(nextMatch); // convert nextMatch (Match) to object
+                                limitBetRefresh(nextMatch.Date.AddMinutes(5)); // prevent access to this method for 5 minutes
 
-                            Team winner, loser;
-                            int winnerRounds, loserRounds;
-                            if (currentMatch.TeamVictoire == currentMatch.Teams[0].Id)
-                            {
-                                winner = currentMatch.Teams[0];
-                                loser = currentMatch.Teams[1];
-                                winnerRounds = currentMatch.Team1Rounds;
-                                loserRounds = currentMatch.Team2Rounds;
+                                return Json(new { winner = obj["winner"], loser = obj["loser"], next = next_obj, bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
                             }
                             else
                             {
-                                winner = currentMatch.Teams[1];
-                                loser = currentMatch.Teams[0];
-                                winnerRounds = currentMatch.Team2Rounds;
-                                loserRounds = currentMatch.Team1Rounds;
+                                Session["limitBetRefreshDate"] = date.Add(TimeSpan.FromMinutes(10)); // prevent access to this method for 10 minutes
+                                return Json(new { winner = obj["winner"], loser = obj["loser"], bet = obj["bets"] }, JsonRequestBehavior.AllowGet); // return complete json
                             }
-
-                            object winner_obj = new { name = winner.Name, img = winner.ImagePath, rounds = winnerRounds };
-                            object loser_obj = new { name = loser.Name, img = loser.ImagePath, rounds = loserRounds };
-                            object bets_obj = new { user = new { won = (winner.Id == (int)userBet[0]["Team_IdTeam"]), amount = (int)userBet[0]["Mise"], gain = (int)userBet[0]["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
-
-                            if (nextMatch != null)
-                            {
-                                long time = msUntilDate(nextMatch.Date);
-                                object next_obj = new
-                                {
-                                    teams = new object[] {
-                                    new { name = nextMatch.Teams[0].Name, img = nextMatch.Teams[0].ImagePath },
-                                    new { name = nextMatch.Teams[1].Name, img = nextMatch.Teams[1].ImagePath }
-                                },
-                                    map = nextMatch.Map,
-                                    time = time
-                                };
-
-                                Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMilliseconds(time));
-                                return Json(new { winner = winner_obj, loser = loser_obj, next = next_obj, bet = bets_obj }, JsonRequestBehavior.AllowGet);
-                            }
-
-                            Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMinutes(10));
-                            return Json(new { winner = winner_obj, loser = loser_obj, next = new { time = 0 }, bet = bets_obj }, JsonRequestBehavior.AllowGet);
                         }
-                        else
+                        else // if the user has NOT placed a bet
                         {
-                            DataTable nextMatchBD = Bd.Procedure("Nextmatch");
-
-                            if (nextMatchBD != null && nextMatchBD.Rows.Count > 0)
+                            Match nextMatch = getNextMatch(); // get the next match
+                            if (nextMatch != null) // if there is a future match
                             {
-                                long time = msUntilDate((DateTime)nextMatchBD.Rows[0]["Date"]);
-                                Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMilliseconds(time));
-
-                                DataRow row = nextMatchBD.Rows[0];
-                                Match nextMatch = new Match();
-                                nextMatch.Id = (int)row["IdMatch"];
-                                nextMatch.Date = ((DateTime)row["Date"]).AddHours((double)Session["timeOffset"]);
-                                nextMatch.Teams[0] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
-                                nextMatch.Teams[1] = Bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
-                                nextMatch.Team1Rounds = (int)row["RoundTeam1"];
-                                nextMatch.Team2Rounds = (int)row["RoundTeam2"];
-                                nextMatch.Map = row["Map"].ToString();
-                                
-
                                 object next_obj = new
                                 {
                                     teams = new object[] {
                                     new { name = nextMatch.Teams[0].Name, img = nextMatch.Teams[0].ImagePath },
                                     new { name = nextMatch.Teams[1].Name, img = nextMatch.Teams[1].ImagePath }
                                 },
-                                    map = nextMatch.Map,
-                                    time = time
+                                    map = nextMatch.Map
                                 };
 
-                                return Json(new { bet = "noBet", next = new { time = time } }, JsonRequestBehavior.AllowGet);
+                                limitBetRefresh(nextMatch.Date.AddMinutes(5)); // prevent access to this method for 5 minutes
+                                return Json(new { bet = "noBet" }, JsonRequestBehavior.AllowGet); // return complete json 
                             }
                             else
                             {
-                                Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMinutes(1));
-                                return Json(new { bet = "noBet", next = new { time = 0 } }, JsonRequestBehavior.AllowGet);
+                                limitBetRefresh(date.Add(TimeSpan.FromMinutes(1))); // prevent access to this method for 1 minute
+                                return Json(new { bet = "noBet" }, JsonRequestBehavior.AllowGet); // return complete json
                             }
                         }
                     }
-                    else
+                    else // if the match is not yet finished
                     {
-                        Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMinutes(1));
-                        return Json("", JsonRequestBehavior.AllowGet);
+                        limitBetRefresh(date.Add(TimeSpan.FromMinutes(1))); // prevent access to this method for 1 minute
+                        return Json("", JsonRequestBehavior.AllowGet); // return blank json
                     }
                 }
                 catch (Exception)
                 {
-                    Session["limitBetRefreshDate"] = DateTime.Now.Add(TimeSpan.FromMinutes(1));
-                    return Json("", JsonRequestBehavior.AllowGet);
+                    limitBetRefresh(date.Add(TimeSpan.FromMinutes(1))); // prevent access to this method for 1 minute
+                    return Json("", JsonRequestBehavior.AllowGet); // return blank json
                 }
             }
             else
-                return Json("Exceeded limit of demands.", JsonRequestBehavior.AllowGet);
+                return Json("Exceeded limit of demands.", JsonRequestBehavior.AllowGet); // warn user that he cannot access this method yet
         }
 
-        private Dictionary<string, int> getTotalBets(ref DataTable bets, int winner)
+        private void limitBetRefresh(DateTime limit)
+        {
+            Session["limitBetRefreshDate"] = limit;
+        }
+
+        private object getNextObject(Match nextMatch)
+        {
+            object next_obj = null;
+
+            if (nextMatch != null)
+            {
+                next_obj = new
+                {
+                    teams = new object[] {
+                                new { name = nextMatch.Teams[0].Name, img = nextMatch.Teams[0].ImagePath },
+                                new { name = nextMatch.Teams[1].Name, img = nextMatch.Teams[1].ImagePath }
+                            },
+                    map = nextMatch.Map,
+                };
+
+                limitBetRefresh(nextMatch.Date.AddMinutes(5));
+            }
+
+            return next_obj;
+        }
+
+        private Match getNextMatch()
+        {
+            MySQLWrapper bd = new MySQLWrapper();
+            DataTable nextMatchBD = bd.Procedure("Nextmatch");
+
+            Match nextMatch = null;
+            if (nextMatchBD != null && nextMatchBD.Rows.Count > 0)
+            {
+                DataRow row = nextMatchBD.Rows[0];
+                nextMatch = new Match();
+                nextMatch.Id = (int)row["IdMatch"];
+                nextMatch.Date = ((DateTime)row["Date"]).AddHours((double)Session["timeOffset"]);
+                nextMatch.Teams[0] = bd.GetTeam(false, int.Parse(row["Team_IdTeam1"].ToString()))[0];
+                nextMatch.Teams[1] = bd.GetTeam(false, int.Parse(row["Team_IdTeam2"].ToString()))[0];
+                nextMatch.Team1Rounds = (int)row["RoundTeam1"];
+                nextMatch.Team2Rounds = (int)row["RoundTeam2"];
+                nextMatch.Map = row["Map"].ToString();
+            }
+
+            return nextMatch;
+        }
+
+        private Dictionary<string, object> getMatchObjects(ref DataTable bets, DataRow userBet, Match currentMatch)
+        {
+            Dictionary<string, long> totalBets = getTotalBets(ref bets, currentMatch.TeamVictoire); // get total bets on both sides
+
+            Team winner, loser;
+            int winnerRounds, loserRounds;
+            if (currentMatch.TeamVictoire == currentMatch.Teams[0].Id)
+            {
+                winner = currentMatch.Teams[0];
+                loser = currentMatch.Teams[1];
+                winnerRounds = currentMatch.Team1Rounds;
+                loserRounds = currentMatch.Team2Rounds;
+            }
+            else
+            {
+                winner = currentMatch.Teams[1];
+                loser = currentMatch.Teams[0];
+                winnerRounds = currentMatch.Team2Rounds;
+                loserRounds = currentMatch.Team1Rounds;
+            }
+
+            object winner_obj = new { name = winner.Name, img = winner.ImagePath, rounds = winnerRounds };
+            object loser_obj = new { name = loser.Name, img = loser.ImagePath, rounds = loserRounds };
+            object bets_obj = new { user = new { won = (winner.Id == (int)userBet["Team_IdTeam"]), amount = (long)userBet["Mise"], gain = (long)userBet["Profit"] }, winners = totalBets["winner"], losers = totalBets["loser"] };
+
+            return new Dictionary<string, object>() { { "winner", winner_obj }, { "loser", loser_obj }, { "bets", bets_obj } };
+        }
+
+        private static Dictionary<string, long> getTotalBets(ref DataTable bets, int winner)
         {
             decimal reduction = 0.9m;
-            int loserTotal = 0, winnerTotal = 0;
+            long loserTotal = 0, winnerTotal = 0, total = 0;
 
             foreach (DataRow row in bets.Rows)
             {
                 if ((int)row["Team_IdTeam"] == winner)
-                    winnerTotal += (int)row["Mise"];
+                    winnerTotal += (long)row["Mise"];
                 else
-                    loserTotal += (int)row["Mise"];
+                    loserTotal += (long)row["Mise"];
+
+                total += (long)row["Mise"];
             }
 
-            loserTotal = (int)Math.Floor(Decimal.Multiply(reduction, loserTotal));
-            winnerTotal = (int)Math.Floor(Decimal.Multiply(reduction, winnerTotal));
-            return new Dictionary<string, int>() { { "winner", winnerTotal }, { "loser", loserTotal } };
+            loserTotal = (int)Math.Floor(decimal.Multiply(reduction, loserTotal));
+            long admin = total - loserTotal - winnerTotal;
+
+            return new Dictionary<string, long>() { { "winner", winnerTotal }, { "loser", loserTotal }, { "admin", admin } };
         }
 
         private long msUntilDate(DateTime date)
