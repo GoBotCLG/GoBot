@@ -83,6 +83,17 @@ namespace Gobot.Controllers
                 return View(user);
             }
 
+            try
+            {
+                Match match = new MySQLWrapper().GetLiveMatch(0);
+                if (match != null)
+                {
+                    ViewBag.Team1 = match.Teams[0];
+                    ViewBag.Team2 = match.Teams[1];
+                }
+            }
+            catch (Exception) { }
+
             return View(user);
         }
 
