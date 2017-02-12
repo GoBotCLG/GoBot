@@ -11,7 +11,7 @@ namespace Liaison_BD___CSGO
 {
     public class MySQLWrapper : IDisposable
     {
-        private string connString = "Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234";
+        private string connString = /*"Server=MYSQL5014.SmarterASP.NET;Database=db_a13e4f_gobotdb;Uid=a13e4f_gobotdb;Pwd=Yolo1234Sw4g1234"*/ "Server=127.0.0.1;Port=3306;Database=gobot;Uid=root;Pwd=root";
 
         private bool disposed = false;
 
@@ -305,13 +305,13 @@ namespace Liaison_BD___CSGO
                                 {
                                     adapt.Fill(result);
                                 }
-                                catch (Exception)
+                                catch (Exception ex)
                                 {
                                     result = null;
                                 }
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             result = null;
                         }

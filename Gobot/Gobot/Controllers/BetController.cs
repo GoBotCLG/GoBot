@@ -21,7 +21,7 @@ namespace Gobot.Controllers
             try
             {
                 MySQLWrapper Bd = new MySQLWrapper();
-                List<Match> FutureMatches = Bd.GetMatches(true, (double)Session["timeOffset"]);
+                List<Match> FutureMatches = Bd.GetMatches(true, /*(double)Session["timeOffset"]*/0);
                 List<Match> Matches = new List<Match>();
 
                 if (FutureMatches.Count() > 0)

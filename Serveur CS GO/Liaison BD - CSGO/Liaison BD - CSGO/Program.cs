@@ -81,7 +81,7 @@ namespace Liaison_BD___CSGO
 
             ConnectionServeur.ServerCommand("sv_lan 1");
 
-            for (int i = 1; i <= 11; i++)
+            for (int i = 0; i <= 12; i++)
             {
                 if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt"))
                     File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
@@ -373,7 +373,7 @@ namespace Liaison_BD___CSGO
             Thread.Sleep(2000);
             //SetForegroundWindow(Process.GetProcessesByName("csgo")[0].MainWindowHandle);
 
-            for (int i = 1; i <= 11; i++)
+            for (int i = 0; i <= 12; i++)
                 File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
 
             StreamReader InLog = new StreamReader(Directory.GetFiles(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + @"\csgo\logs")[0]);
@@ -634,7 +634,7 @@ namespace Liaison_BD___CSGO
             }
 
             InRound.Close();
-            for (int i = 1; i <= 11; i++)
+            for (int i = 0; i <= 12; i++)
             {
                 if (File.Exists(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt"))
                     File.Delete(Serveur.StartInfo.FileName.Substring(0, Serveur.StartInfo.FileName.Length - 9) + "\\csgo\\backup_round" + i.ToString("00") + ".txt");
